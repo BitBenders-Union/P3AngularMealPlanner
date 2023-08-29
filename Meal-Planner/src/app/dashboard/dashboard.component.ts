@@ -12,7 +12,6 @@ import { WeekScheduleService } from '../week-schedule.service'; // Import the se
     trigger('shoppingListAnimation', [
       state('visible', style({ opacity: 1, maxHeight: '1000px' })),
       state('hidden', style({ opacity: 0, maxHeight: 0, overflow: 'hidden' })),
-      transition('visible => hidden', animate('300ms ease-in-out')),
       transition('hidden => visible', animate('300ms ease-in-out')),
     ]),
   ],
