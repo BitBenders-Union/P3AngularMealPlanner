@@ -14,4 +14,6 @@ export class BookmarkComponent {
     this.isExpanded = !this.isExpanded;
     this.isExpandedChange.emit(this.isExpanded);
   }
+
+  // test
 }
