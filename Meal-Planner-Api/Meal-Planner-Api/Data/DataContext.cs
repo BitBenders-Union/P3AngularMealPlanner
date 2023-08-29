@@ -15,6 +15,7 @@ namespace Meal_Planner_Api.Data
         public DbSet<Ingredient> Ingredients { get; set; } // Renamed to match class name
         public DbSet<Amount> Amounts { get; set; }
         public DbSet<Instruction> Instructions { get; set; }
+        public DbSet<User> Users { get; set; } // Renamed to match class name
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
