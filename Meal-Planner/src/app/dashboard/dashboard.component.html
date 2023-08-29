@@ -1,9 +1,21 @@
-<div cdkDropListGroup>
 
+<!-- 
+    cdkDropListGroup
+
+    this is a directive that allows for drag and drop functionality
+
+    it is used between the dashboard, the recipe-card component and the week-schedule component
+
+
+ -->
+
+ <div cdkDropListGroup>
+
+    <!-- week-schedule emits a list of ingredients that it gets from the dropped recipe-card we then bind the emit it to the method onShoppingListUpdated -->
     <app-week-schedule (shoppingListUpdated)="onShoppingListUpdated($event)"></app-week-schedule>
 
 
-
+    <!--  -->
     <app-bookmark (isExpandedChange)="toggleShoppingList()"></app-bookmark>
 
 
@@ -17,4 +29,3 @@
 
 
 </div>
-

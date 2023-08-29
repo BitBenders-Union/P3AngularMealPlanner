@@ -7,6 +7,7 @@ import { WeekScheduleService } from '../week-schedule.service'; // Import the se
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
+  // added animations
   animations: [
     trigger('shoppingListAnimation', [
       state('visible', style({ opacity: 1, maxHeight: '1000px' })),
