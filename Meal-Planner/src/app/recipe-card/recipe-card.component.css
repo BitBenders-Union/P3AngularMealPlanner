@@ -1,0 +1,53 @@
+.recipe-card-container {
+  display: flex;
+  justify-content: center; /* Center items horizontally */
+  align-items: flex-start;
+  gap: 10px;
+  padding-left: 10px;
+  overflow-y: auto;
+  max-height: 80vh;
+  
+}
+
+.recipe-card-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 90%;
+}
+
+.recipe-card {
+  background-color: var(--color-primary);
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  color: var(--color-text);
+  min-width: calc(33.33% - 10px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: grab;
+  text-align: center; /* Center the content horizontally */
+  height: 100%;
+  user-select: none;
+  
+}
+
+.recipe-card h3 {
+  margin: 0;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center the stars horizontally */
+}
+
+.rating i {
+  color: gold;
+  margin-right: 2px;
+}
+
+.recipe-card-drag-preview {
+  width: 100%; /* Set the width to fill the cell */
+}
+

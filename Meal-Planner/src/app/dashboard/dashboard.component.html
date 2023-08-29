@@ -1,0 +1,20 @@
+<div cdkDropListGroup>
+
+    <app-week-schedule (shoppingListUpdated)="onShoppingListUpdated($event)"></app-week-schedule>
+
+
+
+    <app-bookmark (isExpandedChange)="toggleShoppingList()"></app-bookmark>
+
+
+
+    <div [@shoppingListAnimation]="showShoppingList ? 'visible' : 'hidden'" class="shopping-list">
+ 
+    <app-shopping-list [ingredients]="shoppingListIngredients"></app-shopping-list>
+
+    </div>
+
+
+
+</div>
+

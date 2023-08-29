@@ -1,0 +1,14 @@
+<div class="dashboard">
+  <!-- Shopping List -->
+  <div class="shopping-list">
+    <h2>Shopping List</h2>
+    <p>Here's what you need to buy:</p>
+    <hr>
+    <ul>
+      <li *ngFor="let ingredient of ingredients">
+        {{ ingredient.amounts.value }} {{ ingredient.amounts.unit }} - {{ ingredient.name }}
+        <hr>
+      </li>
+    </ul>
+  </div>
+</div>
