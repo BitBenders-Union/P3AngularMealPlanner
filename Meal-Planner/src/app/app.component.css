@@ -1,0 +1,12 @@
+/* makes my content displayed below navbar*/
+
+router-outlet {
+    margin-top: 10vh; /* Adjust the value as needed to create space */
+  }
+  .main{
+    margin-top: 7vh;
+  }
+
+  .recipe-card-drag-preview {
+    width: 100%; /* Set the width to fill the cell */
+  }

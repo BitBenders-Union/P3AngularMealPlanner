@@ -1,0 +1,18 @@
+
+<div class="search-container">
+  <input
+    type="text"
+    [(ngModel)]="searchTerm"
+    (keyup)="onSearchInputChanged($event)"
+    (keyup.enter)="filterRecipes(searchTerm)"
+    placeholder="Search..."
+    class="search-bar"
+  />
+
+  <div class="recipes">
+    <div *ngFor="let recipe of filteredRecipes" class="recipe-card" (click)="goToRecipeDetail(recipe)">
+     <h3>{{ recipe.title }}</h3>
+      <!-- Render other recipe details here -->
+    </div>
+  </div>
+</div>

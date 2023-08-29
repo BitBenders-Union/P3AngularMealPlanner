@@ -1,0 +1,10 @@
+<div class="bookmark-container" [class.expanded]="isExpanded" *ngIf="!isHidden">
+  
+  <div class="expanded-content" [style.display]="isExpanded ? 'block' : 'none'">
+    <app-recipe-card></app-recipe-card>
+
+  </div>
+</div>
+<div class="arrow" (click)="toggleExpansion()" [ngStyle]="{ bottom: isExpanded ? 'calc(30vh)' : '0' }">
+  <i [ngClass]="isExpanded ? 'fa fa-arrow-down' : 'fa fa-arrow-up'"></i>
+</div>

@@ -1,0 +1,83 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@fortawesome/fontawesome-free/css/all.css';
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Open Sans', sans-serif;
+}
+
+:root{
+    --color-primary: rgb(57, 94, 102);
+    --color-secondary: rgb(146, 182, 177);
+    --color-text: rgb(74, 5, 28);
+
+    
+
+}
+
+body{
+    background-color: var(--color-primary);
+    color: var(--color-text);
+    font-size: 1.2rem;
+    margin: 0;
+    padding: 0;
+}
+
+  
+  .button {
+    background-color: var(--color-secondary);
+    border: none;
+    padding: 10px 20px;
+  }
+
+
+  h2 {
+    font-size: 30px;
+  }
+
+  h3 {
+    font-size: 26px;
+  }
+
+  p {
+    font-size: 22px;
+  }
+
+  li{
+    font-size: 22px;
+  }
+
+  .cdk-drag-preview {
+    cursor: grabbing;
+  }
+
+
+  .recipe-card-drag-preview {
+    width: 100%; /* Set the width to fill the cell */
+  }
+
+
+Apply custom scrollbar styling
+.scrollable-content {
+  overflow: scroll; /* Always show scrollbar, even when content fits */
+  max-height: 100vh; /* Set a maximum height for the scrollable element */
+}
+
+::-webkit-scrollbar {
+  width: 10px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color of the thumb */
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1; /* Color of the track */
+}
+
+html {
+  overflow: -moz-scrollbars-vertical; 
+  overflow-y: scroll;
+}

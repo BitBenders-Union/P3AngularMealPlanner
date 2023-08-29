@@ -1,0 +1,17 @@
+<app-navbar></app-navbar>
+
+
+
+<!-- <div class="main" [@routeAnimations]="prepareRoute(outlet)"> -->
+    <div class="main">
+
+        <div [@routeFadeAnimation]="getRouteAnimationState(o)">
+            <router-outlet #o="outlet"></router-outlet>
+        </div>
+    </div>
+    <!-- <router-outlet #outlet="outlet"></router-outlet> -->
+<!-- </div> -->
+
+
+
+<!-- The router-outlet directive is used to display the views of the different components. -->

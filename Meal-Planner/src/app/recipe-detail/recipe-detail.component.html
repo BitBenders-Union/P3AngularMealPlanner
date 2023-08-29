@@ -1,0 +1,44 @@
+<div class="recipe-detail-container">
+    <div *ngIf="recipe" class="recipe-card">
+
+      <h2>{{ recipe.title }}</h2>
+
+      <div class="rating">
+        <ng-container *ngFor="let star of starService.getRatingStars(recipe.rating)">
+          <i class="fas fa-star" *ngIf="star === true"></i>
+          <i class="fas fa-star-half-alt" *ngIf="star === 'half'"></i>
+        </ng-container>
+      </div>
+      
+      <div class="description">
+        <p>{{ recipe.description }}</p>
+      </div>
+
+      <div class="list">
+        <h3>Ingredients:</h3>
+        <ul>
+          <li *ngFor="let ingredient of recipe.ingredients">{{ ingredient.name }} - {{ ingredient.amounts.value }} {{ ingredient.amounts.unit }}</li>
+        </ul>
+      </div>
+
+      <div class="list">
+        <h3>Instructions</h3>
+        <h6 class="time">Cooking Time: {{recipe.cookingTime}} - Preparation time: {{recipe.preparationTime}}</h6>
+        <h6 class="servings">Servings: {{recipe.servings}}</h6>
+        <ul>
+          <li *ngFor="let instruction of recipe.instructions">{{ instruction.text }}</li>
+        </ul>
+        <div class="actions">
+          <button (click)="updateRecipe()" class="btn-update">Update Recipe</button>
+          <button (click)="deleteRecipe()" class="btn-delete">Delete Recipe</button>
+        </div>
+      </div>
+
+
+
+    </div>
+    <div *ngIf="!recipe" class="empty-message">
+      <p>No recipe found.</p>
+    </div>
+  </div>
+  

@@ -1,0 +1,34 @@
+.navbar {
+    background-color: var(--color-secondary); /* Use the secondary color for the background */
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 10px 0; /* Increase padding to make the navbar taller */
+    line-height: 2; /* Adjust line height for vertical centering */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    
+  }
+
+  .navbar ul {
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    font-size: larger;
+  }
+  
+  .navbar li {
+    margin: 0 20px;
+  }
+  
+  .navbar a {
+    color: var(--color-text); /* Text color */
+    text-decoration: none; /* Remove text decoration */
+    transition: color 0.3s; /* Transition effect for color change */
+  }
+  
+  .navbar a:hover {
+    color: var(--color-primary); /* Change text color on hover */
+  }

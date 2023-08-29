@@ -1,0 +1,334 @@
+[
+  {
+    "title": "Delicious Pasta",
+    "category": "Main Dish",
+    "description": "A classic pasta dish with tomato sauce and cheese.",
+    "preparationTime": 15,
+    "cookingTime": 25,
+    "servings": 4,
+    "rating": 4,
+    "ingredients": [
+      {
+        "name": "Pasta",
+        "amounts": {
+          "value": 200,
+          "unit": "g"
+        }
+      },
+      {
+        "name": "Tomato Sauce",
+        "amounts": {
+          "value": 1,
+          "unit": "cup"
+        }
+      },
+      {
+        "name": "Cheese",
+        "amounts": {
+          "value": 100,
+          "unit": "g"
+        }
+      }
+    ],
+    "instructions": [
+      {
+        "text": "Cook the pasta according to package instructions."
+      },
+      {
+        "text": "Heat the tomato sauce and mix in the cooked pasta."
+      },
+      {
+        "text": "Sprinkle cheese on top and serve."
+      }
+    ],
+    "deleted": false
+  },
+  {
+    "title": "Tasty Salad",
+    "category": "Salad",
+    "description": "A refreshing and healthy salad with lettuce, tomatoes, and cucumbers.",
+    "preparationTime": 10,
+    "cookingTime": 0,
+    "servings": 2,
+    "rating": 5,
+    "ingredients": [
+      { "name": "Lettuce", "amounts": { "value": 1, "unit": "head" } },
+      { "name": "Tomatoes", "amounts": { "value": 2, "unit": "pieces" } },
+      { "name": "Cucumbers", "amounts": { "value": 1, "unit": "piece" } },
+      { "name": "Dressing", "amounts": { "value": 2, "unit": "tbsp" } }
+    ],
+    "instructions": [
+      { "text": "Wash and chop the lettuce, tomatoes, and cucumbers." },
+      { "text": "Combine the vegetables and drizzle with dressing." },
+      { "text": "Toss and serve immediately." }
+    ],
+    "deleted": false
+  },
+  {
+    "title": "Homestyle Pizza",
+    "category": "Main Dish",
+    "description": "A classic pizza made with your favorite toppings.",
+    "preparationTime": 20,
+    "cookingTime": 15,
+    "servings": 6,
+    "rating": 4.5,
+    "ingredients": [
+      { "name": "Pizza Dough", "amounts": { "value": 1, "unit": "package" } },
+      { "name": "Pizza Sauce", "amounts": { "value": 0.75, "unit": "cup" } },
+      { "name": "Mozzarella Cheese", "amounts": { "value": 200, "unit": "g" } },
+      { "name": "Pepperoni", "amounts": { "value": 100, "unit": "g" } }
+    ],
+    "instructions": [
+      { "text": "Preheat the oven to 450°F (230°C)." },
+      { "text": "Roll out the pizza dough on a baking sheet." },
+      { "text": "Spread pizza sauce over the dough." },
+      { "text": "Sprinkle cheese and add your favorite toppings." },
+      { "text": "Bake for 12-15 minutes or until the crust is golden and cheese is bubbly." },
+      { "text": "Slice and serve." }
+    ],
+    "deleted": false
+  },
+  {
+    "title": "Creamy Chicken Alfredo",
+    "category": "Main Dish",
+    "description": "A rich and creamy pasta dish with chicken and Alfredo sauce.",
+    "preparationTime": 20,
+    "cookingTime": 30,
+    "servings": 4,
+    "rating": 4.2,
+    "ingredients": [
+      { "name": "Fettuccine Pasta", "amounts": { "value": 250, "unit": "g" } },
+      { "name": "Chicken Breast", "amounts": { "value": 2, "unit": "pieces" } },
+      { "name": "Heavy Cream", "amounts": { "value": 1, "unit": "cup" } },
+      { "name": "Parmesan Cheese", "amounts": { "value": 0.5, "unit": "cup" } }
+    ],
+    "instructions": [
+      { "text": "Cook the pasta according to package instructions." },
+      { "text": "Season chicken with salt and pepper, then cook until done." },
+      { "text": "In a separate pan, heat heavy cream and Parmesan cheese." },
+      { "text": "Toss cooked pasta and sliced chicken in the sauce." },
+      { "text": "Serve hot with additional Parmesan cheese." }
+    ],
+    "deleted": false
+  },
+  {
+    "title": "Classic Chocolate Cake",
+    "category": "Dessert",
+    "description": "A moist and decadent chocolate cake for all occasions.",
+    "preparationTime": 25,
+    "cookingTime": 35,
+    "servings": 8,
+    "rating": 4.8,
+    "ingredients": [
+      { "name": "All-Purpose Flour", "amounts": { "value": 1.5, "unit": "cups" } },
+      { "name": "Cocoa Powder", "amounts": { "value": 0.75, "unit": "cup" } },
+      { "name": "Baking Powder", "amounts": { "value": 1.5, "unit": "tsp" } },
+      { "name": "Sugar", "amounts": { "value": 1.5, "unit": "cups" } },
+      { "name": "Butter", "amounts": { "value": 0.75, "unit": "cup" } },
+      { "name": "Eggs", "amounts": { "value": 3, "unit": "pieces" } },
+      { "name": "Vanilla Extract", "amounts": { "value": 1, "unit": "tsp" } },
+      { "name": "Milk", "amounts": { "value": 1, "unit": "cup" } }
+    ],
+    "instructions": [
+      { "text": "Preheat the oven to 350°F (175°C). Grease and flour two 9-inch round cake pans." },
+      { "text": "In a mixing bowl, combine flour, cocoa powder, and baking powder." },
+      { "text": "In a separate bowl, cream butter and sugar until light and fluffy." },
+      { "text": "Beat in eggs, one at a time, and vanilla extract." },
+      { "text": "Gradually add dry ingredients and milk, alternating between the two." },
+      { "text": "Divide the batter between the prepared pans and bake for 30-35 minutes." },
+      { "text": "Let the cakes cool in the pans for 10 minutes, then transfer to a wire rack to cool completely." },
+      { "text": "Frost and decorate the cake as desired." }
+    ],
+    "deleted": false
+  },
+  {
+    "title": "Fresh Fruit Smoothie",
+    "category": "Beverage",
+    "description": "A refreshing and healthy smoothie made with a variety of fresh fruits.",
+    "preparationTime": 10,
+    "cookingTime": 0,
+    "servings": 2,
+    "rating": 4.5,
+    "ingredients": [
+      { "name": "Banana", "amounts": { "value": 1, "unit": "piece" } },
+      { "name": "Strawberries", "amounts": { "value": 1, "unit": "cup" } },
+      { "name": "Blueberries", "amounts": { "value": 0.5, "unit": "cup" } },
+      { "name": "Yogurt", "amounts": { "value": 1, "unit": "cup" } },
+      { "name": "Honey", "amounts": { "value": 2, "unit": "tbsp" } },
+      { "name": "Ice Cubes", "amounts": { "value": 1, "unit": "cup" } }
+    ],
+    "instructions": [
+      { "text": "Combine banana, strawberries, blueberries, yogurt, honey, and ice cubes in a blender." },
+      { "text": "Blend until smooth and creamy." },
+      { "text": "Pour into glasses and serve immediately." }
+    ],
+    "deleted": false
+  },
+  {
+    "title": "Spaghetti Carbonara",
+    "category": "Main Dish",
+    "description": "A classic Italian pasta dish with eggs, cheese, and pancetta.",
+    "preparationTime": 15,
+    "cookingTime": 20,
+    "servings": 4,
+    "rating": 4.3,
+    "ingredients": [
+      { "name": "Spaghetti", "amounts": { "value": 250, "unit": "g" } },
+      { "name": "Pancetta", "amounts": { "value": 150, "unit": "g" } },
+      { "name": "Eggs", "amounts": { "value": 3, "unit": "pieces" } },
+      { "name": "Pecorino Romano Cheese", "amounts": { "value": 0.75, "unit": "cup" } },
+      { "name": "Black Pepper", "amounts": { "value": 0.5, "unit": "tsp" } }
+    ],
+    "instructions": [
+      { "text": "Cook the spaghetti according to package instructions." },
+      { "text": "In a bowl, whisk eggs, grated Pecorino Romano cheese, and black pepper." },
+      { "text": "In a pan, cook diced pancetta until crispy." },
+      { "text": "Drain the cooked pasta and quickly toss it with the cooked pancetta." },
+      { "text": "Remove from heat and immediately mix in the egg mixture." },
+      { "text": "Toss until the eggs coat the pasta and create a creamy sauce." },
+      { "text": "Serve immediately with additional cheese and black pepper." }
+    ],
+    "deleted": false
+  },
+  {
+    "title": "Grilled Chicken Sandwich",
+    "category": "Sandwich",
+    "description": "A delicious and satisfying grilled chicken sandwich with fresh veggies and sauce.",
+    "preparationTime": 15,
+    "cookingTime": 15,
+    "servings": 2,
+    "rating": 4.7,
+    "ingredients": [
+      { "name": "Boneless Chicken Breast", "amounts": { "value": 2, "unit": "pieces" } },
+      { "name": "Hamburger Buns", "amounts": { "value": 2, "unit": "pieces" } },
+      { "name": "Lettuce", "amounts": { "value": 4, "unit": "leaves" } },
+      { "name": "Tomato", "amounts": { "value": 1, "unit": "piece" } },
+      { "name": "Onion", "amounts": { "value": 1, "unit": "piece" } },
+      { "name": "Mayonnaise", "amounts": { "value": 2, "unit": "tbsp" } },
+      { "name": "Mustard", "amounts": { "value": 1, "unit": "tbsp" } },
+      { "name": "Cheese", "amounts": { "value": 2, "unit": "slices" } }
+    ],
+    "instructions": [
+      { "text": "Preheat the grill to medium-high heat." },
+      { "text": "Season chicken breasts with salt and pepper." },
+      { "text": "Grill the chicken for 6-8 minutes per side, until fully cooked." },
+      { "text": "Toast the hamburger buns on the grill for a minute." },
+      { "text": "Spread mayonnaise and mustard on the buns." },
+      { "text": "Assemble the sandwiches with lettuce, tomato, onion, cheese, and grilled chicken." },
+      { "text": "Serve hot with your favorite side." }
+    ],
+    "deleted": false
+  },
+  {
+    "title": "Refreshing Lemonade",
+    "category": "Beverage",
+    "description": "A classic homemade lemonade with a hint of citrus and sweetness.",
+    "preparationTime": 10,
+    "cookingTime": 0,
+    "servings": 4,
+    "rating": 4.6,
+    "ingredients": [
+      { "name": "Lemons", "amounts": { "value": 4, "unit": "pieces" } },
+      { "name": "Sugar", "amounts": { "value": 0.75, "unit": "cup" } },
+      { "name": "Water", "amounts": { "value": 4, "unit": "cups" } }
+    ],
+    "instructions": [
+      { "text": "Juice the lemons and strain the juice." },
+      { "text": "In a pitcher, dissolve sugar in warm water." },
+      { "text": "Add lemon juice and cold water, then stir well." },
+      { "text": "Serve over ice with a lemon slice." }
+    ],
+    "deleted": false
+  },
+  {
+    "title": "Vegetable Stir-Fry",
+    "category": "Main Dish",
+    "description": "A quick and flavorful vegetable stir-fry with a savory sauce.",
+    "preparationTime": 15,
+    "cookingTime": 10,
+    "servings": 3,
+    "rating": 4.4,
+    "ingredients": [
+      { "name": "Mixed Vegetables", "amounts": { "value": 4, "unit": "cups" } },
+      { "name": "Tofu", "amounts": { "value": 200, "unit": "g" } },
+      { "name": "Soy Sauce", "amounts": { "value": 2, "unit": "tbsp" } },
+      { "name": "Sesame Oil", "amounts": { "value": 1, "unit": "tbsp" } },
+      { "name": "Ginger", "amounts": { "value": 1, "unit": "tsp" } },
+      { "name": "Garlic", "amounts": { "value": 2, "unit": "cloves" } },
+      { "name": "Cornstarch", "amounts": { "value": 1, "unit": "tsp" } }
+    ],
+    "instructions": [
+      { "text": "Cut tofu into cubes and press to remove excess moisture." },
+      { "text": "In a bowl, mix soy sauce, sesame oil, ginger, and minced garlic." },
+      { "text": "Add tofu to the marinade and let it sit for 10 minutes." },
+      { "text": "Heat a pan and add marinated tofu, cooking until browned." },
+      { "text": "Remove tofu from the pan and set aside." },
+      { "text": "Stir-fry mixed vegetables in the same pan until crisp-tender." },
+      { "text": "In a small bowl, mix cornstarch and water to make a slurry." },
+      { "text": "Return tofu to the pan and add the slurry, stirring until sauce thickens." },
+      { "text": "Serve over rice or noodles." }
+    ],
+    "deleted": false
+  },
+  {
+    "title": "Homemade Pizza Dough",
+    "category": "Bread",
+    "description": "Make your own pizza dough from scratch with this easy recipe.",
+    "preparationTime": 15,
+    "cookingTime": 0,
+    "servings": 2,
+    "rating": 4.9,
+    "ingredients": [
+      { "name": "Warm Water", "amounts": { "value": 1, "unit": "cup" } },
+      { "name": "Active Dry Yeast", "amounts": { "value": 2, "unit": "tsp" } },
+      { "name": "Sugar", "amounts": { "value": 1, "unit": "tsp" } },
+      { "name": "All-Purpose Flour", "amounts": { "value": 2.5, "unit": "cups" } },
+      { "name": "Olive Oil", "amounts": { "value": 2, "unit": "tbsp" } },
+      { "name": "Salt", "amounts": { "value": 0.5, "unit": "tsp" } }
+    ],
+    "instructions": [
+      { "text": "In a bowl, combine warm water, yeast, and sugar. Let it sit for 5-10 minutes." },
+      { "text": "Add flour, olive oil, and salt to the yeast mixture." },
+      { "text": "Stir until a dough forms, then knead on a floured surface for a few minutes." },
+      { "text": "Place the dough in a lightly greased bowl, cover with a damp cloth, and let it rise for 1-2 hours." },
+      { "text": "Punch down the dough and shape it into a pizza crust on a baking sheet." },
+      { "text": "Add your favorite toppings and bake in a preheated oven at 450°F (230°C) for 12-15 minutes." },
+      { "text": "Slice and enjoy!" }
+    ],
+    "deleted": false
+  },
+  {
+    "title": "Creamy Tomato Soup",
+    "category": "Soup",
+    "description": "A comforting and creamy tomato soup made with ripe tomatoes and herbs.",
+    "preparationTime": 15,
+    "cookingTime": 25,
+    "servings": 4,
+    "rating": 4.7,
+    "ingredients": [
+      { "name": "Ripe Tomatoes", "amounts": { "value": 6, "unit": "pieces" } },
+      { "name": "Onion", "amounts": { "value": 1, "unit": "piece" } },
+      { "name": "Garlic", "amounts": { "value": 2, "unit": "cloves" } },
+      { "name": "Vegetable Broth", "amounts": { "value": 4, "unit": "cups" } },
+      { "name": "Heavy Cream", "amounts": { "value": 0.5, "unit": "cup" } },
+      { "name": "Basil", "amounts": { "value": 1, "unit": "tbsp" } },
+      { "name": "Olive Oil", "amounts": { "value": 2, "unit": "tbsp" } }
+    ],
+    "instructions": [
+      { "text": "Heat olive oil in a pot and sauté chopped onion and minced garlic until fragrant." },
+      { "text": "Add chopped tomatoes and cook for a few minutes." },
+      { "text": "Pour in vegetable broth and bring to a boil." },
+      { "text": "Reduce heat and let the soup simmer for 15-20 minutes." },
+      { "text": "Use an immersion blender to puree the soup until smooth." },
+      { "text": "Stir in heavy cream and chopped basil." },
+      { "text": "Season with salt and pepper to taste." },
+      { "text": "Serve hot with a drizzle of olive oil and crusty bread." }
+    ],
+    "deleted": false
+  }
+]
+
+
+
+
+

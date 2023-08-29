@@ -1,0 +1,92 @@
+.week-schedule {
+  margin: 10px 50px auto;
+  display: grid;
+  grid-template-columns: auto repeat(7, 1fr);
+  grid-template-rows: 50px minmax(125px, 1fr) minmax(125px, 1fr) minmax(125px, 1fr);
+  grid-gap: 10px;
+}
+
+.cell {
+  padding: 5px;
+  text-align: center;
+  min-height: 17vh;
+  overflow: auto; /* or 'hidden' if you prefer to hide overflow */
+}
+
+
+.empty-cell {
+  border: none;
+}
+
+.weekday {
+  font-weight: bold;
+  border: none;
+  align-self: center;
+  display: flex; /* Use flexbox */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+}
+
+
+.time-slot {
+  font-weight: bold;
+  border: none;
+  align-self: center;
+  display: flex; /* Use flexbox */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+}
+
+
+.event {
+  background-color: var(--color-secondary);
+  height: 100%; /* Expand event to fill its cell's height */
+}
+
+.drop-zone {
+  border: 2px dashed #ccc;
+  min-height: 60px; /* Adjust as needed */
+}
+
+.drop-area{
+  max-height: 120px;
+  overflow: hidden;
+}
+
+.shopping-list{
+  max-height: 120px;
+  overflow: hidden;
+}
+
+.fa-star{
+  color: gold;
+}
+
+/* Add this CSS to your component's styles or your global styles */
+.delete-button {
+  margin-top: 10px;
+  border: 1px solid var(--color-text);
+  position: relative;
+  background-color: var(--color-secondary);
+  color: var(--color-text); /* You can change the color as needed */
+  cursor: pointer;
+  transition: opacity 0.3s ease-in-out;
+  padding: 5px 10px;
+  border-radius: 15px; /* Adjust this value for the desired roundness */
+  box-shadow: none;
+  font-size: large;
+  font-weight: bold;
+}
+
+.delete-button.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.recipe-card-drag-preview {
+  width: 100%; /* Set the width to fill the cell */
+}
+
+.rating{
+  color: gold;
+}

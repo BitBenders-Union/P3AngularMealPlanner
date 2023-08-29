@@ -1,0 +1,50 @@
+<div class="week-schedule">
+  <div class="cell empty-cell"></div> <!-- Top-left corner cell -->
+
+  <!-- Weekdays -->
+  <div class="cell weekday" *ngFor="let day of days">{{ day }}</div>
+
+  <!-- Time slots and events -->
+  <ng-container *ngFor="let timeSlot of timeSlots; let colIndex = index">
+    <!-- Time slot -->
+    <div class="cell time-slot">{{ timeSlot }}</div>
+
+    <!-- Events -->
+    <div
+      cdkDropList
+      [cdkDropListData]="cellContents[colIndex]"
+      (cdkDropListDropped)="Drop($event, rowIndex, colIndex)"
+      class="cell event drop-area"
+      *ngFor="let day of days; let rowIndex = index"
+    >
+      <ng-container *ngIf="cellContents[colIndex] && cellContents[colIndex][rowIndex] && !cellContents[colIndex][rowIndex]?.deleted; else emptyCell">
+        <div 
+        class="recipe-card" 
+        cdkDrag 
+        [ngClass]="{ 'recipe-card-drag-preview': isDragging }"
+        (cdkDragStarted)="isDragging = true"
+        (cdkDragEnded)="isDragging = false"
+        >
+          <h3>{{ cellContents[colIndex][rowIndex].title }}</h3>
+          <div class="rating">
+            <ng-container *ngFor="let star of starService.getRatingStars(cellContents[colIndex][rowIndex]?.rating || 0)">
+              <i class="fas fa-star" *ngIf="star === true"></i>
+              <i class="fas fa-star-half-alt" *ngIf="star === 'half'"></i>
+            </ng-container>
+          </div>
+          
+          <!-- <div class="rating">
+            <i
+              class="fas fa-star"
+              *ngFor="let _ of getRatingStars(cellContents[colIndex][rowIndex]?.rating || 0)"
+            ></i>
+          </div> -->
+          <button class="delete-button" (click)="deleteRecipe(rowIndex, colIndex)" [class.hidden]="cellContents[colIndex][rowIndex].deleted">Remove</button>
+        </div>
+      </ng-container>
+      <ng-template #emptyCell>
+        <!-- Empty cell content -->
+      </ng-template>
+    </div>
+  </ng-container>
+</div>

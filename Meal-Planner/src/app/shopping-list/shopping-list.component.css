@@ -1,0 +1,33 @@
+.shopping-list {
+
+  padding: 10px;
+    margin-top: 20px;
+    border-radius: 5px;
+    background-color: var(--color-primary);
+    margin-top: 20px;
+    margin-left: 8%;
+  }
+  
+  .shopping-list h2 {
+    margin-bottom: 10px;
+  }
+  
+  .shopping-list p {
+    margin-bottom: 10px;
+  }
+  
+  .shopping-list ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .shopping-list li {
+    margin-bottom: 5px;
+  }
+
+  hr {
+    border: 1px solid var(--color-secondary);
+    margin: 10px 0;
+    width: 30%;
+  }
+  

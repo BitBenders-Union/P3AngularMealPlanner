@@ -1,0 +1,41 @@
+.about-container {
+    max-width: 800px;
+    margin: 10vh auto;
+    padding: 20px;
+    background-color: var(--color-secondary);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    height: 85vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+  }
+  
+  h2 {
+    font-size: 30px;
+    margin-bottom: 10px;
+  }
+  
+  h3 {
+    font-size: 24px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    font-size: 20px;
+    line-height: 1.5;
+    margin-bottom: 30px;
+  }
+  
+  a {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+
