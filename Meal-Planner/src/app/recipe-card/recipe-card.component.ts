@@ -24,12 +24,12 @@ export class RecipeCardComponent implements OnInit{
     this.getRecipes(); // method that fetches recipes from API
   }
 
-getRecipes(): void {
-  // fetch recipes from API using a subscription, should add error handling
-  this.recipeService.getRecipes()
-    .subscribe(recipes => this.recipes = recipes);
+  getRecipes(): void {
+    // fetch recipes from API using a subscription, should add error handling
+    this.recipeService.getRecipes()
+      .subscribe(recipes => this.recipes = recipes);
+      
     
-  
-}
+  }
 
 }

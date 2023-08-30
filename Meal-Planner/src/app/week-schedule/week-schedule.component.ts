@@ -1,9 +1,10 @@
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Recipe, Ingredient } from '../Interfaces';
+import { Recipe, Ingredient, WeekData } from '../Interfaces';
 import { WeekScheduleService } from '../week-schedule.service';
 import { StarService } from '../star.service';
 import { RecipeServiceService } from '../recipe-service.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-week-schedule',
@@ -24,11 +25,27 @@ export class WeekScheduleComponent implements OnInit {
     Array(this.days.length).fill(null)
   );
 
+  userID: number = 1;
+
+  test: WeekData[] = [];
+  savedRecipes: Recipe[] = [];
+
+
   constructor(private weekScheduleService: WeekScheduleService, public starService: StarService) {}
 
   ngOnInit(): void {
     this.loadCellContents(); // Load cell contents when the component initializes
-  }
+
+    // get week schedule data from user id
+    // remember to change to actual user ID instead of 1
+    this.getScheduleData(this.userID)
+
+
+
+      
+
+}
+
 
 
 
@@ -98,4 +115,37 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
       this.cellContents = data;
     });
   }
+
+
+  // get week schedule data from user id
+  // stores it in test
+  getScheduleData(userID: number): void {
+    this.weekScheduleService.getWeekScheduleData(userID)
+        .subscribe({
+            next: (data) => {
+              this.test = data
+              const recipeIDs = data.map((item: WeekData) => item.recipeId);
+              this.getRecipes(recipeIDs);
+            },
+            error: (err) => console.log(err),
+        })
+  }
+
+  // gets recipes from an array of recipe ids
+  // is called in getScheduleData
+  // stores it in savedRecipes
+  getRecipes(recipIds: number[]): void{
+    this.weekScheduleService.getScheduledRecipes(recipIds)
+        .subscribe({
+            next: (data) => {
+              console.log(data)
+              this.savedRecipes = data;
+            },
+            error: (err) => console.log(err),
+        })
+  }
+
+
+
+
 }
