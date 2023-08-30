@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, ReactiveFormsModule  } from '@angular/forms';
-import { CreateRecipeService } from '../create-recipe.service';
 import { Recipe, CreateRecipe } from '../Interfaces';
+import { RecipeServiceService } from '../recipe-service.service';
 
 @Component({
   selector: 'app-create-recipe',
@@ -19,7 +19,7 @@ export class CreateRecipeComponent {
   // since ingredients and instructions are arrays, we need to initialize them as an array instead of single values
   // we also inject the createRecipeService so we can fetch from our API
   constructor(private formBuilder: FormBuilder,
-    private createRecipeService: CreateRecipeService 
+    private recipeService: RecipeServiceService
     ) {
     this.form = this.formBuilder.group({
       title: 'test',
@@ -127,7 +127,7 @@ export class CreateRecipeComponent {
         deleted: false
       };
 
-      this.createRecipeService.createRecipe(formattedRecipe).subscribe({
+      this.recipeService.createRecipe(formattedRecipe).subscribe({
         next: response => {
           console.log('Recipe created successfully', response);
           this.form.reset();

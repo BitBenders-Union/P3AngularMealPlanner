@@ -3,6 +3,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Recipe, Ingredient } from '../Interfaces';
 import { WeekScheduleService } from '../week-schedule.service';
 import { StarService } from '../star.service';
+import { RecipeServiceService } from '../recipe-service.service';
 
 @Component({
   selector: 'app-week-schedule',
@@ -23,11 +24,7 @@ export class WeekScheduleComponent implements OnInit {
     Array(this.days.length).fill(null)
   );
 
-  constructor(
-    private weekScheduleService: WeekScheduleService, // WeekScheduleService for data handling
-    public starService: StarService // StarService for rating stars
-  ) {}
-
+  constructor(private weekScheduleService: WeekScheduleService, public starService: StarService) {}
 
   ngOnInit(): void {
     this.loadCellContents(); // Load cell contents when the component initializes
