@@ -14,7 +14,7 @@ const routes: Routes = [
   {path: 'dashboard', component: DashboardComponent, data: {animation: 'fader'}},
   {path: 'search', component: SearchComponent, data: {animation: 'fader'}},
   {path: 'about', component: AboutComponent, data: {animation: 'fader'}},
-  {path: 'recipe-detail/:id', component: RecipeDetailComponent, data: {animation: 'fader'} }, // New route
+  {path: 'recipe-detail/:id', component: RecipeDetailComponent, data: {animation: 'fader'} },
   {path: 'create-recipe', component: CreateRecipeComponent, data: {animation: 'fader'}},
   {path: 'forms-test', component: FormsTestComponent, data: {animation: 'fader'}},
   {path: 'update/:id', component: UpdateRecipeComponent, data: {animation: 'fader'}},

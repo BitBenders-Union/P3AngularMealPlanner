@@ -9,7 +9,6 @@
     <!-- Time slot -->
     <div class="cell time-slot">{{ timeSlot }}</div>
 
-    <!-- Events -->
     <div
       cdkDropList
       [cdkDropListData]="cellContents[colIndex]"
@@ -33,12 +32,6 @@
             </ng-container>
           </div>
           
-          <!-- <div class="rating">
-            <i
-              class="fas fa-star"
-              *ngFor="let _ of getRatingStars(cellContents[colIndex][rowIndex]?.rating || 0)"
-            ></i>
-          </div> -->
           <button class="delete-button" (click)="deleteRecipe(rowIndex, colIndex)" [class.hidden]="cellContents[colIndex][rowIndex].deleted">Remove</button>
         </div>
       </ng-container>

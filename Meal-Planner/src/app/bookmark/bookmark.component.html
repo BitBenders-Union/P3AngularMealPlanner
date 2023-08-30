@@ -1,3 +1,21 @@
+
+
+
+
+
+<!-- 
+  [class.expanded]="isExpanded" *ngIf="!isHidden">
+  if isExpanded is true, add the class 'expanded' to the div
+  if isHidden is false, show the div
+
+  [style.display]="isExpanded ? 'block' : 'none'
+  style display is block if isExpanded is true, else display is none  
+
+ -->
+
+
+
+
 <div class="bookmark-container" [class.expanded]="isExpanded" *ngIf="!isHidden">
   
   <div class="expanded-content" [style.display]="isExpanded ? 'block' : 'none'">
@@ -5,6 +23,25 @@
 
   </div>
 </div>
+
+
+
+
+
 <div class="arrow" (click)="toggleExpansion()" [ngStyle]="{ bottom: isExpanded ? 'calc(30vh)' : '0' }">
   <i [ngClass]="isExpanded ? 'fa fa-arrow-down' : 'fa fa-arrow-up'"></i>
 </div>
+
+<!-- 
+
+[ngStyle]="{ bottom: isExpanded ? 'calc(30vh)' : '0' }"
+when isExpanded is true, bottom is 30vh, else bottom is 0
+giving the effect of the arrow moving up and down
+
+[ngClass]="isExpanded ? 'fa fa-arrow-down' : 'fa fa-arrow-up'"
+changes the class of the arrow depending on the value of isExpanded
+and the class changes the direction of the arrow
+
+true is up, false is down
+
+ -->
