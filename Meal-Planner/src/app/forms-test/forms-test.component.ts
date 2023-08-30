@@ -9,6 +9,10 @@ import { Recipe } from '../Interfaces';
   styleUrls: ['./forms-test.component.css']
 })
 export class FormsTestComponent implements OnInit {
+
+  // this component is used as a testing playground and is not rendered in the app
+
+
   updateForm: FormGroup;
   recipe: Recipe | undefined; // Initialize ingredients as an empty array
 

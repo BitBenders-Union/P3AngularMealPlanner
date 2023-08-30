@@ -9,7 +9,7 @@ import { CreateRecipe } from './Interfaces';
 })
 export class CreateRecipeService {
 
-  private url = 'https://localhost:7268/api/Recipe';
+  private url = 'https://localhost:7268/api/Recipe'; // url for the API
 
   constructor(private http: HttpClient) {}
 

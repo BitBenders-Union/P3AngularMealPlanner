@@ -1,3 +1,11 @@
+<!-- 
+  this component is used to display all the recipes as a card
+  it also adds drag and drop functionality to the cards
+  it is rendered in the bookmark component
+
+  we also use a getRatingStars method from the starService to display the rating of the recipe as stars
+ -->
+
 <div class="recipe-card-container" cdkDropList [cdkDropListData]="recipes" *ngIf="recipes">
   <div class="recipe-card-wrapper">
     <div class="recipe-card" *ngFor="let recipe of recipes" cdkDrag [cdkDragData]="recipe" >

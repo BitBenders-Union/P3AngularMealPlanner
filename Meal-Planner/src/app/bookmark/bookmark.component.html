@@ -1,3 +1,21 @@
+
+
+
+
+
+<!-- 
+  [class.expanded]="isExpanded" *ngIf="!isHidden">
+  if isExpanded is true, add the class 'expanded' to the div
+  if isHidden is false, show the div
+
+  [style.display]="isExpanded ? 'block' : 'none'
+  style display is block if isExpanded is true, else display is none  
+
+ -->
+
+
+
+
 <div class="bookmark-container" [class.expanded]="isExpanded" *ngIf="!isHidden">
   
   <div class="expanded-content" [style.display]="isExpanded ? 'block' : 'none'">
