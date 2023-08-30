@@ -17,7 +17,7 @@ export class RecipeDetailComponent implements OnInit {
   // initially it is set to null
   recipe: Recipe | null = null;
 
-  // Inject ActivatedRoute and RecipeServiceService
+  // Inject services and routes
   constructor(private route: ActivatedRoute, private recipeService: RecipeServiceService, public starService: StarService, private router: Router) {}
 
 
@@ -44,15 +44,17 @@ export class RecipeDetailComponent implements OnInit {
     });
   }
 
+  // routes to the update page using the recipe id
   updateRecipe() {
     if (this.recipe) {
-      // Implement logic to open a modal or navigate to an update form
-      // Pass this.recipe.id to the form to identify the recipe to update
-      console.log(this.recipe.id);
+
       this.router.navigate(['/update', this.recipe.id]);
     }
   }
 
+
+  // deletes the recipe
+  // navigates back to the search page
   deleteRecipe() {
     if (this.recipe) {
       if (confirm('Are you sure you want to delete this recipe?')) {

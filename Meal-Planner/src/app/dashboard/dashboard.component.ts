@@ -17,49 +17,52 @@ import { WeekScheduleService } from '../week-schedule.service'; // Import the se
   ],
 })
 export class DashboardComponent {
-  shoppingListIngredients: Ingredient[] = [];
+  shoppingListIngredients: Ingredient[] = []; // List of ingredients we send to the shoppingList componenet
   showShoppingList = true;
 
   constructor(private weekScheduleService: WeekScheduleService) {} // Inject the service
 
+
+  // This function is called when the shopping list needs to be updated with new ingredients.
+  // It takes an array of Ingredient objects as a parameter.
+
   onShoppingListUpdated(ingredients: Ingredient[]) {
+
+    // Loop through the ingredients to check if they are already present in the shopping list
     ingredients.forEach(newIngredient => {
+      
+      // Find the index of the existing ingredient in the shopping list
+      // If the ingredient is not in the shopping list, the index will be -1
       const existingIngredientIndex = this.shoppingListIngredients.findIndex(
         existingIngredient => existingIngredient.name === newIngredient.name
       );
 
+      // If the ingredient already exists in the shopping list
       if (existingIngredientIndex !== -1) {
-        // Subtract the ingredient amount from shopping list
+        
+        // Add the amount of the new ingredient to the existing ingredient's amount
         this.shoppingListIngredients[existingIngredientIndex].amounts.value += newIngredient.amounts.value;
       } else {
-        // Create a new instance of the ingredient and add it to the list
+        
+        // If the ingredient is not already in the shopping list, create a new entry
         const shoppingListIngredient: Ingredient = {
           name: newIngredient.name,
           amounts: { ...newIngredient.amounts, value: newIngredient.amounts.value },
         };
+        
+        // Add the new ingredient to the shopping list
         this.shoppingListIngredients.push(shoppingListIngredient);
       }
     });
 
-    // Remove ingredients with 0 amount
+    // Remove ingredients with 0 amount from the shopping list
     this.shoppingListIngredients = this.shoppingListIngredients.filter(
       ingredient => ingredient.amounts.value > 0
     );
   }
 
-  deleteRecipe(rowIndex: number, colIndex: number): void {
-    // ... Delete logic ...
-
-    this.saveCellContents();
-  }
-
-  private saveCellContents(): void {
-    // Assuming you have the 'cellContents' variable accessible
-    this.weekScheduleService
-      .updateData(this.saveCellContents)
-      .subscribe(() => console.log('Data saved successfully'));
-  }
-
+  // the bookmark component emits a bool telling if the bookmark component is expanded or not
+  // this function toggles the shopping list hiding it when the bookmark component is expanded
   toggleShoppingList() {
     this.showShoppingList = !this.showShoppingList;
   }

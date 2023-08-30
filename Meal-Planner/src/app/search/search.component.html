@@ -1,4 +1,4 @@
-
+<!-- searchbar -->
 <div class="search-container">
   <input
     type="text"
@@ -8,7 +8,7 @@
     placeholder="Search..."
     class="search-bar"
   />
-
+<!-- renders recipes based on searchbar -->
   <div class="recipes">
     <div *ngFor="let recipe of filteredRecipes" class="recipe-card" (click)="goToRecipeDetail(recipe)">
      <h3>{{ recipe.title }}</h3>
