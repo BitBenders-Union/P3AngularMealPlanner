@@ -24,12 +24,7 @@ export class WeekScheduleComponent implements OnInit {
     Array(this.days.length).fill(null)
   );
 
-  constructor(
-    private weekScheduleService: WeekScheduleService, // WeekScheduleService for data handling
-    private recipeService: RecipeServiceService, // RecipeService for fetching recipes
-    public starService: StarService // StarService for rating stars
-  ) {}
-
+  constructor(private weekScheduleService: WeekScheduleService, public starService: StarService) {}
 
   ngOnInit(): void {
     this.loadCellContents(); // Load cell contents when the component initializes
