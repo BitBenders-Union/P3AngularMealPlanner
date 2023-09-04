@@ -42,7 +42,7 @@ export class WeekScheduleComponent implements OnInit {
 
 
 
-      
+
 
 }
 
