@@ -2,7 +2,10 @@
 {
     public class Rating
     {
-        public int RatingID { get; set; }
+        public int Id { get; set; }
         public float Score { get; set; }
+        public ICollection<RecipeRating> RecipeRating { get; set; }
+
+
     }
 }

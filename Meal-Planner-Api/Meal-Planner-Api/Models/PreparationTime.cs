@@ -2,7 +2,9 @@
 {
     public class PreparationTime
     {
-        public int PreparationTimeID { get; set; }
+        public int Id { get; set; }
         public int Minutes { get; set; }
+        public ICollection<RecipePreparationTime> RecipePreparationTime { get; set; }
+
     }
 }

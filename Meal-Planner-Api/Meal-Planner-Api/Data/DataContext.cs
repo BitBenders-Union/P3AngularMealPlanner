@@ -28,6 +28,7 @@ namespace Meal_Planner_Api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
+
         }
 
 
