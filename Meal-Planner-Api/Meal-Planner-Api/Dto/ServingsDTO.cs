@@ -1,9 +1,8 @@
 ﻿namespace Meal_Planner_Api.Dto
 {
-    public class AmountDTO
+    public class ServingsDTO
     {
         public int Id { get; set; }
-        public float Quantity { get; set; }
-
+        public int Quantity { get; set; }
     }
 }

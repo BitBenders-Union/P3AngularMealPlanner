@@ -8,14 +8,41 @@ namespace Meal_Planner_Api.MappingHelper
     {
         public MappingProfile() 
         {
-            CreateMap<Recipe, RecipeDTO>();
-            CreateMap<RecipeDTO, Recipe>();
+            CreateMap<Amount, AmountDTO>();
+            CreateMap<AmountDTO, Amount>();
+
+            CreateMap<Category, CategoryDTO>();
+            CreateMap<CategoryDTO, Category>();
 
             CreateMap<Ingredient, IngredientDTO>();
             CreateMap<IngredientDTO, Ingredient>();
 
-            CreateMap<Amount, AmountDTO>();
-            CreateMap<AmountDTO, Amount>();
+            CreateMap<Instruction, InstructionDTO>();
+            CreateMap<InstructionDTO, Instruction>();
+
+            CreateMap<PreparationTime, PreparationTimeDTO>();
+            CreateMap<PreparationTimeDTO, PreparationTime>();
+
+            CreateMap<Rating, RatingDTO>();
+            CreateMap<RatingDTO, Rating>();
+
+
+            CreateMap<Recipe, RecipeDTO>();
+            CreateMap<RecipeDTO, Recipe>();
+
+            CreateMap<RecipeSchedule, RecipeScheduleDTO>();
+            CreateMap<RecipeScheduleDTO, RecipeScheduleDTO>();
+
+            CreateMap<Servings, ServingsDTO>();
+            CreateMap<ServingsDTO, ServingsDTO>();
+
+            CreateMap<Unit, UnitDTO>();
+            CreateMap<UnitDTO, Unit>();
+
+            CreateMap<User, UserDTO>();
+            CreateMap<UserDTO, User>();
+
+
         }
     }
 }

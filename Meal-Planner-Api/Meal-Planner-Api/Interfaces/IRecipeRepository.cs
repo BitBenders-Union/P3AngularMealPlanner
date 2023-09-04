@@ -6,6 +6,11 @@ namespace Meal_Planner_Api.Interfaces
     {
         ICollection<Recipe> GetRecipes();
         Recipe GetRecipe(int id);
+        Recipe GetRecipe(string name);
+        float GetRecipeRating(int recipeId);
+        bool RecipeExists(int recipeId);
+
+
 
 
     }

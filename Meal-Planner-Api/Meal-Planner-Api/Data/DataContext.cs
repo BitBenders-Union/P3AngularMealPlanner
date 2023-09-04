@@ -34,7 +34,9 @@ namespace Meal_Planner_Api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-
+            // tell what keys to bind on
+            // then tell that first key is many to many & what fk they have
+            // the tell second key is many to many & what fk they have
 
             modelBuilder.Entity<RecipeCookingTime>()
                 .HasKey(rc => new { rc.RecipeID, rc.CookingTimeID });

@@ -17,12 +17,38 @@ namespace Meal_Planner_Api.Repositories
         public Recipe GetRecipe(int id)
         {
 
-            return _context.Recipes.Where(x => x.Id == id).FirstOrDefault();
+            return _context.Recipes.FirstOrDefault(x => x.Id == id); // finds first value in recipe where recipe.id is the sam as input id
+        }
+
+        public Recipe GetRecipe(string name)
+        {
+            return _context.Recipes.FirstOrDefault(x => x.Title == name); // finds first value in recipe where recipe.title is the sam as input name
+
+        }
+
+        public float GetRecipeRating(int recipeId)
+        {
+            var recipe = _context.Recipes.Include(rr => rr.RecipeRating).FirstOrDefault(r => r.Id == recipeId); // finds the recipe from id
+
+            if (recipe != null)
+            {
+                // get average rating
+                float avgRating = recipe.RecipeRating.Average(rr => rr.Rating.Score);
+                return avgRating;
+            }
+            else return 0.0f; // if recipe doesn't exist return 0.0f as rating
         }
 
         public ICollection<Recipe> GetRecipes()
         {
             return _context.Recipes.OrderBy(x => x.Id).ToList();
         }
+
+        public bool RecipeExists(int recipeId)
+        {
+            return _context.Recipes.Any(r => r.Id == recipeId);
+        }
+
+
     }
 }
