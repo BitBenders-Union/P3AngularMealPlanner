@@ -41,6 +41,10 @@ namespace Meal_Planner_Api.Data
             modelBuilder.Entity<RecipeCookingTime>()
                 .HasOne(r => r.Recipe)
                 .WithMany(rc => rc.RecipeCookingTime)
+                .HasForeignKey(r => r.RecipeID);
+            modelBuilder.Entity<RecipeCookingTime>()
+                .HasOne(c => c.CookingTime)
+                .WithMany(rc => rc.RecipeCookingTime)
                 .HasForeignKey(c => c.CookingTimeID);
 
 
@@ -48,6 +52,10 @@ namespace Meal_Planner_Api.Data
                 .HasKey(ri => new { ri.RecipeID, ri.IngredientID });
             modelBuilder.Entity<RecipeIngredient>()
                 .HasOne(r => r.Recipe)
+                .WithMany(ri => ri.RecipeIngredients)
+                .HasForeignKey(r => r.RecipeID);
+            modelBuilder.Entity<RecipeIngredient>()
+                .HasOne(i => i.Ingredient)
                 .WithMany(ri => ri.RecipeIngredients)
                 .HasForeignKey(i => i.IngredientID);
 
@@ -57,14 +65,25 @@ namespace Meal_Planner_Api.Data
             modelBuilder.Entity<RecipePreparationTime>()
                 .HasOne(r => r.Recipe)
                 .WithMany(rp => rp.RecipePreparationTime)
+                .HasForeignKey(r => r.RecipeID);
+            modelBuilder.Entity<RecipePreparationTime>()
+                .HasOne(p => p.PreparationTime)
+                .WithMany(rp => rp.RecipePreparationTime)
                 .HasForeignKey(p => p.PreparationTimeID);
+
+
 
             modelBuilder.Entity<RecipeRating>()
                 .HasKey(rr => new {rr.RecipeID, rr.RatingID});
             modelBuilder.Entity<RecipeRating>()
                 .HasOne(r => r.Recipe)
                 .WithMany(rr => rr.RecipeRating)
+                .HasForeignKey(r => r.RecipeID);
+            modelBuilder.Entity<RecipeRating>()
+                .HasOne(r => r.Rating)
+                .WithMany(rr => rr.RecipeRating)
                 .HasForeignKey(r => r.RatingID);
+
 
 
             modelBuilder.Entity<RecipeServings>()
@@ -72,8 +91,11 @@ namespace Meal_Planner_Api.Data
             modelBuilder.Entity<RecipeServings>()
                 .HasOne(r => r.Recipe)
                 .WithMany(rs => rs.RecipeServings)
+                .HasForeignKey(r => r.RecipeID);
+            modelBuilder.Entity<RecipeServings>()
+                .HasOne(s => s.Servings)
+                .WithMany(rs => rs.RecipeServings)
                 .HasForeignKey(s => s.ServingID);
-
         }
 
 

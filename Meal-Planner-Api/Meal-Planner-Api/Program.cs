@@ -36,8 +36,8 @@ builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.Re
 // DI
 
 builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
-builder.Services.AddScoped<IAmountRepository, AmountRepository>();
-builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
+//builder.Services.AddScoped<IAmountRepository, AmountRepository>();
+//builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
 
 
 builder.Services.AddControllers();
