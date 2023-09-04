@@ -1,20 +1,44 @@
-<div cdkDropListGroup>
 
+<!-- 
+    cdkDropListGroup
+
+    this is a directive that allows for drag and drop functionality
+
+    it is used between the dashboard, the recipe-card component and the week-schedule component
+
+
+ -->
+
+ <div cdkDropListGroup>
+
+    <!-- week-schedule emits a list of ingredients that it gets from the dropped recipe-card we then bind the emit it to the method onShoppingListUpdated -->
     <app-week-schedule (shoppingListUpdated)="onShoppingListUpdated($event)"></app-week-schedule>
 
 
-
+    <!-- bookmark emits a bool telling dashboard if bookmark is expanded or not. then runs the method toggleShoppingList 
+         this can seem a bit confusing but the toggleShoppingList's job is to hide the shopping list when the bookmark is expanded
+         and show the shopping list when the bookmark is collapsed
+    -->
     <app-bookmark (isExpandedChange)="toggleShoppingList()"></app-bookmark>
 
 
-
+    <!-- 
+        changes the state of the contents of this div based on the value of showShoppingList
+        if it is true then the div is visible
+        if it is false then the div is hidden
+        it is also bound to an animation that triggers when the state goes from hidden to visible
+        
+     -->
     <div [@shoppingListAnimation]="showShoppingList ? 'visible' : 'hidden'" class="shopping-list">
  
-    <app-shopping-list [ingredients]="shoppingListIngredients"></app-shopping-list>
+        <!-- 
+            renders the shopping list component. this componenet takes an input of an array of Ingredients
+         -->
+
+        <app-shopping-list [ingredients]="shoppingListIngredients"></app-shopping-list>
 
     </div>
 
 
 
 </div>
-
