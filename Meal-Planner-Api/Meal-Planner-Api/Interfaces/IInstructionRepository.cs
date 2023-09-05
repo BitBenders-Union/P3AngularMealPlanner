@@ -6,9 +6,8 @@ namespace Meal_Planner_Api.Interfaces
     {
         ICollection<Instruction> GetInstructions();
         Instruction GetInstruction(int id);
-        Instruction GetInstructionByRecipeID(int recipeId);
+        ICollection<Instruction> GetInstructionsByRecipeID(int recipeId);
         bool InstructionExists(int id);
-        bool InstructionExistsByRecipeID(int recipeId);
 
     }
 }

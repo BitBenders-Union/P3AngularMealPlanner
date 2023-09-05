@@ -7,6 +7,6 @@ namespace Meal_Planner_Api.Interfaces
         RecipeSchedule GetRecipeScheduleForUser(int userId);
         RecipeSchedule GetRecipeScheudle(int recipeScheduleId);
         ICollection<RecipeSchedule> GetRecipeSchedules();
-        bool RecipeScheduleExists(int userID);
+        bool RecipeScheduleExists(int userId);
     }
 }

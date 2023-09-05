@@ -6,6 +6,7 @@ namespace Meal_Planner_Api.Interfaces
     {
         ICollection<CookingTime> GetCookingTimes();
         CookingTime GetCookingTime(int id);
-        bool CookingTimeExists();   
+        CookingTime GetCookingTimeForRecipe(int recipeId);
+        bool CookingTimeExists(int id);   
     }
 }

@@ -18,5 +18,8 @@ namespace Meal_Planner_Api.Interfaces
 
         // get all ratings
         ICollection<Rating> GetRatings();
+
+        bool recipeRatingsExists(int recipeId);
+        bool ratingExists(int id);
     }
 }

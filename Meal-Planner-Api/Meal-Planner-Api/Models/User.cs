@@ -7,5 +7,7 @@
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
         public ICollection<Recipe> Recipes { get; set; }
+
+        //TODO: make binding to rating here and in rating make binding to user
     }
 }

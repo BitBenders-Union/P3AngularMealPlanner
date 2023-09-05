@@ -12,7 +12,7 @@ namespace Meal_Planner_Api.Data
         }
 
         public DbSet<Amount> Amounts { get; set; }
-        public DbSet<Category> Categorys { get; set; }
+        public DbSet<Category> Categories { get; set; }
         public DbSet<CookingTime> CookingTimes { get; set; }
         public DbSet<Instruction> Instructions { get; set; }
         public DbSet<PreparationTime> PreparationTimes { get; set; }
@@ -22,6 +22,8 @@ namespace Meal_Planner_Api.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<Servings> Servings { get; set; }
+        //TODO: forgot to add servings to datacontext, so now we need a migration 05-09
 
         public DbSet<RecipeCookingTime> RecipeCookingTimes { get; set; }
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
