@@ -5,6 +5,7 @@ namespace Meal_Planner_Api.Interfaces
     public interface IRecipeRepository
     {
         ICollection<Recipe> GetRecipes();
+        ICollection<Recipe> GetUserRecipes(int userId);
         Recipe GetRecipe(int id);
         Recipe GetRecipe(string name);
         float GetRecipeRating(int recipeId);
