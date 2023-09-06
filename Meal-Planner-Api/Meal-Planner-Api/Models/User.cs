@@ -8,6 +8,7 @@
         public byte[] PasswordSalt { get; set; }
         public ICollection<Recipe> Recipes { get; set; }
 
-        //TODO: make binding to rating here and in rating make binding to user
+
+        public ICollection<UserRating> UserRating { get; set; }
     }
 }

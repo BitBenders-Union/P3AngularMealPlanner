@@ -41,12 +41,29 @@ namespace Meal_Planner_Api.Repositories
         {
             // returns all the ratings the user have given
 
-            //TODO: After implementing user and rating binding, complete this method.
-            throw new NotImplementedException();
+            var user = _context.Users.Include(x => x.UserRating)
+                .ThenInclude(x => x.Rating)
+                .FirstOrDefault(x => x.Id ==  userId);
+
+            if (user == null)
+                return null;
+
+            var rating = user.UserRating.Select(x => x.Rating)
+                .Where(x => x != null).ToList();
+
+            return rating;
         }
 
         public Rating GetRecipeUserRating(int userID, int recipeId)
         {
+            // get the rating a user made on a recipe
+
+            var userRatings = GetRatingsForUser(userID);
+
+            // find the recipe inside the userRatings
+
+            
+
             //TODO: After implementing user and rating binding, and the GetRatingsForUser method, complete this method.
             throw new NotImplementedException();
 

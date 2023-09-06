@@ -5,7 +5,7 @@
         public int Id { get; set; }
         public float Score { get; set; }
         public ICollection<RecipeRating> RecipeRating { get; set; }
-
+        public ICollection<UserRating> UserRating { get; set; }
 
     }
 }

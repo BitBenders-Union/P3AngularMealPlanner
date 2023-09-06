@@ -37,7 +37,8 @@ namespace Meal_Planner_Api.Repositories
                                     .ThenInclude(a => a.Amount)
                                     .FirstOrDefault(r => r.Id == recipeId);
 
-
+            if (recipe == null)
+                return null;
             // get all ingredients in the recipe
             // then find all amounts from ingredients
 
@@ -57,9 +58,16 @@ namespace Meal_Planner_Api.Repositories
             // get ingredients then include amounts,
             // then find the ingredient with matching id,
             // then get the amount and return it
-            return _context.Ingredients.Include(a => a.Amount)
-                                        .FirstOrDefault(i => i.Id == ingredientId)
-                                        .Amount;
+            var ingredient = _context.Ingredients.Include(a => a.Amount)
+                .FirstOrDefault(i => i.Id == ingredientId);
+            
+            if (ingredient == null)
+                return null;
+
+            if (ingredient.Amount == null)
+                return null;
+
+            return ingredient.Amount;
         }
 
 

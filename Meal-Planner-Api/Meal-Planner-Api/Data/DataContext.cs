@@ -23,7 +23,6 @@ namespace Meal_Planner_Api.Data
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<Servings> Servings { get; set; }
-        //TODO: forgot to add servings to datacontext, so now we need a migration 05-09
 
         public DbSet<RecipeCookingTime> RecipeCookingTimes { get; set; }
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
@@ -100,6 +99,21 @@ namespace Meal_Planner_Api.Data
                 .HasOne(s => s.Servings)
                 .WithMany(rs => rs.RecipeServings)
                 .HasForeignKey(s => s.ServingID);
+
+
+            modelBuilder.Entity<UserRating>()
+                .HasKey(ur => new {ur.UserId, ur.RatingId});
+            modelBuilder.Entity<UserRating>()
+                .HasOne(u => u.User)
+                .WithMany(ur => ur.UserRating)
+                .HasForeignKey(u => u.UserId);
+            modelBuilder.Entity<UserRating>()
+                .HasOne(r => r.Rating)
+                .WithMany(ur => ur.UserRating)
+                .HasForeignKey(r => r.RatingId);
+
+
+
         }
 
 
