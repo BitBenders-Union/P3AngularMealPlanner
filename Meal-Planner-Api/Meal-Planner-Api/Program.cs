@@ -1,6 +1,7 @@
 using Meal_Planner_Api.Data;
 using Meal_Planner_Api.Interfaces;
 using Meal_Planner_Api.Repositories;
+using Meal_Planner_Api.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json.Serialization;
@@ -35,9 +36,19 @@ builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.Re
 
 // DI
 
+builder.Services.AddScoped<IAmountRepository, AmountRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICookingTimeRepository, CookingTimeRepository>();
+builder.Services.AddScoped<IHashingService, HashingService>();
+builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
+builder.Services.AddScoped<IInstructionRepository, InstructionRepository>();
+builder.Services.AddScoped<IPreparationTimeRepository, PreparationTimeRepository>();
+builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
-//builder.Services.AddScoped<IAmountRepository, AmountRepository>();
-//builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
+builder.Services.AddScoped<IRecipeScheduleRepository, RecipeScheduleRepository>();
+builder.Services.AddScoped<IServingsRepository, ServingsRepository>();
+builder.Services.AddScoped<IUnitRepository, UnitRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 
 builder.Services.AddControllers();
