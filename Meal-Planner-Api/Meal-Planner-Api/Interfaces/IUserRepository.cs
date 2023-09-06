@@ -7,7 +7,7 @@ namespace Meal_Planner_Api.Interfaces
         ICollection<User> GetUsers();
         User GetUser(int id);
         User GetUser(string username);
-        User ValidatePassword(byte[] hashedPassword);
+        bool ValidateUser(byte[] hashedPassword, string username);
         bool UserExists(int id);
     }
 }

@@ -58,7 +58,8 @@ namespace Meal_Planner_Api.Repositories
             // then find the ingredient with matching id,
             // then get the amount and return it
             return _context.Ingredients.Include(a => a.Amount)
-                                        .FirstOrDefault(i => i.Id == ingredientId).Amount;
+                                        .FirstOrDefault(i => i.Id == ingredientId)
+                                        .Amount;
         }
 
 

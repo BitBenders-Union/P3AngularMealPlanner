@@ -1,6 +1,7 @@
 ﻿using Meal_Planner_Api.Data;
 using Meal_Planner_Api.Interfaces;
 using Meal_Planner_Api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Meal_Planner_Api.Repositories
 {
@@ -14,27 +15,45 @@ namespace Meal_Planner_Api.Repositories
         }
         public Unit GetUnitById(int id)
         {
-            throw new NotImplementedException();
+            return _context.Units.FirstOrDefault(u => u.Id == id);
         }
 
         public Unit GetUnitByName(string name)
         {
-            throw new NotImplementedException();
+            return _context.Units.FirstOrDefault(u => u.Measurement == name);
+
         }
 
         public Unit GetUnitForRecipe(int recipeId)
         {
-            throw new NotImplementedException();
+            var recipe = _context.Recipes
+                                    .Include(ri => ri.RecipeIngredients)
+                                    .ThenInclude(i => i.Ingredient)
+                                    .ThenInclude(u => u.Unit)
+                                    .FirstOrDefault(r => r.Id == recipeId);
+
+            var unit = recipe.RecipeIngredients.Select(iu => iu.Ingredient.Unit)
+                .Where(unit => unit != null)
+                .FirstOrDefault();
+
+            return unit;
+        }
+
+        public Unit GetUnitFromIngredient(int ingredientId)
+        {
+            return _context.Ingredients.Include(u => u.Unit)
+                    .FirstOrDefault(x => x.Id == ingredientId)
+                    .Unit;
         }
 
         public ICollection<Unit> GetUnits()
         {
-            throw new NotImplementedException();
+            return _context.Units.OrderBy(u => u.Measurement).ToList();
         }
 
         public bool UnitExists(int id)
         {
-            throw new NotImplementedException();
+            return _context.Units.Any(u => u.Id == id);
         }
     }
 }
