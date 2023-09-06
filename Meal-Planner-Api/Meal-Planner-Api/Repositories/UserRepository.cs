@@ -32,6 +32,11 @@ namespace Meal_Planner_Api.Repositories
             return _context.Users.Any(x => x.Id == id);
         }
 
+        public bool UserExists(string username)
+        {
+            return _context.Users.Any(x => x.Username == username);
+        }
+
         public bool ValidateUser(byte[] hashedPassword, string username)
         {
             bool user = _context.Users.Any(x => x.Username == username);

@@ -11,8 +11,8 @@ namespace Meal_Planner_Api.Controllers
     [ApiController]
     public class RecipeController : ControllerBase
     {
-        private readonly IRecipeRepository _recipeRepository;
-        private readonly IMapper _mapper;
+        private IRecipeRepository _recipeRepository;
+        private IMapper _mapper;
 
         public RecipeController(IMapper mapper, IRecipeRepository recipeRepository)
         {
@@ -45,6 +45,18 @@ namespace Meal_Planner_Api.Controllers
             return Ok(recipe);
         }
 
+        [HttpGet("{recipeName}")]
+        public IActionResult GetRecipe(string recipeName)
+        {
+            // maps the recipe to recipeDTO so we only show what we want.
+            var recipe = _mapper.Map<RecipeDTO>(_recipeRepository.GetRecipe(recipeName));
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(recipe);
+        }
+
         [HttpGet("{recipeId}/rating")]
         public IActionResult GetRating(int recipeId)
         {
@@ -60,6 +72,23 @@ namespace Meal_Planner_Api.Controllers
 
             return Ok(rating);
         }
+
+        // get recipe a user created
+        [HttpGet("byUserId/{userId}")]
+        public IActionResult GetByUserId(int userId)
+        {
+            var recipe = _mapper.Map<List<RecipeDTO>>(_recipeRepository.GetUserRecipes(userId));
+
+            if(recipe == null)
+                return NotFound();
+
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(recipe);
+        }
+
+
 
     }
 }

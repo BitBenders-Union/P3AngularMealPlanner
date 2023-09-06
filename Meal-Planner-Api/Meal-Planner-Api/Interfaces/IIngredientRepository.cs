@@ -9,6 +9,7 @@ namespace Meal_Planner_Api.Interfaces
         Ingredient GetIngredient(int id);
         Ingredient GetIngredient(string name);
         bool IngredientExists(int id);
+        bool IngredientExists(string name);
 
     }
 }

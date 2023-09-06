@@ -8,8 +8,6 @@ namespace Meal_Planner_Api.Repositories
     public class RecipeRepository : IRecipeRepository
     {
         private DataContext _context;
-
-
         public RecipeRepository(DataContext context)
         {
             _context = context;

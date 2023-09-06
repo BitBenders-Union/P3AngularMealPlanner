@@ -37,6 +37,8 @@ namespace Meal_Planner_Api.Repositories
                 .FirstOrDefault();
 
             return unit;
+
+            //TODO: change this to a list
         }
 
         public Unit GetUnitFromIngredient(int ingredientId)
@@ -54,6 +56,11 @@ namespace Meal_Planner_Api.Repositories
         public bool UnitExists(int id)
         {
             return _context.Units.Any(u => u.Id == id);
+        }
+
+        public bool UnitExists(string name)
+        {
+            return _context.Units.Any(u => u.Measurement == name);
         }
     }
 }

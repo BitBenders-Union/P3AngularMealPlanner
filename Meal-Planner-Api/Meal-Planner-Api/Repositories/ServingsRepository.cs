@@ -34,5 +34,10 @@ namespace Meal_Planner_Api.Repositories
         {
             return _context.Servings.OrderBy(x => x.Id).ToList();
         }
+
+        public bool servingExist(int id)
+        {
+            return _context.Servings.Any(x => x.Id == id);
+        }
     }
 }

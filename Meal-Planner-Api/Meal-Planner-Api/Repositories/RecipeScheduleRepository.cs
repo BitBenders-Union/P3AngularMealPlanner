@@ -26,7 +26,7 @@ namespace Meal_Planner_Api.Repositories
             return _context.RecipeSchedules.OrderBy(x => x.Id).ToList();
         }
 
-        public RecipeSchedule GetRecipeScheudle(int recipeScheduleId)
+        public RecipeSchedule GetRecipeSchedule(int recipeScheduleId)
         {
             return _context.RecipeSchedules.FirstOrDefault(x => x.Id == recipeScheduleId);
         }

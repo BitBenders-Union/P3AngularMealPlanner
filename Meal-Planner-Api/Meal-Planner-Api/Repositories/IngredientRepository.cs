@@ -48,5 +48,9 @@ namespace Meal_Planner_Api.Repositories
         {
             return _context.Ingredients.Any(x => x.Id == id);
         }
+        public bool IngredientExists(string name)
+        {
+            return _context.Ingredients.Any(x => x.Name == name);
+        }
     }
 }

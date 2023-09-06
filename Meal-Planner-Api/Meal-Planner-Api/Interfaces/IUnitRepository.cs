@@ -10,5 +10,6 @@ namespace Meal_Planner_Api.Interfaces
         Unit GetUnitForRecipe(int recipeId);
         Unit GetUnitFromIngredient(int ingredientId);
         bool UnitExists(int id);
+        bool UnitExists(string name);
     }
 }
