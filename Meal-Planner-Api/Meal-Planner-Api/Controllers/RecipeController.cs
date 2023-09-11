@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-using Meal_Planner_Api.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -12,78 +11,83 @@ namespace Meal_Planner_Api.Controllers
     [ApiController]
     public class RecipeController : ControllerBase
     {
-        private readonly IRecipeRepository _recipeRepository;
-        private readonly IAmountRepository _amountRepository;
-        private readonly IMapper _mapper;
+        private IRecipeRepository _recipeRepository;
+        private IMapper _mapper;
 
-        public RecipeController(IRecipeRepository recipeRepository, IAmountRepository amountRepository, IMapper mapper)
+        public RecipeController(IMapper mapper, IRecipeRepository recipeRepository)
         {
             _recipeRepository = recipeRepository;
-            _amountRepository = amountRepository;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public ActionResult GetAllRecipes()
+        public IActionResult GetRecipes()
         {
-            List<RecipeDTO> recipes = _recipeRepository.GetAllRecipes()
-                .Select(recipe => _mapper.Map<RecipeDTO>(recipe))
-                .ToList();
+            var recipes = _mapper.Map<List<RecipeDTO>>(_recipeRepository.GetRecipes());
+
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+
             return Ok(recipes);
         }
 
-        [HttpGet("{id}", Name = "GetRecipe")]
-        public ActionResult<RecipeDTO> GetRecipe(int id)
+        [HttpGet("{recipeId}")]
+        public IActionResult GetRecipe(int recipeId)
         {
-            var recipe = _recipeRepository.GetRecipe(id);
-            if (recipe == null)
-            {
+            // maps the recipe to recipeDTO so we only show what we want.
+            var recipe = _mapper.Map<RecipeDTO>(_recipeRepository.GetRecipe(recipeId));
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(recipe);
+        }
+
+        [HttpGet("{recipeName}")]
+        public IActionResult GetRecipe(string recipeName)
+        {
+            // maps the recipe to recipeDTO so we only show what we want.
+            var recipe = _mapper.Map<RecipeDTO>(_recipeRepository.GetRecipe(recipeName));
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(recipe);
+        }
+
+        [HttpGet("{recipeId}/rating")]
+        public IActionResult GetRating(int recipeId)
+        {
+            // check if recipe exist
+            if (!_recipeRepository.RecipeExists(recipeId))
                 return NotFound();
-            }
-            var recipeDTO = _mapper.Map<RecipeDTO>(recipe);
-            return Ok(recipeDTO);
+
+            // get the rating
+            var rating = _recipeRepository.GetRecipeRating(recipeId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(rating);
         }
 
-        [HttpPost]
-        public IActionResult CreateRecipe([FromBody] Recipe recipe)
+        // get recipe a user created
+        [HttpGet("byUserId/{userId}")]
+        public IActionResult GetByUserId(int userId)
         {
-            // Add the instructions to the recipe
-            recipe.Instructions = recipe.Instructions.Select(instructionText =>
-                new Instruction { Text =  instructionText.Text}).ToList();
+            var recipe = _mapper.Map<List<RecipeDTO>>(_recipeRepository.GetUserRecipes(userId));
 
-
-            // Add the recipe and its associated instructions to the database
-            _recipeRepository.AddRecipe(recipe);
-
-            // Return the newly created recipe
-            var createdRecipe = _mapper.Map<Recipe>(recipe);
-            return CreatedAtAction(nameof(GetRecipe), new { id = createdRecipe.Id }, createdRecipe);
-        }
-
-
-        [HttpPut("{id}")]
-        public ActionResult UpdateRecipe(int id, RecipeDTO recipeUpdateDto)
-        {
-            var recipeModel = _mapper.Map<Recipe>(recipeUpdateDto);
-            recipeModel.Id = id; // Make sure to set the ID to the existing recipe's ID
-            _recipeRepository.UpdateRecipe(recipeModel);
-
-            return NoContent(); // Returns a 204 No Content response
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult DeleteRecipe(int id)
-        {
-            var recipe = _recipeRepository.GetRecipe(id);
-            if (recipe == null)
-            {
+            if(recipe == null)
                 return NotFound();
-            }
 
-            _recipeRepository.DeleteRecipe(id);
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            return NoContent();
+            return Ok(recipe);
         }
+
 
 
     }

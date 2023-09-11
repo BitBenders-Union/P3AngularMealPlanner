@@ -2,8 +2,10 @@
 {
     public class Unit
     {
-        public int UnitID { get; set; }
+        public int Id { get; set; }
         public string Measurement { get; set; }
+        public ICollection<Ingredient> Ingredients { get; set; }
+
 
     }
 }

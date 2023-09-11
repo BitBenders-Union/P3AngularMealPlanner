@@ -1,5 +1,4 @@
 ﻿using Meal_Planner_Api.Data;
-using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
 using Meal_Planner_Api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -8,86 +7,49 @@ namespace Meal_Planner_Api.Repositories
 {
     public class RecipeRepository : IRecipeRepository
     {
-        private readonly DataContext _context;
-
+        private DataContext _context;
         public RecipeRepository(DataContext context)
         {
             _context = context;
         }
-
         public Recipe GetRecipe(int id)
         {
-            return _context.Recipes
-                            .Include(r => r.Ingredients)
-                                .ThenInclude(i => i.Amounts)
-                            .Include(r => r.Instructions)
-                            .SingleOrDefault(r => r.Id == id);
+
+            return _context.Recipes.FirstOrDefault(x => x.Id == id); // finds first value in recipe where recipe.id is the sam as input id
         }
 
-        public IEnumerable<Recipe> GetAllRecipes()
+        public Recipe GetRecipe(string name)
         {
-            return _context.Recipes
-                .Include(r => r.Ingredients)
-                    .ThenInclude(i => i.Amounts) // Include Amounts within Ingredients
-                .Include(r => r.Instructions)
-                .ToList();
+            return _context.Recipes.FirstOrDefault(x => x.Title == name); // finds first value in recipe where recipe.title is the sam as input name
+
         }
 
-        public Recipe AddRecipe(Recipe recipe) { 
-            _context.Recipes.Add(recipe);
-            _context.SaveChanges();
-            return recipe;
-        }
-
-        // upsert
-        public void UpdateRecipe(Recipe recipe)
+        public float GetRecipeRating(int recipeId)
         {
+            var recipe = _context.Recipes.Include(rr => rr.RecipeRating).FirstOrDefault(r => r.Id == recipeId); // finds the recipe from id
 
-            // existingRecipe is a reference to _context and therefore changes to existingRecipe will reflect _context.
-            // then we include ingredients and instructions or we won't be able to access them later
-            var existingRecipe = _context.Recipes
-                                    .Include(r => r.Ingredients)
-                                    .Include(r => r.Instructions)
-                                    .FirstOrDefault(r => r.Id == recipe.Id);
-
-            if (existingRecipe == null)
-            {
-                throw new ArgumentException("Recipe not found");
-            }
-
-            // compares _context ingredients and input ingredients, if they are not the same eg. changes was made. we clear the _context and add the input to the context, ensuring all changes are reflected
-            // next we do the same for instructions
-            if(!Enumerable.SequenceEqual(existingRecipe.Ingredients, recipe.Ingredients))
-            {
-                existingRecipe.Ingredients.Clear();
-
-                foreach (var ingredient in recipe.Ingredients)
-                    existingRecipe.Ingredients.Add(ingredient);
-
-            }
-
-            if(!Enumerable.SequenceEqual(existingRecipe.Instructions, recipe.Instructions))
-            {
-                existingRecipe.Instructions.Clear();
-
-                foreach(var instruction in recipe.Instructions)
-                    existingRecipe.Instructions.Add(instruction);
-            }
-
-
-            _context.SaveChanges();
-        }
-
-
-
-        public void DeleteRecipe(int id)
-        {
-            var recipe = _context.Recipes.FirstOrDefault(r => r.Id == id);
             if (recipe != null)
             {
-                _context.Recipes.Remove(recipe);
-                _context.SaveChanges();
+                // get average rating
+                float avgRating = recipe.RecipeRating.Average(rr => rr.Rating.Score);
+                return avgRating;
             }
+            else return 0.0f; // if recipe doesn't exist return 0.0f as rating
+        }
+
+        public ICollection<Recipe> GetRecipes()
+        {
+            return _context.Recipes.OrderBy(x => x.Id).ToList();
+        }
+
+        public ICollection<Recipe> GetUserRecipes(int userId)
+        {
+            return _context.Recipes.Where(r => r.User.Id == userId).ToList();
+        }
+
+        public bool RecipeExists(int recipeId)
+        {
+            return _context.Recipes.Any(r => r.Id == recipeId);
         }
 
 
