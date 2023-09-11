@@ -25,7 +25,7 @@ namespace Meal_Planner_Api.Controllers
         {
             var ingredients = _mapper.Map<List<IngredientDTO>>(_ingredientRepository.GetIngredients());
 
-            if (ingredients == null)
+            if (ingredients == null || ingredients.Count() == 0)
                 return NotFound("Not Found");
 
             if(!ModelState.IsValid)

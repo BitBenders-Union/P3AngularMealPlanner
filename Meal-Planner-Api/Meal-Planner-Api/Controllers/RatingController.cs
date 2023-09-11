@@ -24,7 +24,7 @@ namespace Meal_Planner_Api.Controllers
         {
             var ratings = _mapper.Map<List<RatingDTO>>(_ratingRepository.GetRatings());
             
-            if(ratings == null)
+            if(ratings == null || ratings.Count() == 0)
                 return NotFound("Not Found");
 
             if (!ModelState.IsValid)

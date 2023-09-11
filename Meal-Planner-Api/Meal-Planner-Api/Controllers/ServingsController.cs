@@ -25,7 +25,7 @@ namespace Meal_Planner_Api.Controllers
         {
             var serving = _mapper.Map<List<ServingsDTO>>(_servingsRepository.GetServings());
 
-            if(serving == null)
+            if(serving == null|| serving.Count() == 0)
                 return NotFound("Not Found");
 
             if (!ModelState.IsValid)
