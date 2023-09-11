@@ -26,7 +26,7 @@ namespace Meal_Planner_Api.Controllers
         {
             var preparationTime = _mapper.Map<List<PreparationTimeDTO>>(_preparationTimeRepository.GetPreparationTimes());
 
-            if(preparationTime == null)
+            if(preparationTime == null || preparationTime.Count() == 0)
                 return NotFound("Not Found");
 
             if(!ModelState.IsValid)

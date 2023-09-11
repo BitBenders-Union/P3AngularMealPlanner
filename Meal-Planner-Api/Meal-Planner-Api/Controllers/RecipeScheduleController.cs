@@ -24,7 +24,7 @@ namespace Meal_Planner_Api.Controllers
         {
             var schedule = _mapper.Map<List<RecipeScheduleDTO>>(_recipeScheduleRepository.GetRecipeSchedules());
 
-            if(schedule == null)
+            if(schedule == null || schedule.Count() == 0)
                 return NotFound("Not Found");
 
             if (!ModelState.IsValid)
