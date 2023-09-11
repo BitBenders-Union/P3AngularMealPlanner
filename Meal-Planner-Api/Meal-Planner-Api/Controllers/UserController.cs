@@ -27,7 +27,7 @@ namespace Meal_Planner_Api.Controllers
         {
             var users = _mapper.Map<List<UserDTO>>(_userRepository.GetUsers());
 
-            if(users == null)
+            if(users == null || users.Count() == 0)
                 return NotFound("Not Found");
 
             if(!ModelState.IsValid)

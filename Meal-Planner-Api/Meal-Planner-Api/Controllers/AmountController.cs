@@ -28,7 +28,7 @@ namespace Meal_Planner_Api.Controllers
             var amounts = _mapper.Map<List<AmountDTO>>(_amountRepository.GetAmounts());
             
             // check if any amounts was found
-            if (amounts == null)
+            if (amounts == null || amounts.Count() == 0)
                 return NotFound("Not Found");
 
             // check if the model is as it should be

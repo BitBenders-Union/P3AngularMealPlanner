@@ -26,7 +26,7 @@ namespace Meal_Planner_Api.Controllers
         {
             var categories = _mapper.Map<List<CategoryDTO>>(_categoryRepository.GetCategories());
 
-            if (categories == null)
+            if (categories == null || categories.Count() == 0)
                 return NotFound();
 
             if (!ModelState.IsValid)

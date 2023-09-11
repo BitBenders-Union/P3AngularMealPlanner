@@ -25,6 +25,8 @@ namespace Meal_Planner_Api.Controllers
         {
             var recipes = _mapper.Map<List<RecipeDTO>>(_recipeRepository.GetRecipes());
 
+            if (recipes == null || recipes.Count() == 0)
+                return NotFound("Not Found");
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -39,6 +41,9 @@ namespace Meal_Planner_Api.Controllers
             // maps the recipe to recipeDTO so we only show what we want.
             var recipe = _mapper.Map<RecipeDTO>(_recipeRepository.GetRecipe(recipeId));
 
+            if (recipe == null)
+                return NotFound("Not Found");
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -50,6 +55,9 @@ namespace Meal_Planner_Api.Controllers
         {
             // maps the recipe to recipeDTO so we only show what we want.
             var recipe = _mapper.Map<RecipeDTO>(_recipeRepository.GetRecipe(recipeName));
+
+            if (recipe == null)
+                return NotFound("Not Found");
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
