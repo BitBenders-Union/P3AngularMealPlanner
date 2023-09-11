@@ -12,6 +12,13 @@ namespace Meal_Planner_Api.Repositories
         {
             _context = context;
         }
+
+        public bool CreateRecipe(Recipe recipe)
+        {
+            _context.Add(recipe);
+            return Save();
+        }
+
         public Recipe GetRecipe(int id)
         {
 
@@ -52,6 +59,10 @@ namespace Meal_Planner_Api.Repositories
             return _context.Recipes.Any(r => r.Id == recipeId);
         }
 
-
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
+        }
     }
 }

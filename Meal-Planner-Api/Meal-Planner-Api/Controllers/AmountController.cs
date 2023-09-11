@@ -88,5 +88,41 @@ namespace Meal_Planner_Api.Controllers
         }
 
 
+
+        [HttpPost]
+        public IActionResult CreateAmount([FromBody] AmountDTO amountCreate)
+        {
+            // checks if the input form body is null
+            if (amountCreate == null)
+                return BadRequest();
+
+            // looks for other quantities with the same value
+            var amount = _amountRepository.GetAmounts()
+                .FirstOrDefault(a => a.Quantity == amountCreate.Quantity);
+
+            // if another quantity does exist
+            if(amount != null)
+            {
+                //TODO: logic that makes it so the created amount uses the existing amount
+                ModelState.AddModelError("", "Quantity Already Exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var amountMap = _mapper.Map<Amount>(amountCreate);
+
+            // create the amount and check if it saved
+            if(!_amountRepository.CreateAmount(amountMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Success");
+        }
+
+
     }
 }

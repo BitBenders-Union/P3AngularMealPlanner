@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
+using Meal_Planner_Api.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -84,6 +85,34 @@ namespace Meal_Planner_Api.Controllers
 
 
 
+
+        [HttpPost]
+        public IActionResult CreateIngredient([FromBody] IngredientDTO ingredientCreate)
+        {
+            if (ingredientCreate == null)
+                return BadRequest();
+
+            var ingredient = _ingredientRepository.GetIngredient(ingredientCreate.Name);
+
+            if(ingredient != null)
+            {
+                ModelState.AddModelError("", "Ingredient Already Exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var ingredietnMap = _mapper.Map<Ingredient>(ingredientCreate);
+
+            if(!_ingredientRepository.CreateIngredient(ingredietnMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Success");
+        }
 
 
     }

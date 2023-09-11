@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
+using Meal_Planner_Api.Models;
+using Meal_Planner_Api.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -97,6 +99,44 @@ namespace Meal_Planner_Api.Controllers
 
             return Ok(validate);
 
+        }
+
+
+
+        [HttpPost]
+        public IActionResult CreateUnit([FromBody] UserDTO userCreate)
+        {
+            // checks if the input form body is null
+            if (userCreate == null)
+                return BadRequest();
+
+            // looks for other quantities with the same value
+            var user = _userRepository.GetUsers()
+                .FirstOrDefault(a => a.Username.Trim().ToUpper == userCreate.Username.Trim().ToUpper());
+
+            
+
+            // if another quantity does exist
+            if (unit != null)
+            {
+                //TODO: logic that makes it so the created amount uses the existing amount
+                ModelState.AddModelError("", "Unit Already Exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var unitMap = _mapper.Map<Unit>(userCreate);
+
+            // create the amount and check if it saved
+            if (!_unitRepository.CrateUnit(unitMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Success");
         }
 
 

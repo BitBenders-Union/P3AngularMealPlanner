@@ -8,5 +8,7 @@ namespace Meal_Planner_Api.Interfaces
         Servings GetServingForRecipe(int recipeId);
         ICollection<Servings> GetServings();
         bool servingExist(int id);
+        bool CreateServing(Servings serving);
+        bool Save();
     }
 }

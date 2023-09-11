@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
+using Meal_Planner_Api.Models;
+using Meal_Planner_Api.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -63,6 +65,38 @@ namespace Meal_Planner_Api.Controllers
                 return BadRequest(ModelState);
 
             return Ok(instruction);
+        }
+
+
+
+
+
+
+
+
+        [HttpPost]
+        public IActionResult CreateInstruction([FromBody] InstructionDTO instructionCreate)
+        {
+            if (instructionCreate == null)
+                return BadRequest();
+
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+
+
+            var instruction = _mapper.Map<Instruction>(instructionCreate);
+
+            if(!_instructionRepository.CreateInstruction(instruction))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return BadRequest(ModelState);
+            }
+
+            // after all checks passed return Ok
+            return Ok("Success");
+
         }
 
 

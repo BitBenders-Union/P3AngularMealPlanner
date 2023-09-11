@@ -52,5 +52,17 @@ namespace Meal_Planner_Api.Repositories
         {
             return _context.Ingredients.Any(x => x.Name == name);
         }
+
+        public bool CreateIngredient(Ingredient ingredient)
+        {
+            _context.Add(ingredient);
+            return Save();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
+        }
     }
 }

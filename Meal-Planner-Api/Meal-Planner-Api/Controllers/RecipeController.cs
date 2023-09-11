@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
+using Meal_Planner_Api.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -95,6 +96,41 @@ namespace Meal_Planner_Api.Controllers
 
             return Ok(recipe);
         }
+
+
+
+        [HttpPost]
+        public IActionResult CreateRecipe([FromBody] RecipeDTO recipeCreate)
+        {
+            if (recipeCreate == null)
+                return BadRequest();
+
+            var recipe = _recipeRepository.GetRecipes()
+                .FirstOrDefault(r => r.Title == recipeCreate.Title);
+
+            if(recipe != null)
+            {
+                ModelState.AddModelError("", "Recipe Already Exist");
+                return StatusCode(422, ModelState);
+            }
+
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+
+            var recipeMap = _mapper.Map<Recipe>(recipeCreate);
+
+            if(!_recipeRepository.CreateRecipe(recipeMap))
+            {
+                ModelState.AddModelError("", "Error while saving");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Success");
+        }
+
+
 
 
 

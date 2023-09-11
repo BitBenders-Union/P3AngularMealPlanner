@@ -13,6 +13,13 @@ namespace Meal_Planner_Api.Repositories
         {
             _context = context;
         }
+
+        public bool CreatePreparationTime(PreparationTime preparationTime)
+        {
+            _context.Add(preparationTime);
+            return Save();
+        }
+
         public PreparationTime GetPreparationTime(int id)
         {
             return _context.PreparationTimes.FirstOrDefault(x => x.Id == id);
@@ -43,5 +50,15 @@ namespace Meal_Planner_Api.Repositories
         {
             return _context.PreparationTimes.Any(x => x.Id == id);
         }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
+        }
+
+
+
+
     }
 }

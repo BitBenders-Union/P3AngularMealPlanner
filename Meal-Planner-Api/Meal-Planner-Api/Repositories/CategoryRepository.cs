@@ -18,6 +18,14 @@ namespace Meal_Planner_Api.Repositories
             return _context.Categories.Any(c => c.Id == id);
         }
 
+        public bool CreateCategory(Category category)
+        {
+            _context.Add(category);
+
+            return Save();
+
+        }
+
         public ICollection<Category> GetCategories()
         {
             return _context.Categories.OrderBy(c => c.Id).ToList();
@@ -37,6 +45,14 @@ namespace Meal_Planner_Api.Repositories
             var recipe = _context.Recipes.Include(c => c.Category).FirstOrDefault(r => r.Id == recipeId);
 
             return recipe.Category;
+        }
+
+        public bool Save()
+        {
+            // saves the changes and updates the database
+            var saved = _context.SaveChanges();
+
+            return saved > 0 ? true : false;
         }
     }
 }
