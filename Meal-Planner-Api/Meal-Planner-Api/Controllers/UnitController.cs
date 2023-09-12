@@ -26,7 +26,7 @@ namespace Meal_Planner_Api.Controllers
         {
             var units = _mapper.Map<List<UnitDTO>>(_unitRepository.GetUnits());
 
-            if(units == null)
+            if(units == null || units.Count() == 0)
                 return NotFound("Not Found");
 
             if (!ModelState.IsValid)

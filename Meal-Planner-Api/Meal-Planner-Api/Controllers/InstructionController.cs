@@ -25,7 +25,7 @@ namespace Meal_Planner_Api.Controllers
         {
             var instructions = _mapper.Map<List<InstructionDTO>>(_instructionRepository.GetInstructions()); 
             
-            if(instructions == null)
+            if(instructions == null || instructions.Count() == 0)
                 return NotFound("Not Found");
 
             if (!ModelState.IsValid)
