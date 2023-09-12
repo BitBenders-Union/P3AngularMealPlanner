@@ -105,7 +105,7 @@ namespace Meal_Planner_Api.Controllers
 
 
         [HttpPost]
-        public IActionResult CreateUnit([FromBody] UserDTO user)
+        public IActionResult CreateUser([FromBody] UserDTO user)
         {
             // checks if the input form body is null
             if (user.Username.IsNullOrEmpty() || user.Password.IsNullOrEmpty())

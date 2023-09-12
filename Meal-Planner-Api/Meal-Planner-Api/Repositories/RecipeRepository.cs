@@ -58,87 +58,34 @@ namespace Meal_Planner_Api.Repositories
         {
             return _context.Recipes.Any(r => r.Id == recipeId);
         }
-        public bool CreateRecipe(RecipeCreateDTO recipeData)
+        public bool CreateRecipe(Recipe recipe, ICollection<int> ratingIds, ICollection<int> ingredientIds)
         {
 
-            Recipe recipe = new()
+            foreach (var ratingId in ratingIds) 
             {
-                Title = recipeData.Title,
-                Description = recipeData.Description,
-                category = _context.Categories.Where(x => x.Id == recipeData.categoryId).FirstOrDefault(),
-                User = _context.Users.Where(x => x.Id == recipeData.userID).FirstOrDefault(),
-
-            };
-
-            foreach (var instructionDto in recipeData.instructions)
-            {
-                var instruction = new Instruction()
+                var recipeRating = new RecipeRating
                 {
-                    Id = instructionDto.Id,
-                    Text = instructionDto.Text,
-                    // Set other properties of the Instruction
+                    Rating = _context.Ratings.FirstOrDefault(r => r.Id == ratingId),
+                    Recipe = recipe
                 };
-                _context.Add(instruction);
+                _context.Add(recipeRating);
             }
 
-
-
-            var recipePrepEntity = _context.PreparationTimes.Where(x => x.Id == recipeData.preparationTimeID).FirstOrDefault();
-            var recipeCookEntity = _context.CookingTimes.Where(x => x.Id == recipeData.cookingTimeID).FirstOrDefault();
-            var recipeServEntity = _context.Servings.Where(x => x.Id == recipeData.servingsID).FirstOrDefault();
-
-            foreach (var ratingId in recipeData.ratingsID)
+            foreach (var ingredientId in ingredientIds)
             {
-                var existingRating = _context.Ratings.SingleOrDefault(r => r.Id == ratingId);
-                if (existingRating != null)
+                var recipeIngredient = new RecipeIngredient
                 {
-                    var recipeRating = new RecipeRating()
-                    {
-                        Rating = existingRating,
-                        Recipe = recipe
-                    };
-                    _context.Add(recipeRating);
-                }
+                    Ingredient = _context.Ingredients.FirstOrDefault(i => i.Id == ingredientId),
+                    Recipe = recipe
+                };
+                _context.Add(recipeIngredient);
             }
-
-            foreach (var ingredientId in recipeData.ingredientsID)
-            {
-                var existingIngredient = _context.Ingredients.SingleOrDefault(i => i.Id == ingredientId);
-                if (existingIngredient != null)
-                {
-                    var recipeIngredient = new RecipeIngredient()
-                    {
-                        Ingredient = existingIngredient,
-                        Recipe = recipe
-                    };
-                    _context.Add(recipeIngredient);
-                }
-            }
-
-            var recipePrep = new RecipePreparationTime()
-            {
-                PreparationTime = recipePrepEntity,
-                Recipe = recipe
-            };
-            _context.Add(recipePrep);
-
-            var recipeCook = new RecipeCookingTime()
-            {
-                CookingTime = recipeCookEntity,
-                Recipe = recipe
-            };
-            _context.Add(recipeCook);
-
-            var recipeServ = new RecipeServings()
-            {
-                Servings = recipeServEntity,
-                Recipe = recipe
-            };
-            _context.Add(recipeServ);
-
 
             _context.Add(recipe);
+
+
             return Save();
+            
         }
 
         public bool Save()

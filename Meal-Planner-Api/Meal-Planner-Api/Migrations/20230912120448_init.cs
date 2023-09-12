@@ -24,7 +24,7 @@ namespace Meal_Planner_Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Categorys",
+                name: "Categories",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -33,7 +33,7 @@ namespace Meal_Planner_Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categorys", x => x.Id);
+                    table.PrimaryKey("PK_Categories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -165,6 +165,30 @@ namespace Meal_Planner_Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserRating",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    RatingId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRating", x => new { x.UserId, x.RatingId });
+                    table.ForeignKey(
+                        name: "FK_UserRating_Ratings_RatingId",
+                        column: x => x.RatingId,
+                        principalTable: "Ratings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserRating_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Recipes",
                 columns: table => new
                 {
@@ -172,7 +196,7 @@ namespace Meal_Planner_Api.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    categoryId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     RecipeScheduleId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -180,9 +204,9 @@ namespace Meal_Planner_Api.Migrations
                 {
                     table.PrimaryKey("PK_Recipes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Recipes_Categorys_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categorys",
+                        name: "FK_Recipes_Categories_categoryId",
+                        column: x => x.categoryId,
+                        principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -374,9 +398,9 @@ namespace Meal_Planner_Api.Migrations
                 column: "RatingID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Recipes_CategoryId",
+                name: "IX_Recipes_categoryId",
                 table: "Recipes",
-                column: "CategoryId");
+                column: "categoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Recipes_RecipeScheduleId",
@@ -397,6 +421,11 @@ namespace Meal_Planner_Api.Migrations
                 name: "IX_RecipeServings_ServingID",
                 table: "RecipeServings",
                 column: "ServingID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRating_RatingId",
+                table: "UserRating",
+                column: "RatingId");
         }
 
         /// <inheritdoc />
@@ -421,6 +450,9 @@ namespace Meal_Planner_Api.Migrations
                 name: "RecipeServings");
 
             migrationBuilder.DropTable(
+                name: "UserRating");
+
+            migrationBuilder.DropTable(
                 name: "CookingTimes");
 
             migrationBuilder.DropTable(
@@ -430,13 +462,13 @@ namespace Meal_Planner_Api.Migrations
                 name: "PreparationTimes");
 
             migrationBuilder.DropTable(
-                name: "Ratings");
-
-            migrationBuilder.DropTable(
                 name: "Recipes");
 
             migrationBuilder.DropTable(
                 name: "Servings");
+
+            migrationBuilder.DropTable(
+                name: "Ratings");
 
             migrationBuilder.DropTable(
                 name: "Amounts");
@@ -445,7 +477,7 @@ namespace Meal_Planner_Api.Migrations
                 name: "Units");
 
             migrationBuilder.DropTable(
-                name: "Categorys");
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "RecipeSchedules");

@@ -35,7 +35,7 @@ namespace Meal_Planner_Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Amounts", (string)null);
+                    b.ToTable("Amounts");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.Category", b =>
@@ -52,7 +52,7 @@ namespace Meal_Planner_Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.CookingTime", b =>
@@ -68,7 +68,7 @@ namespace Meal_Planner_Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CookingTimes", (string)null);
+                    b.ToTable("CookingTimes");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.Ingredient", b =>
@@ -95,7 +95,7 @@ namespace Meal_Planner_Api.Migrations
 
                     b.HasIndex("UnitId");
 
-                    b.ToTable("Ingredients", (string)null);
+                    b.ToTable("Ingredients");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.Instruction", b =>
@@ -117,7 +117,7 @@ namespace Meal_Planner_Api.Migrations
 
                     b.HasIndex("RecipeId");
 
-                    b.ToTable("Instructions", (string)null);
+                    b.ToTable("Instructions");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.PreparationTime", b =>
@@ -133,7 +133,7 @@ namespace Meal_Planner_Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PreparationTimes", (string)null);
+                    b.ToTable("PreparationTimes");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.Rating", b =>
@@ -149,7 +149,7 @@ namespace Meal_Planner_Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Ratings", (string)null);
+                    b.ToTable("Ratings");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.Recipe", b =>
@@ -159,9 +159,6 @@ namespace Meal_Planner_Api.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -177,15 +174,18 @@ namespace Meal_Planner_Api.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<int>("categoryId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("CategoryId");
+                    b.HasKey("Id");
 
                     b.HasIndex("RecipeScheduleId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Recipes", (string)null);
+                    b.HasIndex("categoryId");
+
+                    b.ToTable("Recipes");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.RecipeCookingTime", b =>
@@ -200,7 +200,7 @@ namespace Meal_Planner_Api.Migrations
 
                     b.HasIndex("CookingTimeID");
 
-                    b.ToTable("RecipeCookingTimes", (string)null);
+                    b.ToTable("RecipeCookingTimes");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.RecipeIngredient", b =>
@@ -215,7 +215,7 @@ namespace Meal_Planner_Api.Migrations
 
                     b.HasIndex("IngredientID");
 
-                    b.ToTable("RecipeIngredients", (string)null);
+                    b.ToTable("RecipeIngredients");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.RecipePreparationTime", b =>
@@ -230,7 +230,7 @@ namespace Meal_Planner_Api.Migrations
 
                     b.HasIndex("PreparationTimeID");
 
-                    b.ToTable("RecipePreparationTimes", (string)null);
+                    b.ToTable("RecipePreparationTimes");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.RecipeRating", b =>
@@ -245,7 +245,7 @@ namespace Meal_Planner_Api.Migrations
 
                     b.HasIndex("RatingID");
 
-                    b.ToTable("RecipeRatings", (string)null);
+                    b.ToTable("RecipeRatings");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.RecipeSchedule", b =>
@@ -269,7 +269,7 @@ namespace Meal_Planner_Api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RecipeSchedules", (string)null);
+                    b.ToTable("RecipeSchedules");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.RecipeServings", b =>
@@ -284,7 +284,7 @@ namespace Meal_Planner_Api.Migrations
 
                     b.HasIndex("ServingID");
 
-                    b.ToTable("RecipeServings", (string)null);
+                    b.ToTable("RecipeServings");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.Servings", b =>
@@ -300,7 +300,7 @@ namespace Meal_Planner_Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Servings", (string)null);
+                    b.ToTable("Servings");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.Unit", b =>
@@ -317,7 +317,7 @@ namespace Meal_Planner_Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Units", (string)null);
+                    b.ToTable("Units");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.User", b =>
@@ -342,7 +342,7 @@ namespace Meal_Planner_Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.UserRating", b =>
@@ -357,7 +357,7 @@ namespace Meal_Planner_Api.Migrations
 
                     b.HasIndex("RatingId");
 
-                    b.ToTable("UserRating", (string)null);
+                    b.ToTable("UserRating");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.Ingredient", b =>
@@ -392,12 +392,6 @@ namespace Meal_Planner_Api.Migrations
 
             modelBuilder.Entity("Meal_Planner_Api.Models.Recipe", b =>
                 {
-                    b.HasOne("Meal_Planner_Api.Models.Category", "Category")
-                        .WithMany("Recipes")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Meal_Planner_Api.Models.RecipeSchedule", null)
                         .WithMany("Recipes")
                         .HasForeignKey("RecipeScheduleId");
@@ -408,9 +402,15 @@ namespace Meal_Planner_Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    b.HasOne("Meal_Planner_Api.Models.Category", "category")
+                        .WithMany("Recipes")
+                        .HasForeignKey("categoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
+
+                    b.Navigation("category");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.RecipeCookingTime", b =>
