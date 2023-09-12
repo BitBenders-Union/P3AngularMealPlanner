@@ -21,5 +21,8 @@ namespace Meal_Planner_Api.Interfaces
 
         bool recipeRatingsExists(int recipeId);
         bool ratingExists(int id);
+
+        bool CreateRating(Rating rating);
+        bool Save();
     }
 }

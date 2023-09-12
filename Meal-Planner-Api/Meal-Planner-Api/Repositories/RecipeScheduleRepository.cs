@@ -40,5 +40,17 @@ namespace Meal_Planner_Api.Repositories
             // returns true if any exists
             return recipeSchedule.Any();
         }
+
+        public bool CreateRecipeSchedule(RecipeSchedule recipeSchedule)
+        {
+            _context.Add(recipeSchedule);
+            return Save();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
+        }
     }
 }

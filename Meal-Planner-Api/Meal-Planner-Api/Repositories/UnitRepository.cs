@@ -13,6 +13,13 @@ namespace Meal_Planner_Api.Repositories
         {
             _context = context;
         }
+
+        public bool CrateUnit(Unit unit)
+        {
+            _context.Add(unit);
+            return Save();
+        }
+
         public Unit GetUnitById(int id)
         {
             return _context.Units.FirstOrDefault(u => u.Id == id);
@@ -51,6 +58,12 @@ namespace Meal_Planner_Api.Repositories
         public ICollection<Unit> GetUnits()
         {
             return _context.Units.OrderBy(u => u.Measurement).ToList();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
 
         public bool UnitExists(int id)

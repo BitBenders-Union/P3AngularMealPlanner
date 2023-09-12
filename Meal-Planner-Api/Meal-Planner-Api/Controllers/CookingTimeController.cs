@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
+using Meal_Planner_Api.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -63,6 +64,42 @@ namespace Meal_Planner_Api.Controllers
 
             return Ok(cookingTime);
         }
+
+
+
+
+
+        [HttpPost]
+        public IActionResult CreateCookingTime([FromBody] CookingTimeDTO cookingCreate)
+        {
+            if(cookingCreate == null)
+                return BadRequest();
+
+            var cookingTime = _cookingTimeRepository.GetCookingTimes()
+                .FirstOrDefault(c => c.Minutes == cookingCreate.Minutes);
+
+            if(cookingTime != null)
+            {
+                ModelState.AddModelError("", "CookingTime Already Exist");
+                return StatusCode(422, ModelState);
+            }
+
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var cookingMap = _mapper.Map<CookingTime>(cookingCreate);
+
+            if (!_cookingTimeRepository.CreateCookingTime(cookingMap))
+            {
+                ModelState.AddModelError("","Something Went Wrong While Saving");
+                return StatusCode(500, ModelState);
+            }
+
+
+            return Ok("Success");
+        }
+
 
     }
 }

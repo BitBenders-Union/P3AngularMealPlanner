@@ -75,5 +75,17 @@ namespace Meal_Planner_Api.Repositories
         {
             return _context.Amounts.OrderBy(a => a.Id).ToList();
         }
+
+        public bool CreateAmount(Amount amount)
+        {
+            _context.Add(amount);
+            return Save();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
+using Meal_Planner_Api.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -54,7 +55,7 @@ namespace Meal_Planner_Api.Controllers
 
         // get prep from recipe
         [HttpGet("byRecipe/{recpeId}")]
-        IActionResult GetByRecipeId(int recipeId)
+        public IActionResult GetByRecipeId(int recipeId)
         {
             var preparationTime = _mapper.Map<PreparationTimeDTO>(_preparationTimeRepository.GetPreparationTimeFromRecipe(recipeId));
 
@@ -66,6 +67,40 @@ namespace Meal_Planner_Api.Controllers
 
             return Ok(preparationTime);
         }
+
+
+
+        [HttpPost]
+        public IActionResult CreatePreparationTime([FromBody] PreparationTimeDTO preparationCreate)
+        {
+            if (preparationCreate == null)
+                return BadRequest();
+
+            var preparation = _preparationTimeRepository.GetPreparationTimes()
+                .FirstOrDefault(p => p.Minutes == preparationCreate.Minutes);
+
+            if(preparation != null)
+            {
+                ModelState.AddModelError("", "Preparationtime already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+
+            var preparationMap = _mapper.Map<PreparationTime>(preparationCreate);
+
+            if(!_preparationTimeRepository.CreatePreparationTime(preparationMap))
+            {
+                ModelState.AddModelError("", "Somethind Went Wrong While Trying To Save");
+                return StatusCode(500, ModelState);
+            }
+
+
+            return Ok("Success");
+        }
+
 
     }
 }

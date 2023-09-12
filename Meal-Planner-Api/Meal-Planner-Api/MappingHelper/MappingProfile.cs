@@ -23,24 +23,33 @@ namespace Meal_Planner_Api.MappingHelper
             CreateMap<PreparationTime, PreparationTimeDTO>();
             CreateMap<PreparationTimeDTO, PreparationTime>();
 
+            CreateMap<CookingTime, CookingTimeDTO>();
+            CreateMap<CookingTimeDTO, CookingTime>();
+
             CreateMap<Rating, RatingDTO>();
             CreateMap<RatingDTO, Rating>();
-
 
             CreateMap<Recipe, RecipeDTO>();
             CreateMap<RecipeDTO, Recipe>();
 
             CreateMap<RecipeSchedule, RecipeScheduleDTO>();
-            CreateMap<RecipeScheduleDTO, RecipeScheduleDTO>();
+            CreateMap<RecipeScheduleDTO, RecipeSchedule>();
 
             CreateMap<Servings, ServingsDTO>();
-            CreateMap<ServingsDTO, ServingsDTO>();
+            CreateMap<ServingsDTO, Servings>();
 
             CreateMap<Unit, UnitDTO>();
             CreateMap<UnitDTO, Unit>();
 
             CreateMap<User, UserDTO>();
             CreateMap<UserDTO, User>();
+
+            CreateMap<UserOnlyNameDTO, UserDTO >();
+            CreateMap<UserDTO, UserOnlyNameDTO>();
+
+            CreateMap<User, UserOnlyNameDTO>();
+            CreateMap<UserOnlyNameDTO, User >();
+
 
 
         }

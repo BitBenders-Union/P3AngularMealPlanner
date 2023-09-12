@@ -1,4 +1,5 @@
-﻿using Meal_Planner_Api.Models;
+﻿using Meal_Planner_Api.Dto;
+using Meal_Planner_Api.Models;
 
 namespace Meal_Planner_Api.Interfaces
 {
@@ -10,7 +11,8 @@ namespace Meal_Planner_Api.Interfaces
         Recipe GetRecipe(string name);
         float GetRecipeRating(int recipeId);
         bool RecipeExists(int recipeId);
-
+        bool CreateRecipe(RecipeCreateDTO recipeData);
+        bool Save();
 
 
 

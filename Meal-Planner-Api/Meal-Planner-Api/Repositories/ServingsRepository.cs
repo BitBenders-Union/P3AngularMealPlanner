@@ -13,6 +13,13 @@ namespace Meal_Planner_Api.Repositories
         {
             _context = context;
         }
+
+        public bool CreateServing(Servings serving)
+        {
+            _context.Add(serving);
+            return Save();
+        }
+
         public Servings GetServing(int id)
         {
             return _context.Servings.FirstOrDefault(x => x.Id == id);
@@ -33,6 +40,12 @@ namespace Meal_Planner_Api.Repositories
         public ICollection<Servings> GetServings()
         {
             return _context.Servings.OrderBy(x => x.Id).ToList();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
 
         public bool servingExist(int id)
