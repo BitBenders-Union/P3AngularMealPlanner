@@ -24,6 +24,7 @@ import { FormsTestComponent } from './forms-test/forms-test.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 import { UpdateRecipeComponent } from './update-recipe/update-recipe.component';
 import { UserLoginComponent } from './user-login/user-login.component';
+import { UserRegisterComponent } from './user-register/user-register.component';
 
 
 @NgModule({
@@ -44,6 +45,7 @@ import { UserLoginComponent } from './user-login/user-login.component';
     LoadingSpinnerComponent,
     UpdateRecipeComponent,
     UserLoginComponent,
+    UserRegisterComponent,
     
     
   ],
