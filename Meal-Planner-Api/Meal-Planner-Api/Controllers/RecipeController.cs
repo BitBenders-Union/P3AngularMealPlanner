@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using Meal_Planner_Api.Data;
 using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
 using Meal_Planner_Api.Models;
+using Meal_Planner_Api.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
 namespace Meal_Planner_Api.Controllers
@@ -99,31 +102,37 @@ namespace Meal_Planner_Api.Controllers
 
 
 
-        [HttpPost]
-        public IActionResult CreateRecipe([FromBody] RecipeDTO recipeCreate)
+
+
+        [HttpPost("/create")]
+        public IActionResult CreateARecipe([FromBody] RecipeCreateDTO recipeData)
         {
-            if (recipeCreate == null)
+
+            // checks if the input form body is null
+            if (recipeData == null)
                 return BadRequest();
 
+            // looks for other quantities with the same value
             var recipe = _recipeRepository.GetRecipes()
-                .FirstOrDefault(r => r.Title == recipeCreate.Title);
+                .FirstOrDefault(x => x.Title == recipeData.Title);
 
-            if(recipe != null)
+
+            // if another quantity does exist
+            if (recipe != null)
             {
-                ModelState.AddModelError("", "Recipe Already Exist");
+                //TODO: logic that makes it so the created amount uses the existing amount
+                ModelState.AddModelError("", "Recipe Already Exists");
                 return StatusCode(422, ModelState);
             }
-
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
 
-            var recipeMap = _mapper.Map<Recipe>(recipeCreate);
-
-            if(!_recipeRepository.CreateRecipe(recipeMap))
+            // create the amount and check if it saved
+            if (!_recipeRepository.CreateRecipe(recipeData))
             {
-                ModelState.AddModelError("", "Error while saving");
+                ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);
             }
 
@@ -131,7 +140,7 @@ namespace Meal_Planner_Api.Controllers
         }
 
 
-
+       
 
 
     }

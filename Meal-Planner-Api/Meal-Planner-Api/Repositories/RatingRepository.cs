@@ -16,7 +16,7 @@ namespace Meal_Planner_Api.Repositories
 
         public bool CreateRating(Rating rating)
         {
-            _context.SaveChanges();
+            _context.Add(rating);
             return Save();
         }
 

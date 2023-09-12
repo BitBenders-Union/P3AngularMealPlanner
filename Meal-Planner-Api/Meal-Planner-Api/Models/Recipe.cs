@@ -1,11 +1,13 @@
-﻿namespace Meal_Planner_Api.Models
+﻿using Meal_Planner_Api.Dto;
+
+namespace Meal_Planner_Api.Models
 {
     public class Recipe
     {
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public Category Category { get; set; }
+        public Category category { get; set; }
         public ICollection<RecipePreparationTime> RecipePreparationTime { get; set; }
         public ICollection<RecipeCookingTime> RecipeCookingTime { get; set; }
         public ICollection<RecipeServings> RecipeServings { get; set; }

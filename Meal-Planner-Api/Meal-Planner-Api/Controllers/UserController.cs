@@ -5,6 +5,7 @@ using Meal_Planner_Api.Models;
 using Meal_Planner_Api.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Meal_Planner_Api.Controllers
 {
@@ -27,7 +28,7 @@ namespace Meal_Planner_Api.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var users = _mapper.Map<List<UserDTO>>(_userRepository.GetUsers());
+            var users = _mapper.Map<List<UserOnlyNameDTO>>(_userRepository.GetUsers());
 
             if(users == null || users.Count() == 0)
                 return NotFound("Not Found");
@@ -46,7 +47,7 @@ namespace Meal_Planner_Api.Controllers
             if (!_userRepository.UserExists(id))
                 return NotFound("Not Found");
 
-            var user = _mapper.Map<UserDTO>(_userRepository.GetUser(id));
+            var user = _mapper.Map<UserOnlyNameDTO>(_userRepository.GetUser(id));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -56,13 +57,13 @@ namespace Meal_Planner_Api.Controllers
 
 
         // get user by username
-        [HttpGet("{username}")]
+        [HttpGet("/username/{username}")]
         public IActionResult Get(string username)
         {
             if (!_userRepository.UserExists(username))
                 return NotFound("Not Found");
 
-            var user = _mapper.Map<UserDTO>(_userRepository.GetUser(username));
+            var user = _mapper.Map<UserOnlyNameDTO>(_userRepository.GetUser(username));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -73,8 +74,8 @@ namespace Meal_Planner_Api.Controllers
 
 
         // validate user
-        [HttpGet("{password}/{username}")]
-        public IActionResult validateUser(string password, string username)
+        [HttpPost("/validate")]
+        public IActionResult validateUser([FromBody] UserDTO user)
         {
             // first find user by username
             // then find salt
@@ -83,19 +84,19 @@ namespace Meal_Planner_Api.Controllers
             // then return Ok(true || false)
 
             // check if username exist
-            if (!_userRepository.UserExists(username))
+            if (!_userRepository.UserExists(user.Username))
                 return NotFound("User Not Found");
 
             // get user & user.passwordSalt
-            var user = _userRepository.GetUser(username);
+            var userGet = _userRepository.GetUser(user.Username);
 
             // hash the password
-            byte[] hash = _hashingService.PasswordHashing(password, user.PasswordSalt);
+            byte[] hash = _hashingService.PasswordHashing(user.Password, userGet.PasswordSalt);
 
             // validate hash and username
             // maybe change to not use username, since we already validate username before this
             // we can't change previous methodology since password hashing requires the correct salt
-            var validate = _userRepository.ValidateUser(hash, username);
+            var validate = _userRepository.ValidateUser(hash, user.Username);
 
             return Ok(validate);
 
@@ -104,33 +105,43 @@ namespace Meal_Planner_Api.Controllers
 
 
         [HttpPost]
-        public IActionResult CreateUnit([FromBody] UserDTO userCreate)
+        public IActionResult CreateUnit([FromBody] UserDTO user)
         {
             // checks if the input form body is null
-            if (userCreate == null)
+            if (user.Username.IsNullOrEmpty() || user.Password.IsNullOrEmpty())
                 return BadRequest();
 
-            // looks for other quantities with the same value
-            var user = _userRepository.GetUsers()
-                .FirstOrDefault(a => a.Username.Trim().ToUpper == userCreate.Username.Trim().ToUpper());
+            // looks for other users with the same value
+            var userGet = _userRepository.GetUsers()
+                .FirstOrDefault(a => a.Username.Trim().ToUpper() == user.Username.Trim().ToUpper());
 
             
 
             // if another quantity does exist
-            if (unit != null)
+            if (userGet != null)
             {
                 //TODO: logic that makes it so the created amount uses the existing amount
-                ModelState.AddModelError("", "Unit Already Exists");
+                ModelState.AddModelError("", "User Already Exists");
                 return StatusCode(422, ModelState);
             }
+
+            // create a new user
+            byte[] salt = _hashingService.GenerateSalt();
+            byte[] hash = _hashingService.PasswordHashing(user.Password, salt);
+
+            User newUser = new User
+            {
+                Username = user.Username,
+                PasswordSalt = salt,
+                PasswordHash = hash
+            };
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var unitMap = _mapper.Map<Unit>(userCreate);
 
             // create the amount and check if it saved
-            if (!_unitRepository.CrateUnit(unitMap))
+            if (!_userRepository.CreateUser(newUser))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);

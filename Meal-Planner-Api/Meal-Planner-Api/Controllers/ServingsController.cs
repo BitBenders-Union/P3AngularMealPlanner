@@ -89,7 +89,9 @@ namespace Meal_Planner_Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            //TODO: Servings map can't be found or is unsupported, fix this
             var servingMap = _mapper.Map<Servings>(servingCreate);
+
 
             // create the amount and check if it saved
             if (!_servingsRepository.CreateServing(servingMap))
