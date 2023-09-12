@@ -14,6 +14,12 @@ namespace Meal_Planner_Api.Repositories
             _context = context;
         }
 
+        public bool CreateRating(Rating rating)
+        {
+            _context.Add(rating);
+            return Save();
+        }
+
         public Rating GetRating(int id)
         {
             return _context.Ratings.FirstOrDefault(x => x.Id == id);
@@ -81,6 +87,12 @@ namespace Meal_Planner_Api.Repositories
                 .FirstOrDefault(x => x.Id == recipeId);
 
             return recipe.RecipeRating.Any();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }

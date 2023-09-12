@@ -10,5 +10,7 @@ namespace Meal_Planner_Api.Interfaces
         bool ValidateUser(byte[] hashedPassword, string username);
         bool UserExists(int id);
         bool UserExists(string username);
+        bool CreateUser(User user);
+        bool Save();
     }
 }

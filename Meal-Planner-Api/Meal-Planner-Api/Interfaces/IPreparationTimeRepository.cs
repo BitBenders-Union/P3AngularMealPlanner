@@ -8,6 +8,8 @@ namespace Meal_Planner_Api.Interfaces
         PreparationTime GetPreparationTime(int id);
         PreparationTime GetPreparationTimeFromRecipe(int recipeId);
         bool PreparationTimeExists(int id);
+        bool CreatePreparationTime(PreparationTime preparationTime);
+        bool Save();
 
     }
 }

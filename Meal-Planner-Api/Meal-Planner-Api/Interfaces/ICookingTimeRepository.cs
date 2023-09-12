@@ -7,6 +7,8 @@ namespace Meal_Planner_Api.Interfaces
         ICollection<CookingTime> GetCookingTimes();
         CookingTime GetCookingTime(int id);
         CookingTime GetCookingTimeForRecipe(int recipeId);
-        bool CookingTimeExists(int id);   
+        bool CookingTimeExists(int id);
+        bool CreateCookingTime(CookingTime cookingTime);
+        bool Save();
     }
 }

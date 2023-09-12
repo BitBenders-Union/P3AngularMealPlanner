@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
+using Meal_Planner_Api.Models;
+using Meal_Planner_Api.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -63,6 +65,42 @@ namespace Meal_Planner_Api.Controllers
 
             return Ok(serving);
 
+        }
+
+        [HttpPost]
+        public IActionResult CreateServing([FromBody] ServingsDTO servingCreate)
+        {
+            // checks if the input form body is null
+            if (servingCreate == null)
+                return BadRequest();
+
+            // looks for other quantities with the same value
+            var serving = _servingsRepository.GetServings()
+                .FirstOrDefault(a => a.Quantity == servingCreate.Quantity);
+
+            // if another quantity does exist
+            if (serving != null)
+            {
+                //TODO: logic that makes it so the created amount uses the existing amount
+                ModelState.AddModelError("", "Quantity Already Exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            //TODO: Servings map can't be found or is unsupported, fix this
+            var servingMap = _mapper.Map<Servings>(servingCreate);
+
+
+            // create the amount and check if it saved
+            if (!_servingsRepository.CreateServing(servingMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Success");
         }
 
 

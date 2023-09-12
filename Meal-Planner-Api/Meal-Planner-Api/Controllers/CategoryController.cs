@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
+using Meal_Planner_Api.Models;
 using Meal_Planner_Api.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -63,6 +64,41 @@ namespace Meal_Planner_Api.Controllers
                 return NotFound();
 
             return Ok(category);
+
+        }
+
+        [HttpPost]
+        public IActionResult CreateCategory([FromBody] CategoryDTO categoryCreate)
+        {
+            if(categoryCreate == null)
+                return BadRequest();
+
+            
+            // looks for other categories with the same name
+            var category = _categoryRepository.GetCategories()
+                .FirstOrDefault(c => c.CategoryName.Trim().ToUpper() == categoryCreate.CategoryName.Trim().ToUpper());
+
+            // if a category with the same name as the input exists, return 422 statuscode
+            if(category != null)
+            {
+                ModelState.AddModelError("", "Category already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var categoryMap = _mapper.Map<Category>(categoryCreate);
+            
+            // create the category if it returns false it didn't save properly, something went wrong.
+            if(!_categoryRepository.CreateCategory(categoryMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(500, ModelState);
+            }
+
+            // after all checks passed return Ok
+            return Ok("Success");
 
         }
 

@@ -18,6 +18,12 @@ namespace Meal_Planner_Api.Repositories
             return _context.CookingTimes.Any(ct => ct.Id == id);
         }
 
+        public bool CreateCookingTime(CookingTime cookingTime)
+        {
+            _context.Add(cookingTime);
+            return Save();
+        }
+
         public CookingTime GetCookingTime(int id)
         {
             return _context.CookingTimes.FirstOrDefault(ct => ct.Id == id);
@@ -44,6 +50,12 @@ namespace Meal_Planner_Api.Repositories
         public ICollection<CookingTime> GetCookingTimes()
         {
             return _context.CookingTimes.OrderBy(ct => ct.Id).ToList();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }

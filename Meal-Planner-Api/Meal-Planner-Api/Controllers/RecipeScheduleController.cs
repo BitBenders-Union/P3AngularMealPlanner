@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
+using Meal_Planner_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Meal_Planner_Api.Controllers
@@ -65,6 +66,31 @@ namespace Meal_Planner_Api.Controllers
             return Ok(schedule);
         }
 
+        [HttpPost]
+        public IActionResult CreateRecipeSchedule([FromBody] RecipeScheduleDTO scheduleCreate)
+        {
+            if (scheduleCreate == null) 
+                return BadRequest();
+            
+            //TODO: figure out how to implement this properly
+            // the post should happen on user creation
+            // it should also take the user and bind it to the schedule
+            // it should also have multiple entries in the table with rows and columns, where recipes are empty.
+
+
+
+
+            var scheduleMap = _mapper.Map<RecipeSchedule>(scheduleCreate);
+
+            if(!_recipeScheduleRepository.CreateRecipeSchedule(scheduleMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(500, ModelState);
+            }
+
+
+            return Ok("Success");
+        }
 
     }
 }

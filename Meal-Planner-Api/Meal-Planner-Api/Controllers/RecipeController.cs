@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
+using Meal_Planner_Api.Data;
 using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
+using Meal_Planner_Api.Models;
+using Meal_Planner_Api.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
 namespace Meal_Planner_Api.Controllers
@@ -96,6 +100,47 @@ namespace Meal_Planner_Api.Controllers
             return Ok(recipe);
         }
 
+
+
+
+
+        [HttpPost("/create")]
+        public IActionResult CreateARecipe([FromBody] RecipeCreateDTO recipeData)
+        {
+
+            // checks if the input form body is null
+            if (recipeData == null)
+                return BadRequest();
+
+            // looks for other quantities with the same value
+            var recipe = _recipeRepository.GetRecipes()
+                .FirstOrDefault(x => x.Title == recipeData.Title);
+
+
+            // if another quantity does exist
+            if (recipe != null)
+            {
+                //TODO: logic that makes it so the created amount uses the existing amount
+                ModelState.AddModelError("", "Recipe Already Exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+
+            // create the amount and check if it saved
+            if (!_recipeRepository.CreateRecipe(recipeData))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Success");
+        }
+
+
+       
 
 
     }

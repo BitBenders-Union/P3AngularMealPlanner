@@ -9,5 +9,9 @@ namespace Meal_Planner_Api.Interfaces
         Category GetCategoryByRecipeId(int recipeId);
         bool CategoriesExists(int id);
 
+        bool CreateCategory(Category category);
+
+        bool Save();
+
     }
 }

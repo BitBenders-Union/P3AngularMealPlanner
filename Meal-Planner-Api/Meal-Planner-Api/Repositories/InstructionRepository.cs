@@ -14,6 +14,12 @@ namespace Meal_Planner_Api.Repositories
             _context = context;
         }
 
+        public bool CreateInstruction(Instruction instruction)
+        {
+            _context.Add(instruction);
+            return Save();
+        }
+
         public Instruction GetInstruction(int id)
         {
             return _context.Instructions.FirstOrDefault(x => x.Id == id);
@@ -44,5 +50,10 @@ namespace Meal_Planner_Api.Repositories
             return _context.Instructions.Any(i => i.Id == id);
         }
 
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
+using Meal_Planner_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Meal_Planner_Api.Controllers
@@ -93,5 +94,42 @@ namespace Meal_Planner_Api.Controllers
 
             return Ok(ratings);
         }
+
+
+
+
+
+        [HttpPost]
+        public IActionResult CreateRating([FromBody] RatingDTO ratingCreate)
+        {
+            if (ratingCreate == null)
+                return BadRequest();
+
+            var rating = _ratingRepository.GetRatings()
+                .FirstOrDefault(r => r.Score == ratingCreate.Score);
+
+            if(rating != null)
+            {
+                ModelState.AddModelError("", "Rating Already Exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var ratingMap = _mapper.Map<Rating>(ratingCreate);
+
+            if (!_ratingRepository.CreateRating(ratingMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(500, ModelState);
+            }
+
+
+            return Ok("Success");
+        }
+
+
+
     }
 }

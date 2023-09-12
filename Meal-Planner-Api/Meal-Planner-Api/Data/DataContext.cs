@@ -112,6 +112,11 @@ namespace Meal_Planner_Api.Data
                 .WithMany(ur => ur.UserRating)
                 .HasForeignKey(r => r.RatingId);
 
+            modelBuilder.Entity<Recipe>()
+                .HasMany(r => r.Instructions)
+                .WithOne(i => i.Recipe)
+                .HasForeignKey(i => i.Id);
+
 
 
         }
