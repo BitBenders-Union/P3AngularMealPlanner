@@ -1,0 +1,60 @@
+.login-form {
+    background-color: var(--color-secondary);
+    padding: 20px;
+    border-radius: 10px;
+    width: 50vw;
+    margin: 0 auto;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.form-section {
+    margin-bottom: 20px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid var(--color-text);
+    border-radius: 5px;
+  }
+
+  button {
+    background-color: var(--color-primary);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .buttons-exit {
+    justify-content: center;
+    margin-top: 5%;
+  }
+
+  button[type="button"] {
+    margin-right: 5px; /* Add a small gap on the left and right */
+  }
+  
+  button:hover {
+    background-color: var(--color-text);
+  }
+  
+  .confirm-button {
+width: 20%; /* Adjust the width as needed */
+}
+
+.confirm-button {
+    background-color: var(--color-primary);
+    margin-left: 10px;
+}
+
+.buttons,
+.buttons-exit {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+  
