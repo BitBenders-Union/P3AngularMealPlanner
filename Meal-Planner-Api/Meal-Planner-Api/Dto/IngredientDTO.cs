@@ -10,7 +10,5 @@ namespace Meal_Planner_Api.Dto
         public AmountDTO Amount { get; set; }
         public UnitDTO Unit { get; set; }
 
-        //public Amount Amounts { get; set; }
-        //public int RecipeId { get; set; }
     }
 }
