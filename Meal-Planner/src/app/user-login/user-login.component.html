@@ -1,10 +1,12 @@
-<form action="" class="login-form">
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
     <h2>Login</h2>
     <div class="form-section">
-        <label>Username <input type="text" class="input-field"></label>
-        <label>Password <input type="text" class="input-field"></label>
+        <label>Username <input type="text" formControlName="username" placeholder="Username" required="required" class="input-field"></label>
+        <label>Password <input type="password" formControlName="password" placeholder="Password" required="required" class="input-field"></label>
+        <div *ngIf="loginForm.get('username')?.hasError('incorrectLogin')" class="error-message">
+            Incorrect username and password
+        </div>
     </div>
-
     <div class="buttons-exit">
         <button type="submit" class="confirm-button">Login</button>
         <button class="register-button">Register</button>
