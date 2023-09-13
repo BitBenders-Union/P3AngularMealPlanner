@@ -4,6 +4,6 @@
     {
         public int Id { get; set; }
         public float Quantity { get; set; }
-        public ICollection<Ingredient> Ingredients { get; set; }
+        public ICollection<RecipeIngredient> Ingredients { get; set; }
     }
 }
