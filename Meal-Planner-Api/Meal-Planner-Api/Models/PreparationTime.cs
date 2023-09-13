@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public int Minutes { get; set; }
-        public ICollection<RecipePreparationTime> RecipePreparationTime { get; set; }
+        public ICollection<Recipe> Recipe { get; set; }
 
     }
 }

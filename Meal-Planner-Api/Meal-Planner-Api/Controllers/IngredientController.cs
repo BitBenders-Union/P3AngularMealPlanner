@@ -13,11 +13,15 @@ namespace Meal_Planner_Api.Controllers
     {
         private IMapper _mapper;
         private IIngredientRepository _ingredientRepository;
+        private IAmountRepository _amountRepository;
+        private IUnitRepository _unitRepository;
 
-        public IngredientController(IMapper mapper, IIngredientRepository ingredientRepository)
+        public IngredientController(IMapper mapper, IIngredientRepository ingredientRepository, IAmountRepository amountRepository, IUnitRepository unitRepository)
         {
             _mapper = mapper;
             _ingredientRepository = ingredientRepository;
+            _amountRepository = amountRepository;
+            _unitRepository = unitRepository;
         }
 
         // get all Ingredients
@@ -84,17 +88,19 @@ namespace Meal_Planner_Api.Controllers
 
 
 
-
-
         [HttpPost]
         public IActionResult CreateIngredient([FromBody] IngredientDTO ingredientCreate)
         {
+
+            // initial Checks
             if (ingredientCreate == null)
                 return BadRequest();
 
+
+            
             var ingredient = _ingredientRepository.GetIngredient(ingredientCreate.Name);
 
-            if(ingredient != null)
+            if (ingredient != null)
             {
                 ModelState.AddModelError("", "Ingredient Already Exists");
                 return StatusCode(422, ModelState);
@@ -103,9 +109,19 @@ namespace Meal_Planner_Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var ingredietnMap = _mapper.Map<Ingredient>(ingredientCreate);
 
-            if(!_ingredientRepository.CreateIngredient(ingredietnMap))
+            // find if amount and or unit exist
+            var amountExist = true;
+            if (_amountRepository.GetAmountByQuantity(ingredientCreate.Amount.Quantity) == null)
+                amountExist = false;
+
+            var unitExist = true;
+            if(_unitRepository.GetUnitByName(ingredientCreate.Unit.Measurement) == null)
+                unitExist = false;
+
+            var ingredientMap = _mapper.Map<Ingredient>(ingredientCreate);
+
+            if (!_ingredientRepository.CreateIngredient(ingredientMap, amountExist, unitExist))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);

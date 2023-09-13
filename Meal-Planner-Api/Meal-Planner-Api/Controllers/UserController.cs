@@ -120,7 +120,6 @@ namespace Meal_Planner_Api.Controllers
             // if another quantity does exist
             if (userGet != null)
             {
-                //TODO: logic that makes it so the created amount uses the existing amount
                 ModelState.AddModelError("", "User Already Exists");
                 return StatusCode(422, ModelState);
             }
