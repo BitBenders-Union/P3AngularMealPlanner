@@ -7,7 +7,7 @@ import {Observable, catchError, retry} from 'rxjs';
 })
 export class LoginService {
 
-  private apiUrl = 'https://localhost:7246/api/';
+  private apiUrl = 'https://localhost:7268/';
 
   constructor(private http:HttpClient) { }
 
@@ -21,8 +21,14 @@ export class LoginService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-
     return this.http.post(`${this.apiUrl}validate`, body,{headers, responseType: 'json'});
   }
 
+  createLogin(data: any): Observable<any>{
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    })
+
+    return this.http.post(`${this.apiUrl}api/User`, data,{headers, responseType: 'text'});
+  }
 }
