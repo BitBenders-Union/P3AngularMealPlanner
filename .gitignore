@@ -1,7 +1,3 @@
 ﻿################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
-
-/Meal-Planner-Api/Meal-Planner-Api/appsettings.json
-/Meal-Planner-Api/Meal-Planner-Api/appsettings.json
-/Meal-Planner-Api/Meal-Planner-Api/appsettings.Development.json
