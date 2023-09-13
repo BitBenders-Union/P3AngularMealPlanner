@@ -23,7 +23,24 @@ export class UserLoginComponent {
   }
 
   onSubmit(): void{
-    
+    if(this.loginForm.valid){
+      const username = this.loginForm.value.username;
+      const password = this.loginForm.value.password;
+
+      const userData = {
+        username: username,
+        password: password
+      };
+
+      this.loginService.sendLoginData(userData).subscribe({
+        next: (data: any) => {
+          console.log("Success", data);
+        },
+        error:(error) => {
+          console.error("Http Error: ",error)
+        }
+      })
+    }
   }
 
 }
