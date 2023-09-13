@@ -7,7 +7,7 @@ import {Observable, catchError, retry} from 'rxjs';
 })
 export class LoginService {
 
-  private apiUrl = 'https://localhost:7246/api/';
+  private apiUrl = 'https://localhost:7268/';
 
   constructor(private http:HttpClient) { }
 
@@ -16,7 +16,7 @@ export class LoginService {
       'Content-Type': 'application/json'
     });
 
-    return this.http.post(`${this.apiUrl}/validate`, data,{headers, responseType: 'text'});
+    return this.http.post(`${this.apiUrl}validate`, data,{headers, responseType: 'json'});
   }
 
 }
