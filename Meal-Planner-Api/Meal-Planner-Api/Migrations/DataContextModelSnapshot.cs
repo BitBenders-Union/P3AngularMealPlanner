@@ -396,7 +396,7 @@ namespace Meal_Planner_Api.Migrations
                         .WithMany("Recipes")
                         .HasForeignKey("RecipeScheduleId");
 
-                    b.HasOne("Meal_Planner_Api.Models.User", "User")
+                    b.HasOne("Meal_Planner_Api.Models.User", null)
                         .WithMany("Recipes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -407,8 +407,6 @@ namespace Meal_Planner_Api.Migrations
                         .HasForeignKey("categoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("User");
 
                     b.Navigation("category");
                 });
