@@ -63,4 +63,7 @@ width: 20%; /* Adjust the width as needed */
   align-items: center;
   margin-top: 10px;
 }
-  
+
+.error-message {
+  color: red;
+}

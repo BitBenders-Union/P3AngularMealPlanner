@@ -1,9 +1,15 @@
-<form action="" class="login-form">
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="login-form">
     <h2>Register</h2>
     <div class="form-section">
-        <label>Username <input type="text" class="input-field"></label>
-        <label>Password <input type="text" class="input-field"></label>
-        <label>Confirm-Password <input type="text" class="input-field"></label>
+        <label>Username <input type="text" formControlName="username" class="input-field"></label>
+        <div *ngIf="registerForm.get('username')?.hasError('usernameTaken')" class="error-message">
+            Username is already taken.
+        </div>
+        <label>Password <input type="password" formControlName="password" class="input-field"></label>
+        <label>Confirm-Password <input type="password" formControlName="confirmPassword" class="input-field"></label>
+        <div *ngIf="passwordsDoNotMatch()" class="error-message">
+            Passwords do not match.
+        </div>
     </div>
 
     <div class="buttons-exit">

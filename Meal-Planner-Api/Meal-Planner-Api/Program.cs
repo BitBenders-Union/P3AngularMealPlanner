@@ -23,11 +23,13 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
         {
 
-            policy.WithOrigins(allowedOrigins)
+            policy.WithOrigins("*")
                   .WithHeaders("content-type")
                   .WithMethods("GET", "POST", "PUT", "DELETE");
         });
 });
+
+
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -57,6 +59,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

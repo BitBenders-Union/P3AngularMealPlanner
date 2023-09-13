@@ -39,6 +39,7 @@ export class UserLoginComponent {
         error:(error) => {
           console.error("Http Error: ",error);
           this.loginForm.get('username')?.setErrors({incorrectLogin: true});
+          this.loginForm.get('password')?.setErrors({incorrectLogin: true})
         }
       })
     }
