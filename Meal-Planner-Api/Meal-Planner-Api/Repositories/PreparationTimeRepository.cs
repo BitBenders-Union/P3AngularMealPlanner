@@ -28,13 +28,10 @@ namespace Meal_Planner_Api.Repositories
         public PreparationTime GetPreparationTimeFromRecipe(int recipeId)
         {
 
-            var recipe = _context.Recipes.Include(x => x.RecipePreparationTime)
-                .ThenInclude(x => x.PreparationTime)
-                .FirstOrDefault(x => x.Id == recipeId);
+            var prepTime = _context.Recipes.Include(x => x.PreparationTime).FirstOrDefault(x => x.Id == recipeId)?.PreparationTime;
 
-            var prepTime = recipe.RecipePreparationTime.Select(x => x.PreparationTime)
-                .Where(prep => prep != null)
-                .FirstOrDefault();
+            if (prepTime == null)
+                return null;
 
             return prepTime;
 

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Meal_Planner_Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230913071802_updated")]
-    partial class updated
+    [Migration("20230913081249_initialize")]
+    partial class initialize
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

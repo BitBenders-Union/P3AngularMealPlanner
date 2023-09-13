@@ -87,5 +87,11 @@ namespace Meal_Planner_Api.Repositories
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
         }
+
+        public Amount GetAmountByQuantity(float quantity)
+        {
+            var amount = _context.Amounts.FirstOrDefault(a => a.Quantity == quantity);
+            return amount;
+        }
     }
 }
