@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using Meal_Planner_Api.Data;
 using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
 using Meal_Planner_Api.Models;
 using Meal_Planner_Api.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
 namespace Meal_Planner_Api.Controllers
@@ -12,78 +15,129 @@ namespace Meal_Planner_Api.Controllers
     [ApiController]
     public class RecipeController : ControllerBase
     {
-        private readonly IRecipeRepository _recipeRepository;
-        private readonly IAmountRepository _amountRepository;
-        private readonly IMapper _mapper;
+        private IRecipeRepository _recipeRepository;
+        private IMapper _mapper;
 
-        public RecipeController(IRecipeRepository recipeRepository, IAmountRepository amountRepository, IMapper mapper)
+        public RecipeController(IMapper mapper, IRecipeRepository recipeRepository)
         {
             _recipeRepository = recipeRepository;
-            _amountRepository = amountRepository;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public ActionResult GetAllRecipes()
+        public IActionResult GetRecipes()
         {
-            List<RecipeDTO> recipes = _recipeRepository.GetAllRecipes()
-                .Select(recipe => _mapper.Map<RecipeDTO>(recipe))
-                .ToList();
+            var recipes = _mapper.Map<List<RecipeDTO>>(_recipeRepository.GetRecipes());
+
+            if (recipes == null || recipes.Count() == 0)
+                return NotFound("Not Found");
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+
             return Ok(recipes);
         }
 
-        [HttpGet("{id}", Name = "GetRecipe")]
-        public ActionResult<RecipeDTO> GetRecipe(int id)
+        [HttpGet("{recipeId}")]
+        public IActionResult GetRecipe(int recipeId)
         {
-            var recipe = _recipeRepository.GetRecipe(id);
+            // maps the recipe to recipeDTO so we only show what we want.
+            var recipe = _mapper.Map<RecipeDTO>(_recipeRepository.GetRecipe(recipeId));
+
             if (recipe == null)
-            {
-                return NotFound();
-            }
-            var recipeDTO = _mapper.Map<RecipeDTO>(recipe);
-            return Ok(recipeDTO);
+                return NotFound("Not Found");
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(recipe);
         }
 
-        [HttpPost]
-        public IActionResult CreateRecipe([FromBody] Recipe recipe)
+        [HttpGet("{recipeName}")]
+        public IActionResult GetRecipe(string recipeName)
         {
-            // Add the instructions to the recipe
-            recipe.Instructions = recipe.Instructions.Select(instructionText =>
-                new Instruction { Text =  instructionText.Text}).ToList();
+            // maps the recipe to recipeDTO so we only show what we want.
+            var recipe = _mapper.Map<RecipeDTO>(_recipeRepository.GetRecipe(recipeName));
 
-
-            // Add the recipe and its associated instructions to the database
-            _recipeRepository.AddRecipe(recipe);
-
-            // Return the newly created recipe
-            var createdRecipe = _mapper.Map<Recipe>(recipe);
-            return CreatedAtAction(nameof(GetRecipe), new { id = createdRecipe.Id }, createdRecipe);
-        }
-
-
-        [HttpPut("{id}")]
-        public ActionResult UpdateRecipe(int id, RecipeDTO recipeUpdateDto)
-        {
-            var recipeModel = _mapper.Map<Recipe>(recipeUpdateDto);
-            recipeModel.Id = id; // Make sure to set the ID to the existing recipe's ID
-            _recipeRepository.UpdateRecipe(recipeModel);
-
-            return NoContent(); // Returns a 204 No Content response
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult DeleteRecipe(int id)
-        {
-            var recipe = _recipeRepository.GetRecipe(id);
             if (recipe == null)
-            {
+                return NotFound("Not Found");
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(recipe);
+        }
+
+        [HttpGet("{recipeId}/rating")]
+        public IActionResult GetRating(int recipeId)
+        {
+            // check if recipe exist
+            if (!_recipeRepository.RecipeExists(recipeId))
                 return NotFound();
+
+            // get the rating
+            var rating = _recipeRepository.GetRecipeRating(recipeId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(rating);
+        }
+
+        // get recipe a user created
+        [HttpGet("byUserId/{userId}")]
+        public IActionResult GetByUserId(int userId)
+        {
+            var recipe = _mapper.Map<List<RecipeDTO>>(_recipeRepository.GetUserRecipes(userId));
+
+            if(recipe == null)
+                return NotFound();
+
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(recipe);
+        }
+
+
+
+
+
+        [HttpPost("/create")]
+        public IActionResult CreateRecipe([FromBody] RecipeDTO recipeData)
+        {
+            if (recipeData == null)
+                return BadRequest();
+
+
+            var recipe = _recipeRepository.GetRecipes()
+                .FirstOrDefault(x => x.Title == recipeData.Title);
+
+
+            if (recipe != null)
+            {
+                ModelState.AddModelError("", "Recipe Already Exists");
+                return StatusCode(422, ModelState);
             }
 
-            _recipeRepository.DeleteRecipe(id);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            return NoContent();
+            var recipeMap = _mapper.Map<Recipe>(recipeData);
+
+
+            if (!_recipeRepository.CreateRecipe(recipeMap, recipeData.RatingIDs, recipeData.IngredientIDs))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Success");
         }
+
+
+       
 
 
     }

@@ -2,18 +2,19 @@
 
 namespace Meal_Planner_Api.Dto
 {
+    // limit data that users can get and send to and from database
     public class RecipeDTO
     {
-        public int id { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; }
-        public string Category { get; set; }
         public string Description { get; set; }
-        public int PreparationTime { get; set; }
-        public int CookingTime { get; set; }
-        public int Servings { get; set; }
-        public double Rating { get; set; }
-        public ICollection<Ingredient> Ingredients { get; set; }
-        public ICollection<Instruction> Instructions { get; set; }
-        public bool Deleted { get; set; }
+        public CategoryDTO Category { get; set; }
+        public ICollection<PreparationTimeDTO> PreparationTimes { get; set; }
+        public ICollection<CookingTimeDTO> CookingTimes { get; set; }
+        public ICollection<ServingsDTO> Servings { get; set; }
+        public ICollection<int> RatingIDs { get; set; }
+        public ICollection<int> IngredientIDs { get; set; }
+        public ICollection<InstructionDTO> Instructions { get; set; }
+        public int UserId { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Meal_Planner_Api.Data;
-using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
 using Meal_Planner_Api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Meal_Planner_Api.Repositories
 {
@@ -13,12 +13,56 @@ namespace Meal_Planner_Api.Repositories
         {
             _context = context;
         }
-
-        public Ingredient CreateIngredient(Ingredient ingredient)
+        public Ingredient GetIngredient(int id)
         {
-            _context.Ingredients.Add(ingredient); // Add the ingredient to the DbSet
-            _context.SaveChanges(); // Save changes to the database
-            return ingredient; // Return the newly created ingredient
+            return _context.Ingredients.FirstOrDefault(x => x.Id == id);
+        }
+
+        public Ingredient GetIngredient(string name)
+        {
+            return _context.Ingredients.FirstOrDefault(x => x.Name == name);
+        }
+
+        public ICollection<Ingredient> GetIngredientsFromRecipe(int recipeId)
+        {
+            // find recipe
+            // include ingredient
+
+            var recipe = _context.Recipes.Include(ri => ri.RecipeIngredients)
+                .ThenInclude(i => i.Ingredient)
+                .FirstOrDefault(x => x.Id == recipeId);
+
+            // get ingredient from recipe
+
+            var ingredient = recipe.RecipeIngredients.Select(i => i.Ingredient).ToList();
+
+            return ingredient;
+        }
+
+        public ICollection<Ingredient> GetIngredients()
+        {
+            return _context.Ingredients.OrderBy(x => x.Id).ToList();
+        }
+
+        public bool IngredientExists(int id)
+        {
+            return _context.Ingredients.Any(x => x.Id == id);
+        }
+        public bool IngredientExists(string name)
+        {
+            return _context.Ingredients.Any(x => x.Name == name);
+        }
+
+        public bool CreateIngredient(Ingredient ingredient)
+        {
+            _context.Add(ingredient);
+            return Save();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }

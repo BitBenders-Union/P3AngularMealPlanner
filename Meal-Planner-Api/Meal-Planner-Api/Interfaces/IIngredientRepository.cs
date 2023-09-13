@@ -1,10 +1,18 @@
-﻿using Meal_Planner_Api.Dto;
-using Meal_Planner_Api.Models;
+﻿using Meal_Planner_Api.Models;
 
 namespace Meal_Planner_Api.Interfaces
 {
     public interface IIngredientRepository
     {
-        Ingredient CreateIngredient(Ingredient ingredient);
+        ICollection<Ingredient> GetIngredients();
+        ICollection<Ingredient> GetIngredientsFromRecipe(int recipeId);
+        Ingredient GetIngredient(int id);
+        Ingredient GetIngredient(string name);
+        bool IngredientExists(int id);
+        bool IngredientExists(string name);
+        bool CreateIngredient(Ingredient ingredient);
+        bool Save();
+
+
     }
 }

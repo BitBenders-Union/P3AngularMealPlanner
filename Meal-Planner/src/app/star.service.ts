@@ -4,6 +4,9 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class StarService {
+
+  // since we are rendering the stars multiple times throughout the website, we created a service to handle the logic
+  // so we don't have to repeat ourselves
   getRatingStars(rating: number): (boolean | string)[] {
     if (rating === null || isNaN(rating)) {
       return [];

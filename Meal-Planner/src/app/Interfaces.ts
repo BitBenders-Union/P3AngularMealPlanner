@@ -59,3 +59,11 @@ export interface Recipe {
     text: string;
   }
   
+
+  export interface WeekData{
+    WeekDataId: number;
+    userId: number;
+    row: number;
+    column: number;
+    recipeId: number;
+  }

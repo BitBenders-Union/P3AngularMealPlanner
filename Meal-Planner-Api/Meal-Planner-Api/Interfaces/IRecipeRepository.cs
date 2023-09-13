@@ -5,10 +5,16 @@ namespace Meal_Planner_Api.Interfaces
 {
     public interface IRecipeRepository
     {
+        ICollection<Recipe> GetRecipes();
+        ICollection<Recipe> GetUserRecipes(int userId);
         Recipe GetRecipe(int id);
-        IEnumerable<Recipe> GetAllRecipes();
-        Recipe AddRecipe(Recipe recipe);
-        void UpdateRecipe(Recipe recipe);
-        void DeleteRecipe(int id);
+        Recipe GetRecipe(string name);
+        float GetRecipeRating(int recipeId);
+        bool RecipeExists(int recipeId);
+        bool CreateRecipe(Recipe recipe, ICollection<int> ratingIds, ICollection<int> ingredientIds);
+        bool Save();
+
+
+
     }
 }
