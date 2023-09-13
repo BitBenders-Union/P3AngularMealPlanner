@@ -31,19 +31,11 @@ namespace Meal_Planner_Api.Repositories
 
         public CookingTime GetCookingTimeForRecipe(int recipeId)
         {
+            var cookingTime = _context.Recipes.Include(c => c.CookingTime).FirstOrDefault(x => x.Id == recipeId)?.CookingTime;
 
-            // finds the correct recipe
-            var recipe = _context.Recipes
-                            .Include(rct => rct.RecipeCookingTime)
-                            .ThenInclude(ct => ct.CookingTime)
-                            .FirstOrDefault(r => r.Id == recipeId);
+            if (cookingTime == null)
+                return null;
 
-            // finds cookingtime from recipe
-            var cookingTime = recipe.RecipeCookingTime
-                            .Select(ct => ct.CookingTime)
-                            .FirstOrDefault();
-
-            // returns cookingtime
             return cookingTime;
         }
 

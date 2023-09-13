@@ -27,12 +27,10 @@ namespace Meal_Planner_Api.Repositories
 
         public Servings GetServingForRecipe(int recipeId)
         {
-            var recipe = _context.Recipes.Include(x => x.RecipeServings)
-                .ThenInclude(x => x.Servings)
-                .FirstOrDefault(x => x.Id == recipeId);
+            var serving = _context.Recipes.Include(x => x.Servings).FirstOrDefault(x => x.Id == recipeId)?.Servings;
 
-            var serving = recipe.RecipeServings.Select(x => x.Servings)
-                .FirstOrDefault(x => x != null);
+            if (serving == null)
+                return null;
 
             return serving;
         }
