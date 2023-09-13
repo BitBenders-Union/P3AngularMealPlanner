@@ -11,12 +11,18 @@ export class LoginService {
 
   constructor(private http:HttpClient) { }
 
-  sendLoginData(data: any): Observable<any>{
+  sendLoginData(username: string, password: string): Observable<any>{
+    
+    const body ={
+      username: username,
+      password: password
+    };
+
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
 
-    return this.http.post(`${this.apiUrl}/validate`, data,{headers, responseType: 'text'});
+    return this.http.post(`${this.apiUrl}validate`, body,{headers, responseType: 'json'});
   }
 
 }
