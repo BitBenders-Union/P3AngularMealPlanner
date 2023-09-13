@@ -105,22 +105,18 @@ namespace Meal_Planner_Api.Controllers
 
 
         [HttpPost("/create")]
-        public IActionResult CreateARecipe([FromBody] RecipeCreateDTO recipeData)
+        public IActionResult CreateRecipe([FromBody] RecipeDTO recipeData)
         {
-
-            // checks if the input form body is null
             if (recipeData == null)
                 return BadRequest();
 
-            // looks for other quantities with the same value
+
             var recipe = _recipeRepository.GetRecipes()
                 .FirstOrDefault(x => x.Title == recipeData.Title);
 
 
-            // if another quantity does exist
             if (recipe != null)
             {
-                //TODO: logic that makes it so the created amount uses the existing amount
                 ModelState.AddModelError("", "Recipe Already Exists");
                 return StatusCode(422, ModelState);
             }
@@ -128,9 +124,10 @@ namespace Meal_Planner_Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            var recipeMap = _mapper.Map<Recipe>(recipeData);
 
-            // create the amount and check if it saved
-            if (!_recipeRepository.CreateRecipe(recipeData))
+
+            if (!_recipeRepository.CreateRecipe(recipeMap, recipeData.RatingIDs, recipeData.IngredientIDs))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);
