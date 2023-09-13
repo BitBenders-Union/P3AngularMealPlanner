@@ -97,8 +97,10 @@ namespace Meal_Planner_Api.Controllers
             // maybe change to not use username, since we already validate username before this
             // we can't change previous methodology since password hashing requires the correct salt
             var validate = _userRepository.ValidateUser(hash, user.Username);
+            if(!validate)
+                return BadRequest();
 
-            return Ok(validate);
+            return Ok();
 
         }
 
