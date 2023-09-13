@@ -10,7 +10,8 @@ namespace Meal_Planner_Api.Services
         public byte[] GenerateSalt()
         {
             byte[] salt = new byte[16];
-            using (RandomNumberGenerator rng = new RNGCryptoServiceProvider())
+            using (RandomNumberGenerator rng = new 
+                RNGCryptoServiceProvider())
             {
                 rng.GetBytes(salt);
             }
