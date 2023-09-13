@@ -51,7 +51,7 @@ namespace Meal_Planner_Api.Repositories
 
         public ICollection<Recipe> GetUserRecipes(int userId)
         {
-            return _context.Recipes.Where(r => r.User.Id == userId).ToList();
+            return _context.Recipes.Where(r => r.UserId == userId).ToList();
         }
 
         public bool RecipeExists(int recipeId)

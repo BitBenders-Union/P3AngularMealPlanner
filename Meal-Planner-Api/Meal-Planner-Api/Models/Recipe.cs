@@ -14,6 +14,8 @@ namespace Meal_Planner_Api.Models
         public ICollection<RecipeRating> RecipeRating { get; set; }
         public ICollection<RecipeIngredient> RecipeIngredients { get; set; }
         public ICollection<Instruction> Instructions { get; set; }
-        public User User { get; set; } //TODO: figure out how to only use username here, we don't want to insert hash and salt when creating a recipe, idea: create a new dto only containing userid and username
+
+        public int UserId { get; set; }
+        //public User User { get; set; } //TODO: figure out how to only use username here, we don't want to insert hash and salt when creating a recipe, idea: create a new dto only containing userid and username
     }
 }

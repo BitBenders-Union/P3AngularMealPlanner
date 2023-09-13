@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Meal_Planner_Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230912120448_init")]
-    partial class init
+    [Migration("20230913062718_test")]
+    partial class test
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -399,7 +399,7 @@ namespace Meal_Planner_Api.Migrations
                         .WithMany("Recipes")
                         .HasForeignKey("RecipeScheduleId");
 
-                    b.HasOne("Meal_Planner_Api.Models.User", "User")
+                    b.HasOne("Meal_Planner_Api.Models.User", null)
                         .WithMany("Recipes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -410,8 +410,6 @@ namespace Meal_Planner_Api.Migrations
                         .HasForeignKey("categoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("User");
 
                     b.Navigation("category");
                 });
