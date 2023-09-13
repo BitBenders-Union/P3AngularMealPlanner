@@ -32,12 +32,13 @@ export class UserLoginComponent {
         password: password
       };
 
-      this.loginService.sendLoginData(userData).subscribe({
+      this.loginService.sendLoginData(username, password).subscribe({
         next: (data: any) => {
           console.log("Success", data);
         },
         error:(error) => {
-          console.error("Http Error: ",error)
+          console.error("Http Error: ",error);
+          this.loginForm.get('username')?.setErrors({incorrectLogin: true});
         }
       })
     }
