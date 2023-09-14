@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../login.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-user-login',
@@ -35,11 +35,12 @@ export class UserLoginComponent {
       this.loginService.sendLoginData(username, password).subscribe({
         next: (data: any) => {
           console.log("Success", data);
+          this.router.navigate(['/'])
         },
         error:(error) => {
           console.error("Http Error: ",error);
           this.loginForm.get('username')?.setErrors({incorrectLogin: true});
-          this.loginForm.get('password')?.setErrors({incorrectLogin: true})
+          this.loginForm.get('password')?.setErrors({incorrectLogin: true});
         }
       })
     }
