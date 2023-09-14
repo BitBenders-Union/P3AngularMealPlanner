@@ -5,7 +5,7 @@
 namespace Meal_Planner_Api.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -196,7 +196,7 @@ namespace Meal_Planner_Api.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    categoryId = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
                     PreparationTimeId = table.Column<int>(type: "int", nullable: false),
                     CookingTimeId = table.Column<int>(type: "int", nullable: false),
                     ServingsId = table.Column<int>(type: "int", nullable: false),
@@ -207,8 +207,8 @@ namespace Meal_Planner_Api.Migrations
                 {
                     table.PrimaryKey("PK_Recipes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Recipes_Categories_categoryId",
-                        column: x => x.categoryId,
+                        name: "FK_Recipes_Categories_CategoryId",
+                        column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -267,22 +267,36 @@ namespace Meal_Planner_Api.Migrations
                 name: "RecipeIngredients",
                 columns: table => new
                 {
-                    RecipeID = table.Column<int>(type: "int", nullable: false),
-                    IngredientID = table.Column<int>(type: "int", nullable: false)
+                    RecipeId = table.Column<int>(type: "int", nullable: false),
+                    IngredientId = table.Column<int>(type: "int", nullable: false),
+                    AmountId = table.Column<int>(type: "int", nullable: false),
+                    UnitId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RecipeIngredients", x => new { x.RecipeID, x.IngredientID });
+                    table.PrimaryKey("PK_RecipeIngredients", x => new { x.RecipeId, x.IngredientId });
                     table.ForeignKey(
-                        name: "FK_RecipeIngredients_Ingredients_IngredientID",
-                        column: x => x.IngredientID,
-                        principalTable: "Ingredients",
+                        name: "FK_RecipeIngredients_Amounts_AmountId",
+                        column: x => x.AmountId,
+                        principalTable: "Amounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RecipeIngredients_Recipes_RecipeID",
-                        column: x => x.RecipeID,
+                        name: "FK_RecipeIngredients_Ingredients_IngredientId",
+                        column: x => x.IngredientId,
+                        principalTable: "Ingredients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RecipeIngredients_Recipes_RecipeId",
+                        column: x => x.RecipeId,
                         principalTable: "Recipes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RecipeIngredients_Units_UnitId",
+                        column: x => x.UnitId,
+                        principalTable: "Units",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -327,9 +341,19 @@ namespace Meal_Planner_Api.Migrations
                 column: "RecipeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RecipeIngredients_IngredientID",
+                name: "IX_RecipeIngredients_AmountId",
                 table: "RecipeIngredients",
-                column: "IngredientID");
+                column: "AmountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecipeIngredients_IngredientId",
+                table: "RecipeIngredients",
+                column: "IngredientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecipeIngredients_UnitId",
+                table: "RecipeIngredients",
+                column: "UnitId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RecipeRatings_RatingID",
@@ -337,9 +361,9 @@ namespace Meal_Planner_Api.Migrations
                 column: "RatingID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Recipes_categoryId",
+                name: "IX_Recipes_CategoryId",
                 table: "Recipes",
-                column: "categoryId");
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Recipes_CookingTimeId",

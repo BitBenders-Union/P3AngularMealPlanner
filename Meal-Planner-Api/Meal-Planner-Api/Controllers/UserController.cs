@@ -100,7 +100,7 @@ namespace Meal_Planner_Api.Controllers
             if(!validate)
                 return BadRequest();
 
-            return Ok();
+            return Ok("Success");
 
         }
 

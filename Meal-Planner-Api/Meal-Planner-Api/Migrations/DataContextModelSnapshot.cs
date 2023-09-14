@@ -160,6 +160,9 @@ namespace Meal_Planner_Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<int>("CookingTimeId")
                         .HasColumnType("int");
 
@@ -183,10 +186,9 @@ namespace Meal_Planner_Api.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("categoryId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("CookingTimeId");
 
@@ -197,8 +199,6 @@ namespace Meal_Planner_Api.Migrations
                     b.HasIndex("ServingsId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("categoryId");
 
                     b.ToTable("Recipes");
                 });
@@ -372,6 +372,12 @@ namespace Meal_Planner_Api.Migrations
 
             modelBuilder.Entity("Meal_Planner_Api.Models.Recipe", b =>
                 {
+                    b.HasOne("Meal_Planner_Api.Models.Category", "Category")
+                        .WithMany("Recipes")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Meal_Planner_Api.Models.CookingTime", "CookingTime")
                         .WithMany("Recipe")
                         .HasForeignKey("CookingTimeId")
@@ -394,17 +400,13 @@ namespace Meal_Planner_Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Meal_Planner_Api.Models.User", null)
+                    b.HasOne("Meal_Planner_Api.Models.User", "User")
                         .WithMany("Recipes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Meal_Planner_Api.Models.Category", "category")
-                        .WithMany("Recipes")
-                        .HasForeignKey("categoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Category");
 
                     b.Navigation("CookingTime");
 
@@ -412,7 +414,7 @@ namespace Meal_Planner_Api.Migrations
 
                     b.Navigation("Servings");
 
-                    b.Navigation("category");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.RecipeIngredient", b =>

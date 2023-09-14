@@ -30,7 +30,7 @@ namespace Meal_Planner_Api.MappingHelper
             CreateMap<RatingDTO, Rating>();
 
             CreateMap<Recipe, RecipeDTO>();
-            CreateMap<RecipeDTO, Recipe>();
+            CreateMap<RecipeDTO, Recipe>(); 
 
             CreateMap<RecipeSchedule, RecipeScheduleDTO>();
             CreateMap<RecipeScheduleDTO, RecipeSchedule>();
