@@ -5,7 +5,7 @@
 namespace Meal_Planner_Api.Migrations
 {
     /// <inheritdoc />
-    public partial class initialize : Migration
+    public partial class update : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

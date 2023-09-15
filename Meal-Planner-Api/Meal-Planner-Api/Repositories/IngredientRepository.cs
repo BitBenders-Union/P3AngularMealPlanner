@@ -65,7 +65,6 @@ namespace Meal_Planner_Api.Repositories
             var existingIngredient = GetIngredient(ingredient.Name);
             if (existingIngredient != null)
             {
-                // Ingredient already exists, return the existing one
                 return false;
             }
 

@@ -1,6 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Meal-Planner-Api",
+    "\\Meal-Planner-Api\\Meal-Planner-Api",
+    "\\Meal-Planner-Api\\Meal-Planner-Api\\Repositories"
   ],
+  "SelectedNode": "\\Meal-Planner-Api\\Meal-Planner-Api\\Repositories\\RecipeRepository.cs",
   "PreviewInSolutionExplorer": false
 }
