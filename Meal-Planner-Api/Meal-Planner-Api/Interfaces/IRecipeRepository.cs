@@ -11,7 +11,7 @@ namespace Meal_Planner_Api.Interfaces
         Recipe GetRecipe(string name);
         float GetRecipeRating(int recipeId);
         bool RecipeExists(int recipeId);
-        bool CreateRecipe(Recipe recipe, ICollection<int> ratingIds, ICollection<int> ingredientIds);
+        bool CreateRecipe(RecipeDTO recipe);
         bool Save();
 
 

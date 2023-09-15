@@ -124,12 +124,12 @@ namespace Meal_Planner_Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var recipeMap = _mapper.Map<Recipe>(recipeData);
+            //var recipeMap = _mapper.Map<Recipe>(recipeData);
 
 
-            if (!_recipeRepository.CreateRecipe(recipeMap, recipeData.RatingIDs, recipeData.IngredientIDs))
+            if (!_recipeRepository.CreateRecipe(recipeData))
             {
-                ModelState.AddModelError("", "Something went wrong while saving");
+                ModelState.AddModelError("", "Something went wrong");
                 return StatusCode(500, ModelState);
             }
 
