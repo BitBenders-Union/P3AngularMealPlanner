@@ -84,9 +84,18 @@ namespace Meal_Planner_Api.Data
 
 
             modelBuilder.Entity<Recipe>()
+                   .HasOne(r => r.User) 
+                   .WithMany(u => u.Recipes) 
+                   .HasForeignKey(r => r.UserId) 
+                   .IsRequired(); 
+
+
+            modelBuilder.Entity<Recipe>()
                 .HasOne(r => r.User)
-                .WithMany(r => r.Recipes)
-                .IsRequired(); 
+                .WithMany(u => u.Recipes)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
 
 
 

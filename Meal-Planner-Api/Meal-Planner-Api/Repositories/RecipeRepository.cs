@@ -64,8 +64,57 @@ namespace Meal_Planner_Api.Repositories
         {
 
 
+            var existingCategory = _context.Categories.FirstOrDefault(c => c.Id == recipe.Category.Id);
+            var existingPreparationTime = _context.PreparationTimes.FirstOrDefault(p => p.Id == recipe.PreparationTimes.Id);
+            var existingCookingTime = _context.CookingTimes.FirstOrDefault(c => c.Id == recipe.CookingTimes.Id);
+            var existingServings = _context.Servings.FirstOrDefault(s => s.Id == recipe.Servings.Id);
+            var existingUser = _context.Users.FirstOrDefault(u => u.Id == recipe.UserId);
+            // u are here
+
+            if (existingUser.Id == null || existingUser.Username == null || existingUser.PasswordHash == null)
+            {
+                //existingUser = _context.Users.FirstOrDefault(u => u.Username == recipe.User.Username);
+            }
+
+            if (existingCategory == null)
+            {
+                existingCategory = new Category { CategoryName = recipe.Category.CategoryName };
+                _context.Categories.Add(existingCategory);
+            }
+
+            if (existingPreparationTime == null)
+            {
+                existingPreparationTime = new PreparationTime { Minutes = recipe.PreparationTimes.Minutes };
+                _context.PreparationTimes.Add(existingPreparationTime);
+            }
+
+            if (existingCookingTime == null)
+            {
+                existingCookingTime = new CookingTime { Minutes = recipe.CookingTimes.Minutes };
+                _context.CookingTimes.Add(existingCookingTime);
+            }
+
+            if (existingServings == null)
+            {
+                existingServings = new Servings { Quantity = recipe.Servings.Quantity };
+                _context.Servings.Add(existingServings);
+            }
+
+            if (existingUser == null)
+            {
+                Console.WriteLine("User doesn't exist");
+                Console.WriteLine(recipe.UserId);
+                return false;
+            }
+
             var recipeMap = _mapper.Map<Recipe>(recipe);
 
+            recipeMap.Category = existingCategory;
+            recipeMap.PreparationTime = existingPreparationTime;
+            recipeMap.CookingTime = existingCookingTime;
+            recipeMap.Servings = existingServings;
+            recipeMap.User = existingUser;
+            Console.WriteLine(recipeMap.User);
 
             foreach (var rating in recipe.Ratings)
             {
@@ -102,55 +151,7 @@ namespace Meal_Planner_Api.Repositories
 
 
 
-            var existingCategory = _context.Categories.FirstOrDefault(c => c.Id == recipe.Category.Id);
-            var existingPreparationTime = _context.PreparationTimes.FirstOrDefault(p => p.Id == recipe.PreparationTimes.Id);
-            var existingCookingTime = _context.CookingTimes.FirstOrDefault(c => c.Id == recipe.CookingTimes.Id);
-            var existingServings = _context.Servings.FirstOrDefault(s => s.Id == recipe.Servings.Id);
-            var existingUser = _context.Users.FirstOrDefault(u => u.Id == recipe.User.Id);
-            // u are here
-
-            if (existingUser == null)
-            {
-                existingUser = _context.Users.FirstOrDefault(u => u.Username == recipe.User.Username);
-            }
-
-            if (existingCategory == null)
-            {
-                existingCategory = new Category { CategoryName = recipe.Category.CategoryName };
-                _context.Categories.Add(existingCategory);
-            }
-
-            if (existingPreparationTime == null)
-            {
-                existingPreparationTime = new PreparationTime { Minutes = recipe.PreparationTimes.Minutes };
-                _context.PreparationTimes.Add(existingPreparationTime);
-            }
-
-            if (existingCookingTime == null)
-            {
-                existingCookingTime = new CookingTime { Minutes = recipe.CookingTimes.Minutes };
-                _context.CookingTimes.Add(existingCookingTime);
-            }
-
-            if (existingServings == null)
-            {
-                existingServings = new Servings { Quantity = recipe.Servings.Quantity };
-                _context.Servings.Add(existingServings);
-            }
             
-            if (existingUser == null)
-            {
-                Console.WriteLine("User doesn't exist");
-                Console.WriteLine(recipe.User.Id);
-                return false;
-            }
-
-            recipeMap.Category = existingCategory;
-            recipeMap.PreparationTime = existingPreparationTime;
-            recipeMap.CookingTime = existingCookingTime;
-            recipeMap.Servings = existingServings;
-            recipeMap.User = existingUser;
-            Console.WriteLine(recipeMap.User);
 
             _context.Recipes.Add(recipeMap);
 

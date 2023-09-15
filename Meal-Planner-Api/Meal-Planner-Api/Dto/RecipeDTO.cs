@@ -15,6 +15,6 @@ namespace Meal_Planner_Api.Dto
         public ICollection<RatingDTO> Ratings { get; set; }
         public ICollection<IngredientDTO> Ingredients { get; set; }
         public ICollection<InstructionDTO> Instructions { get; set; }
-        public UserOnlyNameDTO User { get; set; }
+        public int UserId { get; set; }
     }
 }
