@@ -299,12 +299,10 @@ namespace Meal_Planner_Api.Controllers
 
             foreach (var instruction in recipeData.Instructions)
             {
+                var instructionMap = _mapper.Map<Instruction>(instruction);
+                instructionMap.Recipe = recipeMap;
+                _instructionRepository.CreateInstruction(instructionMap);
 
-                if (instruction != null)
-                {
-                    var instructionMap = _mapper.Map<Instruction>(instruction);
-                    _instructionRepository.CreateInstruction(instructionMap);
-                }
             }
 
 
