@@ -1,4 +1,5 @@
 ﻿using Meal_Planner_Api.Data;
+using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
 using Meal_Planner_Api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,11 @@ namespace Meal_Planner_Api.Repositories
             return _context.PreparationTimes.FirstOrDefault(x => x.Id == id);
         }
 
+        public PreparationTime GetPreparationTimeFromMinutes(int minutes)
+        {
+            return _context.PreparationTimes.FirstOrDefault(x => x.Minutes == minutes);
+        }
+
         public PreparationTime GetPreparationTimeFromRecipe(int recipeId)
         {
 
@@ -46,6 +52,11 @@ namespace Meal_Planner_Api.Repositories
         public bool PreparationTimeExists(int id)
         {
             return _context.PreparationTimes.Any(x => x.Id == id);
+        }
+        
+        public bool PreparationTimeExists(PreparationTimeDTO prepTime)
+        {
+            return _context.PreparationTimes.Any(x => x.Minutes == prepTime.Minutes);
         }
 
         public bool Save()

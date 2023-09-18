@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Meal_Planner_Api.Repositories
 {
-    public class RecipeRepository : IRecipeRepository
+    public class RecipeRepository: IRecipeRepository
     {
         private DataContext _context;
         private IMapper _mapper;
@@ -22,12 +22,32 @@ namespace Meal_Planner_Api.Repositories
         public Recipe GetRecipe(int id)
         {
 
-            return _context.Recipes.FirstOrDefault(x => x.Id == id); // finds first value in recipe where recipe.id is the sam as input id
+            return _context.Recipes
+                       .Include(x => x.category)
+                       .Include(x => x.PreparationTime)
+                       .Include(x => x.CookingTime)
+                       .Include(x => x.Servings)
+                       .Include(x => x.Instructions)
+                       .Include(x => x.RecipeRating)
+                           .ThenInclude(z => z.Rating)
+                        .Include(x => x.RecipeIngredients)
+                            .ThenInclude(z => z.Ingredient)
+                       .FirstOrDefault(x => x.Id == id);
         }
 
         public Recipe GetRecipe(string name)
         {
-            return _context.Recipes.FirstOrDefault(x => x.Title == name); // finds first value in recipe where recipe.title is the sam as input name
+            return _context.Recipes
+                       .Include(x => x.category)
+                       .Include(x => x.PreparationTime)
+                       .Include(x => x.CookingTime)
+                       .Include(x => x.Servings)
+                       .Include(x => x.Instructions)
+                       .Include(x => x.RecipeRating)
+                           .ThenInclude(z => z.Rating)
+                        .Include(x => x.RecipeIngredients)
+                            .ThenInclude(z => z.Ingredient)
+                       .FirstOrDefault(x => x.Title == name);
 
         }
 
@@ -51,47 +71,61 @@ namespace Meal_Planner_Api.Repositories
 
         public ICollection<Recipe> GetUserRecipes(int userId)
         {
-            return _context.Recipes.Where(r => r.UserId == userId).ToList();
+            return _context.Recipes.Where(r => r.User.Id == userId).ToList();
         }
 
         public bool RecipeExists(int recipeId)
         {
             return _context.Recipes.Any(r => r.Id == recipeId);
         }
-        public bool CreateRecipe(Recipe recipe, ICollection<int> ratingIds, ICollection<int> ingredientIds)
+        public bool CreateRecipe(Recipe recipe, List<int> ratingIds, List<int> ingredientIds )
         {
 
-            foreach (var ratingId in ratingIds) 
+            // foreach id in rating and ingredient
+            // create a RecipeRating and RecipeIngredient
+            // add them to context
+
+            foreach(var id in ratingIds)
             {
+                var rating = _context.Ratings.FirstOrDefault(r => r.Id == id);
+
                 var recipeRating = new RecipeRating
                 {
-                    Rating = _context.Ratings.FirstOrDefault(r => r.Id == ratingId),
+                    Rating = rating,
                     Recipe = recipe
                 };
                 _context.Add(recipeRating);
+
             }
 
-            foreach (var ingredientId in ingredientIds)
+            foreach (var id in ingredientIds)
             {
+                var ingredient = _context.Ingredients.FirstOrDefault(i => i.Id == id);
                 var recipeIngredient = new RecipeIngredient
                 {
-                    Ingredient = _context.Ingredients.FirstOrDefault(i => i.Id == ingredientId),
-                    Recipe = recipe
+                    Recipe = recipe,
+                    Ingredient = ingredient
                 };
                 _context.Add(recipeIngredient);
             }
 
+            // add recipe to context
+
             _context.Add(recipe);
+            
+            // save
 
 
             return Save();
-            
         }
 
         public bool Save()
         {
+            // save changes updates the database with the current context.
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
         }
+
+
     }
 }

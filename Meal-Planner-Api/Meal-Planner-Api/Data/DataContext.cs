@@ -25,6 +25,8 @@ namespace Meal_Planner_Api.Data
         public DbSet<Servings> Servings { get; set; }
 
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
+        public DbSet<IngredientAmount> IngredientAmounts { get; set; }
+        public DbSet<IngredientUnit> IngredientUnits { get; set; }
         public DbSet<RecipeRating> RecipeRatings { get; set; }
  
 
@@ -53,10 +55,6 @@ namespace Meal_Planner_Api.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
 
-
-
-
-
             modelBuilder.Entity<RecipeRating>()
                 .HasKey(rr => new {rr.RecipeID, rr.RatingID});
             modelBuilder.Entity<RecipeRating>()
@@ -67,8 +65,6 @@ namespace Meal_Planner_Api.Data
                 .HasOne(r => r.Rating)
                 .WithMany(rr => rr.RecipeRating)
                 .HasForeignKey(r => r.RatingID);
-
-
 
 
             modelBuilder.Entity<UserRating>()
@@ -83,6 +79,11 @@ namespace Meal_Planner_Api.Data
                 .HasForeignKey(r => r.RatingId);
 
 
+            modelBuilder.Entity<IngredientAmount>()
+                .HasKey(ia => new { ia.ingredientId, ia.amountId });
+
+            modelBuilder.Entity<IngredientUnit>()
+                .HasKey(iu => new { iu.ingredientId, iu.unitId });
 
 
             base.OnModelCreating(modelBuilder);

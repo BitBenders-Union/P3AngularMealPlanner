@@ -1,4 +1,5 @@
 ﻿using Meal_Planner_Api.Data;
+using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
 using Meal_Planner_Api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +41,11 @@ namespace Meal_Planner_Api.Repositories
             return _context.Servings.OrderBy(x => x.Id).ToList();
         }
 
+        public Servings GetServingsFromQuantity(int quantity)
+        {
+            return _context.Servings.FirstOrDefault(x => x.Quantity == quantity);
+        }
+
         public bool Save()
         {
             var saved = _context.SaveChanges();
@@ -49,6 +55,12 @@ namespace Meal_Planner_Api.Repositories
         public bool servingExist(int id)
         {
             return _context.Servings.Any(x => x.Id == id);
+        }
+
+        public bool servingExist(ServingsDTO servings)
+        {
+            return _context.Servings.Any(x => x.Quantity == servings.Quantity);
+
         }
     }
 }

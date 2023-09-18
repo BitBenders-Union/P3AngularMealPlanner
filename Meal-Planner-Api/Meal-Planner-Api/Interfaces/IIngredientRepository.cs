@@ -1,4 +1,5 @@
-﻿using Meal_Planner_Api.Models;
+﻿using Meal_Planner_Api.Dto;
+using Meal_Planner_Api.Models;
 
 namespace Meal_Planner_Api.Interfaces
 {
@@ -11,7 +12,7 @@ namespace Meal_Planner_Api.Interfaces
         bool IngredientExists(int id);
         bool IngredientExists(string name);
         bool Save();
-        bool CreateIngredient(Ingredient ingredient, bool amountExist, bool unitExist);
+        bool CreateIngredient(Ingredient ingredient);
 
 
     }

@@ -100,7 +100,9 @@ namespace Meal_Planner_Api.Controllers
             if(!validate)
                 return BadRequest();
 
-            return Ok();
+            var returnData = _mapper.Map<UserOnlyNameDTO>(_userRepository.GetUser(user.Username));
+
+            return Ok(returnData);
 
         }
 
