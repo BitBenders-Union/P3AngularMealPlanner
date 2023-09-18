@@ -209,20 +209,55 @@ export class CreateRecipeComponent {
     private recipeFormService: CreateRecipeService // Inject your service
   ) {
     this.form = this.formBuilder.group({
-      title: 'test',
-      category: 'test',
-      description: 'test',
-      prepTime: 123,
-      cookTime: 123,
-      servings: 123,
-      rating: 1.5,
-      ingredients: this.formBuilder.array([]),
-      instructions: this.formBuilder.array([])
+      id: 0, // Set the default value for id
+      title: 'string',
+      description: 'string',
+      category: this.formBuilder.group({
+        id: 0,
+        categoryName: 'string',
+      }),
+      preparationTimes: this.formBuilder.group({
+        id: 0,
+        minutes: 0,
+      }),
+      cookingTimes: this.formBuilder.group({
+        id: 0,
+        minutes: 0,
+      }),
+      servings: this.formBuilder.group({
+        id: 0,
+        quantity: 0,
+      }),
+      ratings: this.formBuilder.array([
+        this.formBuilder.group({
+          id: 0,
+          score: 0,
+        }),
+      ]),
+      ingredients: this.formBuilder.array([
+        this.formBuilder.group({
+          id: 0,
+          name: 'string',
+          amount: this.formBuilder.group({
+            id: 0,
+            quantity: 0,
+          }),
+          unit: this.formBuilder.group({
+            id: 0,
+            measurement: 'string',
+          }),
+        }),
+      ]),
+      instructions: this.formBuilder.array([
+        this.formBuilder.group({
+          id: 0,
+          text: 'string',
+        }),
+      ]),
+      userId: 0,
     });
-
-    this.addIngredients();
-    this.addInstruction();
   }
+
 
   get ingredients(): FormArray {
     return this.form.get('ingredients') as FormArray;
@@ -268,29 +303,7 @@ export class CreateRecipeComponent {
 
   onSubmit() {
     if (this.form.valid) {
-      this.loading = true;
-
-      const formattedRecipe: CreateRecipe = {
-        title: this.form.get('title')?.value,
-        category: this.form.get('category')?.value,
-        description: this.form.get('description')?.value,
-        preparationTime: this.form.get('prepTime')?.value,
-        cookingTime: this.form.get('cookTime')?.value,
-        servings: this.form.get('servings')?.value,
-        rating: this.form.get('rating')?.value,
-        ingredients: this.ingredients.controls.map(control => ({
-          name: control.get('name')?.value,
-          amounts: {
-            value: control.get('amounts')?.value,
-            unit: control.get('unit')?.value
-          }
-        })),
-        instructions: this.instructions.controls.map(control => ({
-          text: control.get('text')?.value
-        })),
-        deleted: false
-      };
-
+      const formattedRecipe: CreateRecipe = this.form.value;
       this.recipeFormService.createRecipe(formattedRecipe).subscribe({
         next: response => {
           console.log('Recipe created successfully', response);
@@ -299,10 +312,6 @@ export class CreateRecipeComponent {
         error: error => {
           console.error('There was an error!', error);
         },
-        complete: () => {
-          this.loading = false;
-          this.onReset();
-        }
       });
     } else {
       console.log('Form is invalid');

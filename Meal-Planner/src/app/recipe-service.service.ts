@@ -13,7 +13,8 @@ export class RecipeServiceService{
   }
 
 
-  url: string = 'https://localhost:7268/api/Recipe';
+  // url: string = 'https://localhost:7268/api/Recipe';
+  url = './assets/Recipes.json';
 
 
 
@@ -39,17 +40,17 @@ export class RecipeServiceService{
   }
 
 
-  // createRecipe(recipeData: CreateRecipe): Observable<any> {
-  //   const url = `${this.url}`; 
+  createRecipe(recipeData: CreateRecipe): Observable<any> {
+    const url = `${this.url}`; 
 
-  //   // Send a POST request to the API
-  //   return this.http.post(url, recipeData).pipe(
-  //     catchError(error => {
-  //       console.error('Error creating recipe:', error);
-  //       throw error;
-  //     })
-  //   );
-  // }
+    // Send a POST request to the API
+    return this.http.post(url, recipeData).pipe(
+      catchError(error => {
+        console.error('Error creating recipe:', error);
+        throw error;
+      })
+    );
+  }
 
   deleteRecipe(recipeId: number): Observable<any> {
     const url = `${this.url}/${recipeId}`;
