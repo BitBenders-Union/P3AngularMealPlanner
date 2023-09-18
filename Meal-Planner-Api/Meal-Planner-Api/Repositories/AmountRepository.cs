@@ -31,23 +31,24 @@ namespace Meal_Planner_Api.Repositories
             // then include amounts
             // then get the recipe that matches the id
 
-            var recipe = _context.Recipes
-                                    .Include(ri => ri.RecipeIngredients)
-                                    .ThenInclude(i => i.Ingredient)
-                                    .ThenInclude(a => a.Amount)
-                                    .FirstOrDefault(r => r.Id == recipeId);
+            //var recipe = _context.Recipes
+            //                        .Include(ri => ri.RecipeIngredients)
+            //                        .ThenInclude(i => i.Ingredient)
+            //                        .FirstOrDefault(r => r.Id == recipeId);
 
-            if (recipe == null)
-                return null;
-            // get all ingredients in the recipe
-            // then find all amounts from ingredients
+            //if (recipe == null)
+            //    return null;
+            //// get all ingredients in the recipe
+            //// then find all amounts from ingredients
 
-            var amounts = recipe.RecipeIngredients
-                .Select(ri => ri.Ingredient.Amount)
-                .Where(amount => amount != null)
-                .ToList();
+            //var amounts = recipe.RecipeIngredients
+            //    .Select(ri => ri.Ingredient.Amount)
+            //    .Where(amount => amount != null)
+            //    .ToList();
 
-            return amounts;
+            //return amounts;
+
+            throw new NotImplementedException();
 
             // not sure if this method will be used. seems like you should get amounts foreach ingredient
             
@@ -58,16 +59,18 @@ namespace Meal_Planner_Api.Repositories
             // get ingredients then include amounts,
             // then find the ingredient with matching id,
             // then get the amount and return it
-            var ingredient = _context.Ingredients.Include(a => a.Amount)
-                .FirstOrDefault(i => i.Id == ingredientId);
+            //var ingredient = _context.Ingredients.Include(a => a.Amount)
+            //    .FirstOrDefault(i => i.Id == ingredientId);
             
-            if (ingredient == null)
-                return null;
+            //if (ingredient == null)
+            //    return null;
 
-            if (ingredient.Amount == null)
-                return null;
+            //if (ingredient.Amount == null)
+            //    return null;
 
-            return ingredient.Amount;
+            //return ingredient.Amount;
+
+            throw new NotImplementedException();
         }
 
 
