@@ -6,8 +6,10 @@ namespace Meal_Planner_Api.Interfaces
     {
         ICollection<Category> GetCategories();
         Category GetCategory(int id);
+        Category GetCategoryFromName(string name);
         Category GetCategoryByRecipeId(int recipeId);
         bool CategoriesExists(int id);
+        bool CategoriesExists(string name);
 
         bool CreateCategory(Category category);
 

@@ -1,4 +1,5 @@
-﻿using Meal_Planner_Api.Models;
+﻿using Meal_Planner_Api.Dto;
+using Meal_Planner_Api.Models;
 
 namespace Meal_Planner_Api.Interfaces
 {
@@ -16,11 +17,14 @@ namespace Meal_Planner_Api.Interfaces
         // get a rating by rating ID
         Rating GetRating(int id);
 
+        int GetRatingId(float value);
+
         // get all ratings
         ICollection<Rating> GetRatings();
 
         bool recipeRatingsExists(int recipeId);
         bool ratingExists(int id);
+        bool ratingExists(ICollection<RatingDTO> rating);
 
         bool CreateRating(Rating rating);
         bool Save();

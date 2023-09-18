@@ -110,18 +110,9 @@ namespace Meal_Planner_Api.Controllers
                 return BadRequest(ModelState);
 
 
-            // find if amount and or unit exist
-            var amountExist = true;
-            if (_amountRepository.GetAmountByQuantity(ingredientCreate.Amount.Quantity) == null)
-                amountExist = false;
-
-            var unitExist = true;
-            if(_unitRepository.GetUnitByName(ingredientCreate.Unit.Measurement) == null)
-                unitExist = false;
-
             var ingredientMap = _mapper.Map<Ingredient>(ingredientCreate);
 
-            if (!_ingredientRepository.CreateIngredient(ingredientMap, amountExist, unitExist))
+            if (!_ingredientRepository.CreateIngredient(ingredientMap))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);

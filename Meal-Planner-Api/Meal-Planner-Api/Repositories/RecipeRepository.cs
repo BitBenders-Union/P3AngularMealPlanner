@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Meal_Planner_Api.Repositories
 {
-    public class RecipeRepository : IRecipeRepository
+    public class RecipeRepository: IRecipeRepository
     {
         private DataContext _context;
         private IMapper _mapper;
@@ -22,12 +22,32 @@ namespace Meal_Planner_Api.Repositories
         public Recipe GetRecipe(int id)
         {
 
-            return _context.Recipes.FirstOrDefault(x => x.Id == id); // finds first value in recipe where recipe.id is the sam as input id
+            return _context.Recipes
+                       .Include(x => x.category)
+                       .Include(x => x.PreparationTime)
+                       .Include(x => x.CookingTime)
+                       .Include(x => x.Servings)
+                       .Include(x => x.Instructions)
+                       .Include(x => x.RecipeRating)
+                           .ThenInclude(z => z.Rating)
+                        .Include(x => x.RecipeIngredients)
+                            .ThenInclude(z => z.Ingredient)
+                       .FirstOrDefault(x => x.Id == id);
         }
 
         public Recipe GetRecipe(string name)
         {
-            return _context.Recipes.FirstOrDefault(x => x.Title == name); // finds first value in recipe where recipe.title is the sam as input name
+            return _context.Recipes
+                       .Include(x => x.category)
+                       .Include(x => x.PreparationTime)
+                       .Include(x => x.CookingTime)
+                       .Include(x => x.Servings)
+                       .Include(x => x.Instructions)
+                       .Include(x => x.RecipeRating)
+                           .ThenInclude(z => z.Rating)
+                        .Include(x => x.RecipeIngredients)
+                            .ThenInclude(z => z.Ingredient)
+                       .FirstOrDefault(x => x.Title == name);
 
         }
 
@@ -58,110 +78,54 @@ namespace Meal_Planner_Api.Repositories
         {
             return _context.Recipes.Any(r => r.Id == recipeId);
         }
-       
-
-        public bool CreateRecipe(RecipeDTO recipe)
+        public bool CreateRecipe(Recipe recipe, List<int> ratingIds, List<int> ingredientIds )
         {
 
+            // foreach id in rating and ingredient
+            // create a RecipeRating and RecipeIngredient
+            // add them to context
 
-            var existingCategory = _context.Categories.FirstOrDefault(c => c.Id == recipe.Category.Id);
-            var existingPreparationTime = _context.PreparationTimes.FirstOrDefault(p => p.Id == recipe.PreparationTimes.Id);
-            var existingCookingTime = _context.CookingTimes.FirstOrDefault(c => c.Id == recipe.CookingTimes.Id);
-            var existingServings = _context.Servings.FirstOrDefault(s => s.Id == recipe.Servings.Id);
-            var existingUser = _context.Users.FirstOrDefault(u => u.Id == recipe.UserId);
-            // u are here
-
-            if (existingUser.Id == null || existingUser.Username == null || existingUser.PasswordHash == null)
+            foreach(var id in ratingIds)
             {
-                //existingUser = _context.Users.FirstOrDefault(u => u.Username == recipe.User.Username);
-            }
+                var rating = _context.Ratings.FirstOrDefault(r => r.Id == id);
 
-            if (existingCategory == null)
-            {
-                existingCategory = new Category { CategoryName = recipe.Category.CategoryName };
-                _context.Categories.Add(existingCategory);
-            }
-
-            if (existingPreparationTime == null)
-            {
-                existingPreparationTime = new PreparationTime { Minutes = recipe.PreparationTimes.Minutes };
-                _context.PreparationTimes.Add(existingPreparationTime);
-            }
-
-            if (existingCookingTime == null)
-            {
-                existingCookingTime = new CookingTime { Minutes = recipe.CookingTimes.Minutes };
-                _context.CookingTimes.Add(existingCookingTime);
-            }
-
-            if (existingServings == null)
-            {
-                existingServings = new Servings { Quantity = recipe.Servings.Quantity };
-                _context.Servings.Add(existingServings);
-            }
-
-            if (existingUser == null)
-            {
-                Console.WriteLine("User doesn't exist");
-                Console.WriteLine(recipe.UserId);
-                return false;
-            }
-
-            var recipeMap = _mapper.Map<Recipe>(recipe);
-
-            recipeMap.Category = existingCategory;
-            recipeMap.PreparationTime = existingPreparationTime;
-            recipeMap.CookingTime = existingCookingTime;
-            recipeMap.Servings = existingServings;
-            recipeMap.User = existingUser;
-            Console.WriteLine(recipeMap.User);
-
-            foreach (var rating in recipe.Ratings)
-            {
                 var recipeRating = new RecipeRating
                 {
-                    Rating = _mapper.Map<Rating>(rating),
-                    Recipe = recipeMap
+                    Rating = rating,
+                    Recipe = recipe
                 };
-                _context.RecipeRatings.Add(recipeRating);
+                _context.Add(recipeRating);
+
             }
 
-
-
-
-
-            foreach (var ingredientDto in recipe.Ingredients)
+            foreach (var id in ingredientIds)
             {
-                var ingredient = _context.Ingredients.FirstOrDefault(i => i.Id == ingredientDto.Id);
-
-                if (ingredient != null)
+                var ingredient = _context.Ingredients.FirstOrDefault(i => i.Id == id);
+                var recipeIngredient = new RecipeIngredient
                 {
-                    var recipeIngredient = new RecipeIngredient
-                    {
-                        Ingredient = ingredient,
-                        Recipe = recipeMap,
-                        Amount = _mapper.Map<Amount>(ingredientDto.Amount),
-                        Unit = _mapper.Map<Unit>(ingredientDto.Unit)
-                    };
-                    _context.RecipeIngredients.Add(recipeIngredient);
-                }
+                    Recipe = recipe,
+                    Ingredient = ingredient
+                };
+                _context.Add(recipeIngredient);
             }
 
+            // add recipe to context
 
-
-
-
+            _context.Add(recipe);
             
+            // save
 
-            _context.Recipes.Add(recipeMap);
 
             return Save();
         }
 
         public bool Save()
         {
+            // save changes updates the database with the current context.
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
         }
+
+
     }
 }
