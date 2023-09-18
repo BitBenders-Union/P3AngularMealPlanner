@@ -1,4 +1,5 @@
 ﻿using Meal_Planner_Api.Data;
+using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
 using Meal_Planner_Api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,11 @@ namespace Meal_Planner_Api.Repositories
         public Rating GetRating(int id)
         {
             return _context.Ratings.FirstOrDefault(x => x.Id == id);
+        }
+
+        public int GetRatingId(float value)
+        {
+            return _context.Ratings.FirstOrDefault(x => x.Score == value).Id;
         }
 
         public ICollection<Rating> GetRatings()
@@ -78,6 +84,12 @@ namespace Meal_Planner_Api.Repositories
         public bool ratingExists(int id)
         {
             return _context.Ratings.Any(x => x.Id == id);
+        }
+
+        public bool ratingExists(ICollection<RatingDTO> rating)
+        {
+            
+            return _context.Ratings.Any(x => x.Score == rating.First().Score);
         }
 
         public bool recipeRatingsExists(int recipeId)

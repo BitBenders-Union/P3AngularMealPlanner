@@ -1,4 +1,5 @@
 ﻿using Meal_Planner_Api.Data;
+using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
 using Meal_Planner_Api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,12 @@ namespace Meal_Planner_Api.Repositories
         public bool CookingTimeExists(int id)
         {
             return _context.CookingTimes.Any(ct => ct.Id == id);
+        }
+
+        public bool CookingTimeExists(CookingTimeDTO cookingTime)
+        {
+            return _context.CookingTimes.Any(ct => ct.Minutes == cookingTime.Minutes);
+
         }
 
         public bool CreateCookingTime(CookingTime cookingTime)
@@ -37,6 +44,11 @@ namespace Meal_Planner_Api.Repositories
                 return null;
 
             return cookingTime;
+        }
+
+        public CookingTime GetCookingTimeFromMinutes(int minutes)
+        {
+            return _context.CookingTimes.FirstOrDefault(x => x.Minutes == minutes);
         }
 
         public ICollection<CookingTime> GetCookingTimes()

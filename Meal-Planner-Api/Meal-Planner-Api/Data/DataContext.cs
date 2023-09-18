@@ -25,8 +25,10 @@ namespace Meal_Planner_Api.Data
         public DbSet<Servings> Servings { get; set; }
 
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
+        public DbSet<IngredientAmount> IngredientAmounts { get; set; }
+        public DbSet<IngredientUnit> IngredientUnits { get; set; }
         public DbSet<RecipeRating> RecipeRatings { get; set; }
-
+ 
 
         // Customize the tables
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -53,12 +55,8 @@ namespace Meal_Planner_Api.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
 
-
-
-
-
             modelBuilder.Entity<RecipeRating>()
-                .HasKey(rr => new { rr.RecipeID, rr.RatingID });
+                .HasKey(rr => new {rr.RecipeID, rr.RatingID});
             modelBuilder.Entity<RecipeRating>()
                 .HasOne(r => r.Recipe)
                 .WithMany(rr => rr.RecipeRating)
@@ -69,10 +67,8 @@ namespace Meal_Planner_Api.Data
                 .HasForeignKey(r => r.RatingID);
 
 
-
-
             modelBuilder.Entity<UserRating>()
-                .HasKey(ur => new { ur.UserId, ur.RatingId });
+                .HasKey(ur => new {ur.UserId, ur.RatingId});
             modelBuilder.Entity<UserRating>()
                 .HasOne(u => u.User)
                 .WithMany(ur => ur.UserRating)
@@ -83,27 +79,17 @@ namespace Meal_Planner_Api.Data
                 .HasForeignKey(r => r.RatingId);
 
 
-            modelBuilder.Entity<Recipe>()
-                   .HasOne(r => r.User) 
-                   .WithMany(u => u.Recipes) 
-                   .HasForeignKey(r => r.UserId) 
-                   .IsRequired(); 
+            modelBuilder.Entity<IngredientAmount>()
+                .HasKey(ia => new { ia.ingredientId, ia.amountId });
 
-
-            modelBuilder.Entity<Recipe>()
-                .HasOne(r => r.User)
-                .WithMany(u => u.Recipes)
-                .OnDelete(DeleteBehavior.Restrict);
-
-
-
-
+            modelBuilder.Entity<IngredientUnit>()
+                .HasKey(iu => new { iu.ingredientId, iu.unitId });
 
 
             base.OnModelCreating(modelBuilder);
 
+        }
+
+
     }
-
-
-}
 }

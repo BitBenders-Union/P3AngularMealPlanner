@@ -4,8 +4,8 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public Amount Amount { get; set; }
-        public Unit Unit { get; set; }
+        public ICollection<IngredientAmount> IngredientAmount { get; set; }
+        public ICollection<IngredientUnit> IngredientUnit { get; set; }
         public ICollection<RecipeIngredient> RecipeIngredients { get; set; }
 
     }

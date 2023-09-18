@@ -1,4 +1,5 @@
-﻿using Meal_Planner_Api.Models;
+﻿using Meal_Planner_Api.Dto;
+using Meal_Planner_Api.Models;
 
 namespace Meal_Planner_Api.Interfaces
 {
@@ -6,8 +7,10 @@ namespace Meal_Planner_Api.Interfaces
     {
         Servings GetServing(int id);
         Servings GetServingForRecipe(int recipeId);
+        Servings GetServingsFromQuantity(int quantity);
         ICollection<Servings> GetServings();
         bool servingExist(int id);
+        bool servingExist(ServingsDTO servings);
         bool CreateServing(Servings serving);
         bool Save();
     }

@@ -1,4 +1,5 @@
 ﻿using Meal_Planner_Api.Data;
+using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
 using Meal_Planner_Api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -60,7 +61,7 @@ namespace Meal_Planner_Api.Repositories
             return _context.Ingredients.Any(x => x.Name == name);
         }
 
-        public bool CreateIngredient(Ingredient ingredient, bool amountExist, bool unitExist)
+        public bool CreateIngredient(Ingredient ingredient)
         {
             var existingIngredient = GetIngredient(ingredient.Name);
             if (existingIngredient != null)
@@ -101,5 +102,6 @@ namespace Meal_Planner_Api.Repositories
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
         }
+
     }
 }
