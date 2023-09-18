@@ -33,24 +33,28 @@ namespace Meal_Planner_Api.Repositories
 
         public Unit GetUnitForRecipe(int recipeId)
         {
-            var recipe = _context.Recipes
-                                    .Include(ri => ri.RecipeIngredients)
-                                    .ThenInclude(i => i.Ingredient)
-                                    .ThenInclude(u => u.Unit)
-                                    .FirstOrDefault(r => r.Id == recipeId);
+            //var recipe = _context.Recipes
+            //                        .Include(ri => ri.RecipeIngredients)
+            //                        .ThenInclude(i => i.Ingredient)
+            //                        .FirstOrDefault(r => r.Id == recipeId);
 
-            var unit = recipe.RecipeIngredients.Select(iu => iu.Ingredient.Unit)
-                .Where(unit => unit != null)
-                .FirstOrDefault();
+            //var unit = recipe.RecipeIngredients.Select(iu => iu.Ingredient.IngredientUnit.FirstOrDefault(x => x.unit))
+            //    .Where(unit => unit != null)
+            //    .FirstOrDefault();
 
-            return unit;
+            //return unit;
+
+            throw new NotImplementedException();
+
         }
 
         public Unit GetUnitFromIngredient(int ingredientId)
         {
-            return _context.Ingredients.Include(u => u.Unit)
-                    .FirstOrDefault(x => x.Id == ingredientId)
-                    .Unit;
+            //return _context.Ingredients.Include(u => u.Unit)
+            //        .FirstOrDefault(x => x.Id == ingredientId)
+            //        .Unit;
+
+            throw new NotImplementedException();
         }
 
         public ICollection<Unit> GetUnits()

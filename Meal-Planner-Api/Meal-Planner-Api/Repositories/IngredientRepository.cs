@@ -46,10 +46,12 @@ namespace Meal_Planner_Api.Repositories
 
         public ICollection<Ingredient> GetIngredients()
         {
-            return _context.Ingredients.Include(x => x.Amount)
-                .Include(x=> x.Unit)
-                .OrderBy(x => x.Id)
-                .ToList();
+            //return _context.Ingredients.Include(x => x.Amount)
+            //    .Include(x=> x.Unit)
+            //    .OrderBy(x => x.Id)
+            //    .ToList();
+
+            throw new NotImplementedException();
         }
 
         public bool IngredientExists(int id)
@@ -63,35 +65,35 @@ namespace Meal_Planner_Api.Repositories
 
         public bool CreateIngredient(Ingredient ingredient)
         {
-            var existingIngredient = GetIngredient(ingredient.Name);
-            if (existingIngredient != null)
-            {
-                return false;
-            }
+            //var existingIngredient = GetIngredient(ingredient.Name);
+            //if (existingIngredient != null)
+            //{
+            //    return false;
+            //}
 
-            // Check if an amount with the same quantity exists
-            var existingAmount = _amountRepository.GetAmountByQuantity(ingredient.Amount.Quantity);
+            //// Check if an amount with the same quantity exists
+            //var existingAmount = _amountRepository.GetAmountByQuantity(ingredient.Amount.Quantity);
 
-            // If there's an existing amount, use it; otherwise, create a new one
-            if (existingAmount == null)
-            {
-                existingAmount = new Amount { Quantity = ingredient.Amount.Quantity };
-                _context.Amounts.Add(existingAmount);
-            }
+            //// If there's an existing amount, use it; otherwise, create a new one
+            //if (existingAmount == null)
+            //{
+            //    existingAmount = new Amount { Quantity = ingredient.Amount.Quantity };
+            //    _context.Amounts.Add(existingAmount);
+            //}
 
-            // Check if a unit with the same measurement exists
-            var existingUnit = _unitRepository.GetUnitByName(ingredient.Unit.Measurement);
+            //// Check if a unit with the same measurement exists
+            //var existingUnit = _unitRepository.GetUnitByName(ingredient.IngredientUnit.Measurement);
 
-            // Create a new unit if it doesn't exist
-            if (existingUnit == null)
-            {
-                existingUnit = new Unit { Measurement = ingredient.Unit.Measurement };
-                _context.Units.Add(existingUnit);
-            }
+            //// Create a new unit if it doesn't exist
+            //if (existingUnit == null)
+            //{
+            //    existingUnit = new Unit { Measurement = ingredient.Unit.Measurement };
+            //    _context.Units.Add(existingUnit);
+            //}
 
-            // Set the existing amount and unit for the ingredient
-            ingredient.Amount = existingAmount;
-            ingredient.Unit = existingUnit;
+            //// Set the existing amount and unit for the ingredient
+            //ingredient.Amount = existingAmount;
+            //ingredient.Unit = existingUnit;
 
             _context.Ingredients.Add(ingredient);
             return Save();
