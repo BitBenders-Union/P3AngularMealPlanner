@@ -44,8 +44,6 @@ namespace Meal_Planner_Api.Repositories
                 .FirstOrDefault();
 
             return unit;
-
-            //TODO: change this to a list
         }
 
         public Unit GetUnitFromIngredient(int ingredientId)

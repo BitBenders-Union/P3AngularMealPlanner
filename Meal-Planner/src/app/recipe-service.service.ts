@@ -13,7 +13,8 @@ export class RecipeServiceService{
   }
 
 
-  url: string = 'https://localhost:7268/api/Recipe';
+  // url: string = 'https://localhost:7268/api/Recipe';
+  url = './assets/Recipes.json';
 
 
 
