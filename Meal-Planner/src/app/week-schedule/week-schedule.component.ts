@@ -36,6 +36,7 @@ export class WeekScheduleComponent implements OnInit {
     private router:Router, private route: ActivatedRoute ) {}
 
   ngOnInit(): void {
+    // get user id from url
     this.route.paramMap.subscribe(params => {
     this.userID = Number(params.get('id'));});
     this.loadCellContents(); // Load cell contents when the component initializes
@@ -124,6 +125,7 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
   // get week schedule data from user id
   // stores it in test
   getScheduleData(userID: number): void {
+    console.log("dumb cunt id: ", userID)
     this.weekScheduleService.getWeekScheduleData(userID)
         .subscribe({
             next: (data) => {
