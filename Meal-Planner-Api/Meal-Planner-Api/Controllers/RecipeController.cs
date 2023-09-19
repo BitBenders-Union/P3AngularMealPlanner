@@ -54,17 +54,39 @@ namespace Meal_Planner_Api.Controllers
         [HttpGet]
         public IActionResult GetRecipes()
         {
-            var recipes = _mapper.Map<List<RecipeDTO>>(_recipeRepository.GetRecipes());
+            var recipes = _recipeRepository.GetRecipes();
 
             if (recipes == null || recipes.Count() == 0)
                 return NotFound("Not Found");
 
+            var recipesDTO = new List<RecipeDTO>();
+
+            foreach (var recipe in recipes)
+            {
+                var recipeDTO = new RecipeDTO
+                {
+                    Id = recipe.Id,
+                    Title = recipe.Title,
+                    Description = recipe.Description,
+                    Category = _mapper.Map<CategoryDTO>(recipe.category),
+                    PreparationTimes = _mapper.Map<PreparationTimeDTO>(recipe.PreparationTime),
+                    CookingTimes = _mapper.Map<CookingTimeDTO>(recipe.CookingTime),
+                    Servings = _mapper.Map<ServingsDTO>(recipe.Servings),
+                    Ratings = recipe.RecipeRating.Select(rr => _mapper.Map<RatingDTO>(rr.Rating)).ToList(),
+                    Ingredients = recipe.RecipeIngredients.Select(ri => _mapper.Map<IngredientDTO>(ri.Ingredient)).ToList(),
+                    Instructions = _mapper.Map<List<InstructionDTO>>(recipe.Instructions),
+                    User = _mapper.Map<UserOnlyNameDTO>(recipe.User)
+                };
+
+                recipesDTO.Add(recipeDTO);
+            }
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-
-            return Ok(recipes);
+            return Ok(recipesDTO);
         }
+
 
         [HttpGet("ById/{recipeId}")]
         public IActionResult GetRecipe(int recipeId)
@@ -270,6 +292,23 @@ namespace Meal_Planner_Api.Controllers
                 if (!_ingredientRepository.IngredientExists(ingredient.Name))
                 {
                     var ingredientMap = _mapper.Map<Ingredient>(ingredient);
+
+
+                    // Create Amount and Unit entities
+                    var amountEntity = _mapper.Map<Amount>(ingredient.Amount);
+                    var unitEntity = _mapper.Map<Unit>(ingredient.Unit);
+
+                    // Add Amount and Unit to Ingredient
+                    ingredientMap.IngredientAmount = new List<IngredientAmount>
+                    {
+                        new IngredientAmount { amount = amountEntity },
+                    };
+
+                    ingredientMap.IngredientUnit = new List<IngredientUnit>
+                    {
+                        new IngredientUnit { unit = unitEntity },
+                    };
+
                     _ingredientRepository.CreateIngredient(ingredientMap);
                     ingredientIds.Add(_ingredientRepository.GetIngredient(ingredient.Name).Id);
                 }
