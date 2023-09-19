@@ -5,6 +5,7 @@ import { WeekScheduleService } from '../week-schedule.service';
 import { StarService } from '../star.service';
 import { RecipeServiceService } from '../recipe-service.service';
 import { Observable } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-week-schedule',
@@ -25,15 +26,18 @@ export class WeekScheduleComponent implements OnInit {
     Array(this.days.length).fill(null)
   );
 
-  userID: number = 1;
+  userID: number = 0;
 
   test: WeekData[] = [];
   savedRecipes: Recipe[] = [];
 
 
-  constructor(private weekScheduleService: WeekScheduleService, public starService: StarService) {}
+  constructor(private weekScheduleService: WeekScheduleService, public starService: StarService,
+    private router:Router, private route: ActivatedRoute ) {}
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+    this.userID = Number(params.get('id'));});
     this.loadCellContents(); // Load cell contents when the component initializes
 
     // get week schedule data from user id
