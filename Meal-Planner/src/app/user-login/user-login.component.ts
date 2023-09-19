@@ -35,7 +35,8 @@ export class UserLoginComponent {
       this.loginService.sendLoginData(username, password).subscribe({
         next: (data: any) => {
           console.log("Success", data);
-          this.router.navigate([`/dashboard/${data.id}`])
+          console.log("User ID: ", data.id);
+          this.router.navigate([`/dashboard`, data.id])
         },
         error:(error) => {
           console.error("Http Error: ",error);

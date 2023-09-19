@@ -13,7 +13,7 @@ import { UserRegisterComponent } from './user-register/user-register.component';
 
 
 const routes: Routes = [
-  {path: 'dashboard', component: DashboardComponent, data: {animation: 'fader'}},
+  {path: 'dashboard/:id', component: DashboardComponent, data: {animation: 'fader'}},
   {path: 'search', component: SearchComponent, data: {animation: 'fader'}},
   {path: 'about', component: AboutComponent, data: {animation: 'fader'}},
   {path: 'recipe-detail/:id', component: RecipeDetailComponent, data: {animation: 'fader'} },

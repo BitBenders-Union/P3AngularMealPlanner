@@ -23,7 +23,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
         {
 
-            policy.WithOrigins("*")
+            policy.WithOrigins("*") //TODO: change this to AllowedOrigins when sanjit fixes his cors issues
                   .WithHeaders("content-type")
                   .WithMethods("GET", "POST", "PUT", "DELETE");
         });

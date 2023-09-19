@@ -23,16 +23,10 @@ namespace Meal_Planner_Api.Repositories
         {
 
             return _context.Recipes
-                       .Include(x => x.category)
-                       .Include(x => x.PreparationTime)
-                       .Include(x => x.CookingTime)
-                       .Include(x => x.Servings)
-                       .Include(x => x.Instructions)
-                       .Include(x => x.RecipeRating)
-                           .ThenInclude(z => z.Rating)
-                        .Include(x => x.RecipeIngredients)
-                            .ThenInclude(z => z.Ingredient)
-                       .FirstOrDefault(x => x.Id == id);
+                .Include(r => r.RecipeIngredients)
+                    .ThenInclude(z => z.Ingredient)
+                    .SingleOrDefault(r => r.Id == id);
+
         }
 
         public Recipe GetRecipe(string name)
@@ -66,7 +60,24 @@ namespace Meal_Planner_Api.Repositories
 
         public ICollection<Recipe> GetRecipes()
         {
-            return _context.Recipes.OrderBy(x => x.Id).ToList();
+            return _context.Recipes.OrderBy(x => x.Id)
+                .Include(x => x.category)
+                .Include(x => x.PreparationTime)
+                .Include(x => x.CookingTime)
+                .Include(x => x.Servings)
+                .Include(x => x.RecipeRating)
+                    .ThenInclude(z => z.Rating)
+                .Include(x => x.RecipeIngredients)
+                    .ThenInclude(z => z.Ingredient)
+                        .ThenInclude(y => y.IngredientUnit)
+                            .ThenInclude(w => w.unit)
+                .Include(x => x.RecipeIngredients)
+                    .ThenInclude(z => z.Ingredient)
+                        .ThenInclude(y => y.IngredientAmount)
+                            .ThenInclude(w => w.amount)
+                .Include(x => x.Instructions)
+                .Include(x => x.User)
+                .ToList();
         }
 
         public ICollection<Recipe> GetUserRecipes(int userId)
@@ -127,6 +138,16 @@ namespace Meal_Planner_Api.Repositories
             return saved > 0 ? true : false;
         }
 
-
+        public ICollection<Ingredient> GetIngredients(int recipeId)
+        {
+            return _context.Recipes
+                .Where(r => r.Id == recipeId)
+                .SelectMany(r => r.RecipeIngredients.Select(ri => ri.Ingredient))
+                .Include(i => i.IngredientAmount)
+                    .ThenInclude(ia => ia.amount)
+                .Include(i => i.IngredientUnit)
+                    .ThenInclude(iu => iu.unit)
+                .ToList();
+        }
     }
 }
