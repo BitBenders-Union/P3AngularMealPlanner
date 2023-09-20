@@ -1,5 +1,6 @@
 [
   {
+    "id": 1,
     "title": "Delicious Pasta",
     "category": "Main Dish",
     "description": "A classic pasta dish with tomato sauce and cheese.",
@@ -44,6 +45,7 @@
     "deleted": false
   },
   {
+    "id": 2,
     "title": "Tasty Salad",
     "category": "Salad",
     "description": "A refreshing and healthy salad with lettuce, tomatoes, and cucumbers.",
@@ -89,6 +91,7 @@
     "deleted": false
   },
   {
+    "id": 3,
     "title": "Creamy Chicken Alfredo",
     "category": "Main Dish",
     "description": "A rich and creamy pasta dish with chicken and Alfredo sauce.",
@@ -112,6 +115,7 @@
     "deleted": false
   },
   {
+    "id": 4,
     "title": "Classic Chocolate Cake",
     "category": "Dessert",
     "description": "A moist and decadent chocolate cake for all occasions.",
@@ -142,6 +146,7 @@
     "deleted": false
   },
   {
+    "id": 5,
     "title": "Fresh Fruit Smoothie",
     "category": "Beverage",
     "description": "A refreshing and healthy smoothie made with a variety of fresh fruits.",
@@ -165,6 +170,7 @@
     "deleted": false
   },
   {
+    "id": 6,
     "title": "Spaghetti Carbonara",
     "category": "Main Dish",
     "description": "A classic Italian pasta dish with eggs, cheese, and pancetta.",
@@ -191,6 +197,7 @@
     "deleted": false
   },
   {
+    "id": 7,
     "title": "Grilled Chicken Sandwich",
     "category": "Sandwich",
     "description": "A delicious and satisfying grilled chicken sandwich with fresh veggies and sauce.",
@@ -220,6 +227,7 @@
     "deleted": false
   },
   {
+    "id": 8,
     "title": "Refreshing Lemonade",
     "category": "Beverage",
     "description": "A classic homemade lemonade with a hint of citrus and sweetness.",
@@ -241,6 +249,7 @@
     "deleted": false
   },
   {
+    "id": 9,
     "title": "Vegetable Stir-Fry",
     "category": "Main Dish",
     "description": "A quick and flavorful vegetable stir-fry with a savory sauce.",
@@ -271,6 +280,7 @@
     "deleted": false
   },
   {
+    "id": 10,
     "title": "Homemade Pizza Dough",
     "category": "Bread",
     "description": "Make your own pizza dough from scratch with this easy recipe.",
@@ -298,6 +308,7 @@
     "deleted": false
   },
   {
+    "id": 11,
     "title": "Creamy Tomato Soup",
     "category": "Soup",
     "description": "A comforting and creamy tomato soup made with ripe tomatoes and herbs.",

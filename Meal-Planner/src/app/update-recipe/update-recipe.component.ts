@@ -53,16 +53,16 @@ export class UpdateRecipeComponent implements OnInit{
           
           this.recipe = recipe;
 
-          this.updateForm.addControl('title', new FormControl(this.recipe.title));
-          this.updateForm.addControl('category', new FormControl(this.recipe.category));
-          this.updateForm.addControl('description', new FormControl(this.recipe.description));
-          this.updateForm.addControl('preparationTime', new FormControl(this.recipe.preparationTime));
-          this.updateForm.addControl('cookingTime', new FormControl(this.recipe.cookingTime));
-          this.updateForm.addControl('servings', new FormControl(this.recipe.servings));
-          this.updateForm.addControl('rating', new FormControl(this.recipe.rating));
+          this.updateForm.addControl('title', new FormControl(this.recipe!.title));
+          this.updateForm.addControl('category', new FormControl(this.recipe!.category));
+          this.updateForm.addControl('description', new FormControl(this.recipe!.description));
+          this.updateForm.addControl('preparationTime', new FormControl(this.recipe!.preparationTime));
+          this.updateForm.addControl('cookingTime', new FormControl(this.recipe!.cookingTime));
+          this.updateForm.addControl('servings', new FormControl(this.recipe!.servings));
+          this.updateForm.addControl('rating', new FormControl(this.recipe!.rating));
           
-          if (this.recipe.ingredients && this.recipe.ingredients.length > 0) {
-            this.recipe.ingredients.forEach((ingredient, index) => {
+          if (this.recipe!.ingredients && this.recipe!.ingredients.length > 0) {
+            this.recipe!.ingredients.forEach((ingredient, index) => {
               const nameControl = new FormControl(ingredient.name);
               const valueControl = new FormControl(ingredient.amounts.value);
               const unitControl = new FormControl(ingredient.amounts.unit);
@@ -78,9 +78,9 @@ export class UpdateRecipeComponent implements OnInit{
             });
           }
         
-          if (this.recipe.instructions && this.recipe.instructions.length > 0) {
+          if (this.recipe!.instructions && this.recipe!.instructions.length > 0) {
 
-            this.recipe.instructions.forEach((instruction, index) => {
+            this.recipe!.instructions.forEach((instruction, index) => {
 
               const textControl = new FormControl(instruction.text);
               const instructionGroup = this.formBuilder.group({
@@ -91,7 +91,7 @@ export class UpdateRecipeComponent implements OnInit{
             });
           }
 
-          this.updateForm.addControl('deleted', new FormControl(this.recipe.deleted));
+          this.updateForm.addControl('deleted', new FormControl(this.recipe!.deleted));
 
         });
       }
