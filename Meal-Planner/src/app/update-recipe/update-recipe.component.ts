@@ -49,7 +49,7 @@ export class UpdateRecipeComponent implements OnInit{
 
       if(!isNaN(this.recipeId)){
 
-        this.recipeService.getRecipeFromJson(this.recipeId).subscribe(recipe => {
+        this.recipeService.getRecipeById(this.recipeId).subscribe(recipe => {
           
           this.recipe = recipe;
 

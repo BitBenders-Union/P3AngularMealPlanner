@@ -14,8 +14,8 @@ export class RecipeServiceService{
   }
 
 
-  // url: string = 'https://localhost:7268/api/Recipe';
-  url = './assets/Recipes.json';
+  url: string = 'https://localhost:7268/api/Recipe';
+  // url = './assets/Recipes.json';
 
 
 
@@ -32,7 +32,7 @@ export class RecipeServiceService{
 
   getRecipeById(id: number): Observable<Recipe> {
 
-    return this.http.get<Recipe>(`${this.url}/${id}`).pipe(
+    return this.http.get<Recipe>(`${this.url}/ById/${id}`).pipe(
       catchError(error => {
         console.error('Error getting recipe by id:', error);
         throw error;

@@ -41,7 +41,7 @@ export class RecipeDetailComponent implements OnInit {
             
 
           // change this to getRecipeById when we are using the api
-            this.recipeService.getRecipeFromJson(recipeId!).subscribe(recipe =>{
+            this.recipeService.getRecipeById(recipeId!).subscribe(recipe =>{
               this.recipe = recipe;
             });
         }   
