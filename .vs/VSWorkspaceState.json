@@ -3,8 +3,9 @@
     "",
     "\\Meal-Planner-Api",
     "\\Meal-Planner-Api\\Meal-Planner-Api",
+    "\\Meal-Planner-Api\\Meal-Planner-Api\\Controllers",
     "\\Meal-Planner-Api\\Meal-Planner-Api\\Repositories"
   ],
-  "SelectedNode": "\\Meal-Planner-Api\\Meal-Planner-Api\\Repositories\\RecipeRepository.cs",
+  "SelectedNode": "\\Meal-Planner-Api\\Meal-Planner-Api\\Controllers\\UserController.cs",
   "PreviewInSolutionExplorer": false
 }

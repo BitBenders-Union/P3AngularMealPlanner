@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpHeaderResponse } from '@angular/common/http';
 import { Observable, catchError } from 'rxjs';
 import { CreateRecipe, Recipe } from './Interfaces';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,16 @@ export class RecipeServiceService{
         throw error;
       }));
 
+  }
+
+  // temporary method that gets data from json file instead of api
+  getRecipeFromJson(id: number): Observable<Recipe | undefined> {
+    return this.http.get<Recipe[]>(this.url).pipe(
+      map((data) => {
+        const recipe = data.find((x) => x.id === id);
+        return recipe;
+      })
+    );
   }
 
 
