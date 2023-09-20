@@ -24,6 +24,8 @@ namespace Meal_Planner_Api.Controllers
         private IIngredientRepository _ingredientRepository;
         private IInstructionRepository _instructionRepository;
         private IUserRepository _userRepository;
+        private IAmountRepository _amountRepository;
+        private IUnitRepository _unitRepository;
         private IMapper _mapper;
 
         public RecipeController
@@ -36,7 +38,9 @@ namespace Meal_Planner_Api.Controllers
             IRatingRepository ratingRepository,
             IIngredientRepository ingredientRepository,
             IInstructionRepository instructionRepository,
-            IUserRepository userRepository
+            IUserRepository userRepository,
+            IAmountRepository amountRepository,
+            IUnitRepository unitRepository
             )
         {
             _recipeRepository = recipeRepository;
@@ -48,6 +52,9 @@ namespace Meal_Planner_Api.Controllers
             _ingredientRepository = ingredientRepository;
             _instructionRepository = instructionRepository;
             _userRepository = userRepository;
+            _amountRepository = amountRepository;
+            _unitRepository = unitRepository;
+
             _mapper = mapper;
         }
 
@@ -286,26 +293,58 @@ namespace Meal_Planner_Api.Controllers
                 {
                     var ingredientMap = _mapper.Map<Ingredient>(ingredient);
 
+                    //TODO: if either amount or unit already exist in the database, use the one that exist instead of creating a new
 
                     // Create Amount and Unit entities
                     var amountEntity = _mapper.Map<Amount>(ingredient.Amount);
                     var unitEntity = _mapper.Map<Unit>(ingredient.Unit);
 
-                    //TODO: if either amount or unit already exist in the database, use the one that exist instead of creating a new
 
-                    // Add Amount and Unit to Ingredient
-                    ingredientMap.IngredientAmount = new List<IngredientAmount>
-                    {
-                        new IngredientAmount { amount = amountEntity },
-                    };
+                    var amountExist = _amountRepository.AmountExistByQuantity(amountEntity.Quantity);
+                    var unitExist = _unitRepository.UnitExists(unitEntity.Measurement);
 
-                    ingredientMap.IngredientUnit = new List<IngredientUnit>
+
+
+                    if (!amountExist)
                     {
-                        new IngredientUnit { unit = unitEntity },
-                    };
+
+                        // Add Amount and Unit to Ingredient
+                        ingredientMap.IngredientAmount = new List<IngredientAmount>
+                        {
+                            new IngredientAmount { amount = amountEntity },
+                        };
+
+                        
+                    }
+                    else
+                    {
+                        // if amount exist, use the one in the database
+
+
+                    }
+
+
+
+                    if (!unitExist)
+                    {
+
+                        ingredientMap.IngredientUnit = new List<IngredientUnit>
+                        {
+                            new IngredientUnit { unit = unitEntity },
+                        };
+
+                    }
+                    else
+                    {
+                        // if unit exist, use the one in the database
+                    }
+
+
 
                     _ingredientRepository.CreateIngredient(ingredientMap);
                     ingredientIds.Add(_ingredientRepository.GetIngredient(ingredient.Name).Id);
+
+
                 }
                 else
                 {
@@ -341,6 +380,10 @@ namespace Meal_Planner_Api.Controllers
 
             return Ok();
         }
+
+
+
+
 
     }
 }

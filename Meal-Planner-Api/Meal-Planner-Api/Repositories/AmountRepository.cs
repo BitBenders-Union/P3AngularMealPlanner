@@ -96,5 +96,10 @@ namespace Meal_Planner_Api.Repositories
             var amount = _context.Amounts.FirstOrDefault(a => a.Quantity == quantity);
             return amount;
         }
+
+        public bool AmountExistByQuantity(float quantity)
+        {
+            return _context.Amounts.Any(a => a.Quantity == quantity);
+        }
     }
 }
