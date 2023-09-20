@@ -10,6 +10,7 @@ namespace Meal_Planner_Api.Interfaces
         ICollection<Amount> GetAmountsFromRecipe(int recipeId);
         Amount GetAmountForIngredient(int ingredientId);
         bool AmountExists(int id);
+        bool AmountExistByQuantity(float quantity);
         bool CreateAmount(Amount amount);
         bool Save();
 

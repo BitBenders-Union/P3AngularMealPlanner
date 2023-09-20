@@ -23,25 +23,46 @@ namespace Meal_Planner_Api.Repositories
         {
 
             return _context.Recipes
-                .Include(r => r.RecipeIngredients)
+                .Include(x => x.category)
+                .Include(x => x.PreparationTime)
+                .Include(x => x.CookingTime)
+                .Include(x => x.Servings)
+                .Include(x => x.RecipeRating)
+                    .ThenInclude(z => z.Rating)
+                .Include(x => x.RecipeIngredients)
                     .ThenInclude(z => z.Ingredient)
-                    .SingleOrDefault(r => r.Id == id);
+                        .ThenInclude(y => y.IngredientUnit)
+                            .ThenInclude(w => w.unit)
+                .Include(x => x.RecipeIngredients)
+                    .ThenInclude(z => z.Ingredient)
+                        .ThenInclude(y => y.IngredientAmount)
+                            .ThenInclude(w => w.amount)
+                .Include(x => x.Instructions)
+                .Include(x => x.User)
+                .FirstOrDefault(x => x.Id == id);
 
         }
-
+         
         public Recipe GetRecipe(string name)
         {
             return _context.Recipes
-                       .Include(x => x.category)
-                       .Include(x => x.PreparationTime)
-                       .Include(x => x.CookingTime)
-                       .Include(x => x.Servings)
-                       .Include(x => x.Instructions)
-                       .Include(x => x.RecipeRating)
-                           .ThenInclude(z => z.Rating)
-                        .Include(x => x.RecipeIngredients)
-                            .ThenInclude(z => z.Ingredient)
-                       .FirstOrDefault(x => x.Title == name);
+                .Include(x => x.category)
+                .Include(x => x.PreparationTime)
+                .Include(x => x.CookingTime)
+                .Include(x => x.Servings)
+                .Include(x => x.RecipeRating)
+                    .ThenInclude(z => z.Rating)
+                .Include(x => x.RecipeIngredients)
+                    .ThenInclude(z => z.Ingredient)
+                        .ThenInclude(y => y.IngredientUnit)
+                            .ThenInclude(w => w.unit)
+                .Include(x => x.RecipeIngredients)
+                    .ThenInclude(z => z.Ingredient)
+                        .ThenInclude(y => y.IngredientAmount)
+                            .ThenInclude(w => w.amount)
+                .Include(x => x.Instructions)
+                .Include(x => x.User)
+                .FirstOrDefault(x => x.Title == name);
 
         }
 
