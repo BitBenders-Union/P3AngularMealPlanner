@@ -285,73 +285,101 @@ namespace Meal_Planner_Api.Controllers
 
             // validate Ingredients
             // since there can be multiple ingredients we need to loop through each
-            List<int> ingredientIds = new();
+            // Create a list to store the ingredient IDs
+            List<int> ingredientIds = new List<int>();
+
+            // Dictionaries to prevent duplicate entries.
+            Dictionary<float, Amount> createdAmounts = new Dictionary<float, Amount>();
+            Dictionary<string, Unit> createdUnits = new Dictionary<string, Unit>();
 
             foreach (var ingredient in recipeData.Ingredients)
             {
-                if (!_ingredientRepository.IngredientExists(ingredient.Name))
+                var ingredientMap = new Ingredient();
+
+                // Check if the ingredient already exists in the database
+                if (_ingredientRepository.IngredientExists(ingredient.Name))
                 {
-                    var ingredientMap = _mapper.Map<Ingredient>(ingredient);
-
-                    //TODO: if either amount or unit already exist in the database, use the one that exist instead of creating a new
-
-                    // Create Amount and Unit entities
-                    var amountEntity = _mapper.Map<Amount>(ingredient.Amount);
-                    var unitEntity = _mapper.Map<Unit>(ingredient.Unit);
-
-
-                    var amountExist = _amountRepository.AmountExistByQuantity(amountEntity.Quantity);
-                    var unitExist = _unitRepository.UnitExists(unitEntity.Measurement);
-
-
-
-                    if (!amountExist)
-                    {
-
-                        // Add Amount and Unit to Ingredient
-                        ingredientMap.IngredientAmount = new List<IngredientAmount>
-                        {
-                            new IngredientAmount { amount = amountEntity },
-                        };
-
-                        
-                    }
-                    else
-                    {
-                        // if amount exist, use the one in the database
-
-
-                    }
-
-
-
-                    if (!unitExist)
-                    {
-
-                        ingredientMap.IngredientUnit = new List<IngredientUnit>
-                        {
-                            new IngredientUnit { unit = unitEntity },
-                        };
-
-                    }
-                    else
-                    {
-                        // if unit exist, use the one in the database
-                    }
-
-
-
-                    _ingredientRepository.CreateIngredient(ingredientMap);
-                    ingredientIds.Add(_ingredientRepository.GetIngredient(ingredient.Name).Id);
-
-
+                    // Get the existing ingredient from the database
+                    ingredientMap = _ingredientRepository.GetIngredient(ingredient.Name);
                 }
                 else
                 {
-                    ingredientIds.Add(_ingredientRepository.GetIngredient(ingredient.Name).Id);
+                    // Set the name for new ingredients
+                    ingredientMap.Name = ingredient.Name;
                 }
 
+                // Create a new IngredientAmount relationship
+                var ingredientAmount = new IngredientAmount();
+
+                // Create Amount entity
+                var amountEntity = new Amount { Quantity = ingredient.Amount.Quantity };
+
+                // Check if the amount with the same quantity already exists in the database
+                if (_amountRepository.AmountExistByQuantity(amountEntity.Quantity))
+                {
+                    // Use the existing amount entity
+                    var existingAmount = _amountRepository.GetAmountByQuantity(amountEntity.Quantity);
+                    ingredientAmount.amount = existingAmount;
+                }
+                else if (createdAmounts.TryGetValue(amountEntity.Quantity, out var existingAmountEntity))
+                {
+                    // Use the existing amount entity from the dictionary
+                    ingredientAmount.amount = existingAmountEntity;
+                }
+                else
+                {
+                    // Add the amount to the dictionary
+                    createdAmounts.Add(amountEntity.Quantity, amountEntity);
+
+                    // Associate the amount with the IngredientAmount relationship
+                    ingredientAmount.amount = amountEntity;
+                }
+
+                // Add the IngredientAmount relationship to the Ingredient
+                ingredientMap.IngredientAmount = new List<IngredientAmount> { ingredientAmount };
+
+                // Create a new IngredientUnit relationship
+                var ingredientUnit = new IngredientUnit();
+
+                // Create Unit entity
+                var unitEntity = new Unit { Measurement = ingredient.Unit.Measurement };
+
+                // Check if the unit with the same measurement already exists in the database
+                if (_unitRepository.UnitExists(unitEntity.Measurement))
+                {
+                    // Use the existing unit entity
+                    var existingUnit = _unitRepository.GetUnitByName(unitEntity.Measurement);
+                    ingredientUnit.unit = existingUnit;
+                }
+                else if (createdUnits.TryGetValue(unitEntity.Measurement, out var existingUnitEntity))
+                {
+                    // Use the existing unit entity from the dictionary
+                    ingredientUnit.unit = existingUnitEntity;
+                }
+                else
+                {
+                    // Add the unit to the dictionary
+                    createdUnits.Add(unitEntity.Measurement, unitEntity);
+
+                    // Associate the unit with the IngredientUnit relationship
+                    ingredientUnit.unit = unitEntity;
+                }
+
+                // Add the IngredientUnit relationship to the Ingredient
+                ingredientMap.IngredientUnit = new List<IngredientUnit> { ingredientUnit };
+
+                // Check if the ingredient already exists in the database
+                if (!_ingredientRepository.IngredientExists(ingredient.Name))
+                {
+                    // Create the ingredient and add its ID to the list
+                    _ingredientRepository.CreateIngredient(ingredientMap);
+                }
+
+                // Add the ingredient ID to the list
+                ingredientIds.Add(ingredientMap.Id);
             }
+
+
 
 
 
