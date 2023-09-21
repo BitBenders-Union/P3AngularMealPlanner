@@ -3,9 +3,11 @@ using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
 using Meal_Planner_Api.Models;
 using Meal_Planner_Api.Repositories;
+using Meal_Planner_Api.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+
 
 namespace Meal_Planner_Api.Controllers
 {
@@ -16,12 +18,14 @@ namespace Meal_Planner_Api.Controllers
         private IMapper _mapper;
         private IUserRepository _userRepository;
         private IHashingService _hashingService;
+        private IJwtTokenService _jwtTokenService;
 
-        public UserController(IMapper mapper, IUserRepository userRepository, IHashingService hashingService)
+        public UserController(IMapper mapper, IUserRepository userRepository, IHashingService hashingService, IJwtTokenService jwtTokenService)
         {
             _mapper = mapper;
             _userRepository = userRepository;
             _hashingService = hashingService;
+            _jwtTokenService = jwtTokenService;
         }
 
         // get all users
@@ -83,12 +87,16 @@ namespace Meal_Planner_Api.Controllers
             // then compare salted hash with stored hash
             // then return Ok(true || false)
 
+            if (user == null)
+                return BadRequest();
+
             // check if username exist
             if (!_userRepository.UserExists(user.Username))
                 return NotFound("User Not Found");
 
             // get user & user.passwordSalt
             var userGet = _userRepository.GetUser(user.Username);
+            
 
             // hash the password
             byte[] hash = _hashingService.PasswordHashing(user.Password, userGet.PasswordSalt);
@@ -100,10 +108,12 @@ namespace Meal_Planner_Api.Controllers
             if(!validate)
                 return BadRequest();
 
-            var returnData = _mapper.Map<UserOnlyNameDTO>(_userRepository.GetUser(user.Username));
+            userGet.Token = _jwtTokenService.CreateJwtToken(userGet);
 
-            return Ok(returnData);
-
+            return Ok(new {
+                Token = userGet.Token,
+                Message = "Success",
+            });
         }
 
 
@@ -152,7 +162,6 @@ namespace Meal_Planner_Api.Controllers
 
             return Ok("Success");
         }
-
 
     }
 }
