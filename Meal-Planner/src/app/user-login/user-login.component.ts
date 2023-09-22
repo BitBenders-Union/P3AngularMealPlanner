@@ -36,6 +36,7 @@ export class UserLoginComponent {
         next: (data: any) => {
           console.log("Success", data);
           console.log("User ID: ", data.id);
+          this.loginService.storeToken(data.token);
           this.router.navigate([`/dashboard`, data.id])
         },
         error:(error) => {
