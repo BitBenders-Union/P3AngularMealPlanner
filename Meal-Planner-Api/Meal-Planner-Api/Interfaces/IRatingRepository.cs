@@ -27,6 +27,8 @@ namespace Meal_Planner_Api.Interfaces
         bool ratingExists(ICollection<RatingDTO> rating);
 
         bool CreateRating(Rating rating);
+        bool DeleteRating(Rating rating);
+        bool UpdateRating(Rating rating);
         bool Save();
     }
 }

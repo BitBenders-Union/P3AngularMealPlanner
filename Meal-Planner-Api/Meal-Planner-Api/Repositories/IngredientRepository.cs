@@ -46,12 +46,7 @@ namespace Meal_Planner_Api.Repositories
 
         public ICollection<Ingredient> GetIngredients()
         {
-            //return _context.Ingredients.Include(x => x.Amount)
-            //    .Include(x=> x.Unit)
-            //    .OrderBy(x => x.Id)
-            //    .ToList();
-
-            throw new NotImplementedException();
+            return _context.Ingredients.OrderBy(x => x.Id).ToList();
         }
 
         public bool IngredientExists(int id)
