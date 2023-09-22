@@ -31,4 +31,18 @@ export class LoginService {
 
     return this.http.post(`${this.apiUrl}api/User`, data,{headers, responseType: 'text'});
   }
+
+  //set usertoken to storage
+  storeToken(tokenValue: string){
+    localStorage.setItem('token', tokenValue);
+  }
+
+  getToken(){
+    return localStorage.getItem('token');
+  }
+
+  //check for token
+  isLoggedIn(): boolean{
+    return !! localStorage.getItem('token');
+  }
 }
