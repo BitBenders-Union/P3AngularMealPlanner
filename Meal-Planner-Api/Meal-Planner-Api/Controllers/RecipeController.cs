@@ -185,10 +185,7 @@ namespace Meal_Planner_Api.Controllers
         }
 
 
-
-
-
-        // this should only be called afer the creation of necessary data, cookingtime, preptime, servings, ingredients, rating, instruction, user, category
+        // this also checks if all the necessary data exist, creates them if it doesn't and binds them to the recipe
         [HttpPost("create")]
         public IActionResult CreateRecipe([FromBody] RecipeDTO recipeData)
         {
@@ -409,7 +406,36 @@ namespace Meal_Planner_Api.Controllers
             return Ok();
         }
 
+        // delete recipe
 
+        [HttpDelete("delete/{recipeId}")]
+        public IActionResult DeleteRecipe(int recipeId)
+        {
+            if(!_recipeRepository.RecipeExists(recipeId))
+                return NotFound();
+
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+
+            // when deleting a recipe all the relationships should be deleted as well
+            // Only the relationships eg. junctiontable data is deleted the rest is maintained.
+            // but since instructions is unique to the recipe (one recipe to many instructions), the instructions are deleted.
+
+            // in turn if we deleted a user, all the recipes that user created would be deleted using cascade delete,
+            // to prevent that we can define the relationship to not delete in the datacontext
+
+            var recipe = _recipeRepository.GetRecipe(recipeId);
+
+            if(!_recipeRepository.DeleteRecipe(recipe))
+            {
+                ModelState.AddModelError("", "Something went wrong while deleting");
+                return StatusCode(500, ModelState);
+            }
+
+
+            return NoContent();
+        }
 
 
 

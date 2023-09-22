@@ -170,5 +170,16 @@ namespace Meal_Planner_Api.Repositories
                     .ThenInclude(iu => iu.unit)
                 .ToList();
         }
+
+        public bool UpdateRecipe(Recipe recipe)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DeleteRecipe(Recipe recipe)
+        {
+            _context.Remove(recipe);
+            return Save();
+        }
     }
 }

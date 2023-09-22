@@ -21,6 +21,12 @@ namespace Meal_Planner_Api.Repositories
             return Save();
         }
 
+        public bool DeleteRating(Rating rating)
+        {
+            _context.Remove(rating);
+            return Save();
+        }
+
         public Rating GetRating(int id)
         {
             return _context.Ratings.FirstOrDefault(x => x.Id == id);
@@ -105,6 +111,11 @@ namespace Meal_Planner_Api.Repositories
         {
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
+        }
+
+        public bool UpdateRating(Rating rating)
+        {
+            throw new NotImplementedException();
         }
     }
 }
