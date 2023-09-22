@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../login.service';
 import { Router, RouterLink } from '@angular/router';
@@ -9,6 +9,7 @@ import { Router, RouterLink } from '@angular/router';
   styleUrls: ['./user-login.component.css']
 })
 export class UserLoginComponent {
+  @Output() userLoggedIn: EventEmitter<boolean> = new EventEmitter<boolean>();
   loginForm!: FormGroup;
 
   constructor(
@@ -37,6 +38,8 @@ export class UserLoginComponent {
           console.log("Success", data);
           console.log("User ID: ", data.id);
           this.loginService.storeToken(data.token);
+          this.userLoggedIn.emit(true);
+          console.log(this.userLoggedIn.emit(true));
           this.router.navigate([`/dashboard`, data.id])
         },
         error:(error) => {
