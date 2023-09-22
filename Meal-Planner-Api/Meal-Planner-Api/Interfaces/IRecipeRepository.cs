@@ -13,6 +13,8 @@ namespace Meal_Planner_Api.Interfaces
         float GetRecipeRating(int recipeId);
         bool RecipeExists(int recipeId);
         bool CreateRecipe(Recipe recipe, List<int> ratingIds, List<int> ingredientIds);
+        bool UpdateRecipe(Recipe recipe);
+        bool DeleteRecipe(Recipe recipe);
         bool Save();
 
     }
