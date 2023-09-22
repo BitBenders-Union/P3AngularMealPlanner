@@ -25,6 +25,8 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
 import { UpdateRecipeComponent } from './update-recipe/update-recipe.component';
 import { UserLoginComponent } from './user-login/user-login.component';
 import { UserRegisterComponent } from './user-register/user-register.component';
+import { AuthGuard } from './guards/auth.guard';
+import { StartpageComponent } from './startpage/startpage.component';
 
 
 @NgModule({
@@ -46,6 +48,7 @@ import { UserRegisterComponent } from './user-register/user-register.component';
     UpdateRecipeComponent,
     UserLoginComponent,
     UserRegisterComponent,
+    StartpageComponent,
     
     
   ],
