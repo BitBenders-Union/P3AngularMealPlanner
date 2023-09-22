@@ -173,7 +173,8 @@ namespace Meal_Planner_Api.Repositories
 
         public bool UpdateRecipe(Recipe recipe)
         {
-            throw new NotImplementedException();
+            _context.Update(recipe);
+            return Save();
         }
 
         public bool DeleteRecipe(Recipe recipe)
