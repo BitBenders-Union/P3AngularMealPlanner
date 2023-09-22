@@ -9,11 +9,13 @@ import { FormsTestComponent } from './forms-test/forms-test.component';
 import { UpdateRecipeComponent } from './update-recipe/update-recipe.component';
 import { UserLoginComponent } from './user-login/user-login.component';
 import { UserRegisterComponent } from './user-register/user-register.component';
+import { AuthGuard } from './guards/auth.guard';
 
 
 
 const routes: Routes = [
-  {path: 'dashboard/:id', component: DashboardComponent, data: {animation: 'fader'}},
+  {path: 'dashboard/:id',  component: DashboardComponent, canActivate: [AuthGuard], data: {animation: 'fader'}},
+  {path: 'dashboard',  component: DashboardComponent, canActivate: [AuthGuard], data: {animation: 'fader'}},
   {path: 'search', component: SearchComponent, data: {animation: 'fader'}},
   {path: 'about', component: AboutComponent, data: {animation: 'fader'}},
   {path: 'recipe-detail/:id', component: RecipeDetailComponent, data: {animation: 'fader'} },
