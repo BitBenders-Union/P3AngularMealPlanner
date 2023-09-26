@@ -1,9 +1,9 @@
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Recipe, Ingredient, WeekData } from '../Interfaces';
-import { WeekScheduleService } from '../week-schedule.service';
-import { StarService } from '../star.service';
-import { RecipeServiceService } from '../recipe-service.service';
+import { WeekScheduleService } from '../service/week-schedule.service';
+import { StarService } from '../service/star.service';
+import { RecipeServiceService } from '../service/recipe-service.service';
 import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 

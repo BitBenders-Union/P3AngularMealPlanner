@@ -20,7 +20,6 @@ import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { CustomFilterPipe } from './custom-filter-pipe.pipe';
 import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 import { CreateRecipeComponent } from './create-recipe/create-recipe.component';
-import { FormsTestComponent } from './forms-test/forms-test.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 import { UpdateRecipeComponent } from './update-recipe/update-recipe.component';
 import { UserLoginComponent } from './user-login/user-login.component';
@@ -44,7 +43,6 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
     CustomFilterPipe,
     RecipeDetailComponent,
     CreateRecipeComponent,
-    FormsTestComponent,
     LoadingSpinnerComponent,
     UpdateRecipeComponent,
     UserLoginComponent,
