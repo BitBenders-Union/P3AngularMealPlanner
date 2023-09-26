@@ -185,10 +185,7 @@ namespace Meal_Planner_Api.Controllers
         }
 
 
-
-
-
-        // this should only be called afer the creation of necessary data, cookingtime, preptime, servings, ingredients, rating, instruction, user, category
+        // this also checks if all the necessary data exist, creates them if it doesn't and binds them to the recipe
         [HttpPost("create")]
         public IActionResult CreateRecipe([FromBody] RecipeDTO recipeData)
         {
@@ -285,73 +282,101 @@ namespace Meal_Planner_Api.Controllers
 
             // validate Ingredients
             // since there can be multiple ingredients we need to loop through each
-            List<int> ingredientIds = new();
+            // Create a list to store the ingredient IDs
+            List<int> ingredientIds = new List<int>();
+
+            // Dictionaries to prevent duplicate entries.
+            Dictionary<float, Amount> createdAmounts = new Dictionary<float, Amount>();
+            Dictionary<string, Unit> createdUnits = new Dictionary<string, Unit>();
 
             foreach (var ingredient in recipeData.Ingredients)
             {
-                if (!_ingredientRepository.IngredientExists(ingredient.Name))
+                var ingredientMap = new Ingredient();
+
+                // Check if the ingredient already exists in the database
+                if (_ingredientRepository.IngredientExists(ingredient.Name))
                 {
-                    var ingredientMap = _mapper.Map<Ingredient>(ingredient);
-
-                    //TODO: if either amount or unit already exist in the database, use the one that exist instead of creating a new
-
-                    // Create Amount and Unit entities
-                    var amountEntity = _mapper.Map<Amount>(ingredient.Amount);
-                    var unitEntity = _mapper.Map<Unit>(ingredient.Unit);
-
-
-                    var amountExist = _amountRepository.AmountExistByQuantity(amountEntity.Quantity);
-                    var unitExist = _unitRepository.UnitExists(unitEntity.Measurement);
-
-
-
-                    if (!amountExist)
-                    {
-
-                        // Add Amount and Unit to Ingredient
-                        ingredientMap.IngredientAmount = new List<IngredientAmount>
-                        {
-                            new IngredientAmount { amount = amountEntity },
-                        };
-
-                        
-                    }
-                    else
-                    {
-                        // if amount exist, use the one in the database
-
-
-                    }
-
-
-
-                    if (!unitExist)
-                    {
-
-                        ingredientMap.IngredientUnit = new List<IngredientUnit>
-                        {
-                            new IngredientUnit { unit = unitEntity },
-                        };
-
-                    }
-                    else
-                    {
-                        // if unit exist, use the one in the database
-                    }
-
-
-
-                    _ingredientRepository.CreateIngredient(ingredientMap);
-                    ingredientIds.Add(_ingredientRepository.GetIngredient(ingredient.Name).Id);
-
-
+                    // Get the existing ingredient from the database
+                    ingredientMap = _ingredientRepository.GetIngredient(ingredient.Name);
                 }
                 else
                 {
-                    ingredientIds.Add(_ingredientRepository.GetIngredient(ingredient.Name).Id);
+                    // Set the name for new ingredients
+                    ingredientMap.Name = ingredient.Name;
                 }
 
+                // Create a new IngredientAmount relationship
+                var ingredientAmount = new IngredientAmount();
+
+                // Create Amount entity
+                var amountEntity = new Amount { Quantity = ingredient.Amount.Quantity };
+
+                // Check if the amount with the same quantity already exists in the database
+                if (_amountRepository.AmountExistByQuantity(amountEntity.Quantity))
+                {
+                    // Use the existing amount entity
+                    var existingAmount = _amountRepository.GetAmountByQuantity(amountEntity.Quantity);
+                    ingredientAmount.amount = existingAmount;
+                }
+                else if (createdAmounts.TryGetValue(amountEntity.Quantity, out var existingAmountEntity))
+                {
+                    // Use the existing amount entity from the dictionary
+                    ingredientAmount.amount = existingAmountEntity;
+                }
+                else
+                {
+                    // Add the amount to the dictionary
+                    createdAmounts.Add(amountEntity.Quantity, amountEntity);
+
+                    // Associate the amount with the IngredientAmount relationship
+                    ingredientAmount.amount = amountEntity;
+                }
+
+                // Add the IngredientAmount relationship to the Ingredient
+                ingredientMap.IngredientAmount = new List<IngredientAmount> { ingredientAmount };
+
+                // Create a new IngredientUnit relationship
+                var ingredientUnit = new IngredientUnit();
+
+                // Create Unit entity
+                var unitEntity = new Unit { Measurement = ingredient.Unit.Measurement };
+
+                // Check if the unit with the same measurement already exists in the database
+                if (_unitRepository.UnitExists(unitEntity.Measurement))
+                {
+                    // Use the existing unit entity
+                    var existingUnit = _unitRepository.GetUnitByName(unitEntity.Measurement);
+                    ingredientUnit.unit = existingUnit;
+                }
+                else if (createdUnits.TryGetValue(unitEntity.Measurement, out var existingUnitEntity))
+                {
+                    // Use the existing unit entity from the dictionary
+                    ingredientUnit.unit = existingUnitEntity;
+                }
+                else
+                {
+                    // Add the unit to the dictionary
+                    createdUnits.Add(unitEntity.Measurement, unitEntity);
+
+                    // Associate the unit with the IngredientUnit relationship
+                    ingredientUnit.unit = unitEntity;
+                }
+
+                // Add the IngredientUnit relationship to the Ingredient
+                ingredientMap.IngredientUnit = new List<IngredientUnit> { ingredientUnit };
+
+                // Check if the ingredient already exists in the database
+                if (!_ingredientRepository.IngredientExists(ingredient.Name))
+                {
+                    // Create the ingredient and add its ID to the list
+                    _ingredientRepository.CreateIngredient(ingredientMap);
+                }
+
+                // Add the ingredient ID to the list
+                ingredientIds.Add(ingredientMap.Id);
             }
+
+
 
 
 
@@ -381,7 +406,173 @@ namespace Meal_Planner_Api.Controllers
             return Ok();
         }
 
+        // Update recipe
+        [HttpPut("update/{recipeId}")]
+        public IActionResult UpdateRecipe([FromBody] RecipeDTO recipeData, int recipeId)
+        {
+            if(recipeData == null)
+                return BadRequest();
 
+            if(!_recipeRepository.RecipeExists(recipeId))
+                return NotFound("Recipe with given id, does not exist");
+
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            recipeData.Id = recipeId;
+            var recipeMap = _mapper.Map<Recipe>(recipeData);
+
+            // validate all data
+            // if data doesn't exist, create it
+
+            // then update recipe with the new data
+
+            // validate instructions
+            // needs to be after creating the recipe, because of one to many rules
+            // then update instructions
+
+            var ExistingRecipe = _recipeRepository.GetRecipe(recipeId);
+
+            // ingredient handling
+
+            // Dictionaries to prevent duplicate entries.
+            Dictionary<float, Amount> createdAmounts = new Dictionary<float, Amount>();
+            Dictionary<string, Unit> createdUnits = new Dictionary<string, Unit>();
+            foreach (var ingredient in recipeData.Ingredients)
+            {
+
+                // get matching ingredient from existingRecipe
+                Ingredient existingIngredient = ExistingRecipe.RecipeIngredients.FirstOrDefault(x => x.Ingredient.Name == ingredient.Name).Ingredient;
+
+                // if ingredient doesn't exist
+                if(existingIngredient == null)
+                {
+                    // create new ingredient
+                    existingIngredient = _mapper.Map<Ingredient>(ingredient);
+
+                    // Create a new IngredientAmount relationship
+                    var ingredientAmount = new IngredientAmount();
+
+                    // Create Amount entity
+                    var amountEntity = new Amount { Quantity = ingredient.Amount.Quantity };
+
+                    // Check if the amount with the same quantity already exists in the database
+                    if (_amountRepository.AmountExistByQuantity(amountEntity.Quantity))
+                    {
+                        // Use the existing amount entity
+                        var existingAmount = _amountRepository.GetAmountByQuantity(amountEntity.Quantity);
+                        ingredientAmount.amount = existingAmount;
+                    }
+                    // check if the amount was added to the dictionary
+                    else if (createdAmounts.TryGetValue(amountEntity.Quantity, out var existingAmountEntity))
+                    {
+                        // Use the existing amount entity from the dictionary
+                        ingredientAmount.amount = existingAmountEntity;
+                    }
+                    else
+                    {
+                        // Add the amount to the dictionary
+                        createdAmounts.Add(amountEntity.Quantity, amountEntity);
+
+                        // Associate the amount with the IngredientAmount relationship
+                        ingredientAmount.amount = amountEntity;
+                    }
+
+                    // Add the IngredientAmount relationship to the Ingredient
+                    existingIngredient.IngredientAmount = new List<IngredientAmount> { ingredientAmount };
+                    // Create a new IngredientUnit relationship
+                    var ingredientUnit = new IngredientUnit();
+
+                    // Create Unit entity
+                    var unitEntity = new Unit { Measurement = ingredient.Unit.Measurement };
+
+                    // Check if the unit with the same measurement already exists in the database
+                    if (_unitRepository.UnitExists(unitEntity.Measurement))
+                    {
+                        // Use the existing unit entity
+                        var existingUnit = _unitRepository.GetUnitByName(unitEntity.Measurement);
+                        ingredientUnit.unit = existingUnit;
+                    }
+                    else if (createdUnits.TryGetValue(unitEntity.Measurement, out var existingUnitEntity))
+                    {
+                        // Use the existing unit entity from the dictionary
+                        ingredientUnit.unit = existingUnitEntity;
+                    }
+                    else
+                    {
+                        // Add the unit to the dictionary
+                        createdUnits.Add(unitEntity.Measurement, unitEntity);
+
+                        // Associate the unit with the IngredientUnit relationship
+                        ingredientUnit.unit = unitEntity;
+                    }
+
+                    // Add the IngredientUnit relationship to the Ingredient
+                    existingIngredient.IngredientUnit = new List<IngredientUnit> { ingredientUnit };
+
+                    // Check if the ingredient already exists in the database
+                    if (!_ingredientRepository.IngredientExists(ingredient.Name))
+                    {
+                        // Create the ingredient and add its ID to the list
+                        _ingredientRepository.CreateIngredient(existingIngredient);
+                    }
+
+
+                }
+
+
+
+
+
+
+
+            }
+
+
+
+
+
+            
+            if(!_recipeRepository.UpdateRecipe(recipeMap))
+            {
+                ModelState.AddModelError("" , "Something went wrong while updating");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Success");
+        }
+        
+        
+        // delete recipe
+
+        [HttpDelete("delete/{recipeId}")]
+        public IActionResult DeleteRecipe(int recipeId)
+        {
+            if(!_recipeRepository.RecipeExists(recipeId))
+                return NotFound();
+
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+
+            // when deleting a recipe all the relationships should be deleted as well
+            // Only the relationships eg. junctiontable data is deleted the rest is maintained.
+            // but since instructions is unique to the recipe (one recipe to many instructions), the instructions are deleted.
+
+            // in turn if we deleted a user, all the recipes that user created would be deleted using cascade delete,
+            // to prevent that we can define the relationship to not delete in the datacontext
+
+            var recipe = _recipeRepository.GetRecipe(recipeId);
+
+            if(!_recipeRepository.DeleteRecipe(recipe))
+            {
+                ModelState.AddModelError("", "Something went wrong while deleting");
+                return StatusCode(500, ModelState);
+            }
+
+
+            return NoContent();
+        }
 
 
 

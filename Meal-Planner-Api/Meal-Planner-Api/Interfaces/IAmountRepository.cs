@@ -12,6 +12,8 @@ namespace Meal_Planner_Api.Interfaces
         bool AmountExists(int id);
         bool AmountExistByQuantity(float quantity);
         bool CreateAmount(Amount amount);
+        bool DeleteAmount(Amount amount);
+        bool UpdateAmount(Amount amount);
         bool Save();
 
     }

@@ -9,6 +9,8 @@ namespace Meal_Planner_Api.Interfaces
         ICollection<Instruction> GetInstructionsByRecipeID(int recipeId);
         bool InstructionExists(int id);
         bool CreateInstruction(Instruction instruction);
+        bool DeleteInstruction(Instruction instruction);
+        bool UpdateInstruction(Instruction instruction);
         bool Save();
 
     }

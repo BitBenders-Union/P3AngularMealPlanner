@@ -61,7 +61,7 @@ namespace Meal_Planner_Api.Controllers
         [HttpGet("byRecipe/{recipeId}")]
         public IActionResult GetAmountByRecipeId(int recipeId)
         {
-            var amount = _mapper.Map<AmountDTO>(_amountRepository.GetAmountsFromRecipe(recipeId));
+            var amount = _mapper.Map<List<AmountDTO>>(_amountRepository.GetAmountsFromRecipe(recipeId));
 
             if (amount == null)
                 return NotFound("Not Found");

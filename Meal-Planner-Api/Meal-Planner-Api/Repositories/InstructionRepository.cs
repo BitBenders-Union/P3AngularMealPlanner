@@ -20,6 +20,12 @@ namespace Meal_Planner_Api.Repositories
             return Save();
         }
 
+        public bool DeleteInstruction(Instruction instruction)
+        {
+            _context.Remove(instruction);
+            return Save();
+        }
+
         public Instruction GetInstruction(int id)
         {
             return _context.Instructions.FirstOrDefault(x => x.Id == id);
@@ -54,6 +60,11 @@ namespace Meal_Planner_Api.Repositories
         {
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
+        }
+
+        public bool UpdateInstruction(Instruction instruction)
+        {
+            throw new NotImplementedException();
         }
     }
 }
