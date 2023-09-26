@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable, catchError, retry} from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class LoginService {
 
   private apiUrl = 'https://localhost:7268/';
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient, private router: Router) { }
 
   sendLoginData(username: string, password: string): Observable<any>{
     
@@ -44,5 +45,10 @@ export class LoginService {
   //check for token
   isLoggedIn(): boolean{
     return !! localStorage.getItem('token');
+  }
+
+  signOut(){
+    localStorage.removeItem('token');
+    this.router.navigate(['login']);
   }
 }
