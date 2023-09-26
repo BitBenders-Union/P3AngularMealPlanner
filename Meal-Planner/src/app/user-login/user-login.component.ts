@@ -10,7 +10,6 @@ import { UserStoreService } from '../service/user-store.service';
   styleUrls: ['./user-login.component.css']
 })
 export class UserLoginComponent {
-  @Output() userLoggedIn: EventEmitter<boolean> = new EventEmitter<boolean>();
   loginForm!: FormGroup;
 
   constructor(

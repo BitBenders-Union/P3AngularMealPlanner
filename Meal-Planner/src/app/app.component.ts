@@ -11,13 +11,9 @@ import { fader } from './Animations';
   ]
 })
 export class AppComponent {
-  isLoggedIn: boolean = false
 
   title = 'Meal-Planner';
 
-  onUserLoggedIn(isUserLoggedIn: boolean) {
-    this.isLoggedIn = isUserLoggedIn;
-  }
 
   prepareRoute(outlet: RouterOutlet) {
     return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
