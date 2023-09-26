@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { RecipeServiceService } from '../recipe-service.service';
+import { RecipeServiceService } from '../service/recipe-service.service';
 import { Recipe } from '../Interfaces';
-import { StarService } from '../star.service';
+import { StarService } from '../service/star.service';
 import { Router } from '@angular/router';
 
 

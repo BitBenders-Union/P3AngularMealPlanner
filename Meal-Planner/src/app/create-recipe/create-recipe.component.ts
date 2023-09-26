@@ -191,7 +191,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
-import { CreateRecipeService } from '../create-recipe.service'; // Import your service
+import { CreateRecipeService } from '../service/create-recipe.service'; // Import your service
 import { CreateRecipe } from '../Interfaces'; // Assuming you have an interface for CreateRecipe
 
 @Component({

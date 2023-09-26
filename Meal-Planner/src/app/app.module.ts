@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // Import BrowserAnimationsModule
 import { FormsModule } from '@angular/forms'; // Import FormsModule
-import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
 import { ReactiveFormsModule } from '@angular/forms';
 
 
@@ -20,11 +20,13 @@ import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { CustomFilterPipe } from './custom-filter-pipe.pipe';
 import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 import { CreateRecipeComponent } from './create-recipe/create-recipe.component';
-import { FormsTestComponent } from './forms-test/forms-test.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 import { UpdateRecipeComponent } from './update-recipe/update-recipe.component';
 import { UserLoginComponent } from './user-login/user-login.component';
 import { UserRegisterComponent } from './user-register/user-register.component';
+import { AuthGuard } from './guards/auth.guard';
+import { StartpageComponent } from './startpage/startpage.component';
+import { TokenInterceptor } from './interceptors/token.interceptor';
 
 
 @NgModule({
@@ -41,11 +43,11 @@ import { UserRegisterComponent } from './user-register/user-register.component';
     CustomFilterPipe,
     RecipeDetailComponent,
     CreateRecipeComponent,
-    FormsTestComponent,
     LoadingSpinnerComponent,
     UpdateRecipeComponent,
     UserLoginComponent,
     UserRegisterComponent,
+    StartpageComponent,
     
     
   ],
@@ -60,7 +62,11 @@ import { UserRegisterComponent } from './user-register/user-register.component';
     ReactiveFormsModule,
     
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: TokenInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
