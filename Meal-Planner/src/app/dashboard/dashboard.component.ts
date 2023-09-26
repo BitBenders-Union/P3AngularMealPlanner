@@ -28,12 +28,13 @@ export class DashboardComponent implements OnInit{
   constructor(private weekScheduleService: WeekScheduleService, private userStore: UserStoreService, private auth: LoginService) {} // Inject the service
 
   ngOnInit(){
+    
       this.userStore.getUserFromStore()
       .subscribe(val =>{
         let userNameFromToken = this.auth.getUsernameFromToken();
         this.userName = val || userNameFromToken;
         console.log(this.userName);
-      })
+      })      
   }
 
   // This function is called when the shopping list needs to be updated with new ingredients.

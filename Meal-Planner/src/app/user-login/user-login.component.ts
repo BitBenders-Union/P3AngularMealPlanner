@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../service/login.service';
 import { Router, RouterLink } from '@angular/router';
 import { UserStoreService } from '../service/user-store.service';
+
 
 @Component({
   selector: 'app-user-login',
   templateUrl: './user-login.component.html',
   styleUrls: ['./user-login.component.css']
 })
-export class UserLoginComponent {
+export class UserLoginComponent implements OnInit{
   loginForm!: FormGroup;
 
   constructor(
@@ -24,6 +25,10 @@ export class UserLoginComponent {
     });
   }
 
+  ngOnInit(): void {
+    localStorage.removeItem('token');
+  }
+
   onSubmit(): void{
     if(this.loginForm.valid){
       const username = this.loginForm.value.username;
@@ -36,8 +41,8 @@ export class UserLoginComponent {
 
       this.loginService.sendLoginData(username, password).subscribe({
         next: (data: any) => {
-          console.log("Success", data);
-          console.log("User ID: ", data.id);
+          // console.log("Success", data);
+          // console.log("User ID: ", data.id);
           this.loginService.storeToken(data.token);
           const tokenPayload = this.loginService.decodeToken();
           this.userStore.setUserInStore(tokenPayload.unique_name);
