@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LoginService } from '../login.service';
+import { LoginService } from '../service/login.service';
 import { Router, RouterLink } from '@angular/router';
+import { UserStoreService } from '../service/user-store.service';
 
 @Component({
   selector: 'app-user-login',
@@ -14,7 +15,8 @@ export class UserLoginComponent {
   constructor(
     private loginService: LoginService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private userStore: UserStoreService
   ){
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
@@ -37,7 +39,10 @@ export class UserLoginComponent {
           console.log("Success", data);
           console.log("User ID: ", data.id);
           this.loginService.storeToken(data.token);
-          this.router.navigate([`/dashboard`, data.id])
+          const tokenPayload = this.loginService.decodeToken();
+          this.userStore.setUserInStore(tokenPayload.unique_name);
+          this.userStore.setIdInStore(tokenPayload.userId);
+          this.router.navigate([`/dashboard`])
         },
         error:(error) => {
           console.error("Http Error: ",error);

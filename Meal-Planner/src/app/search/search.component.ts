@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { RecipeServiceService } from '../recipe-service.service'; // Import the service for fetching recipes
+import { RecipeServiceService } from '../service/recipe-service.service'; // Import the service for fetching recipes
 import { Recipe } from '../Interfaces'; // Import the Recipe interface
 
 @Component({
