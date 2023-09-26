@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../service/login.service';
 import { Router, RouterLink } from '@angular/router';
@@ -39,6 +39,7 @@ export class UserLoginComponent {
           console.log("Success", data);
           console.log("User ID: ", data.id);
           this.loginService.storeToken(data.token);
+          
           const tokenPayload = this.loginService.decodeToken();
           this.userStore.setUserInStore(tokenPayload.unique_name);
           this.userStore.setIdInStore(tokenPayload.userId);
