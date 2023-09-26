@@ -86,11 +86,11 @@ namespace Meal_Planner_Api.Data
                 .HasKey(iu => new { iu.ingredientId, iu.unitId });
 
 
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Recipes)
-                .WithOne(r => r.User)
-                .HasForeignKey(r => r.User.Id)
-                .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<User>()
+            //    .HasMany(u => u.Recipes)
+            //    .WithOne(r => r.User)
+            //    .HasForeignKey(r => r.User.Id)
+            //    .OnDelete(DeleteBehavior.Restrict);
 
 
 

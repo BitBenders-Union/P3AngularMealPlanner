@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { fader } from './Animations';
 
@@ -11,7 +11,13 @@ import { fader } from './Animations';
   ]
 })
 export class AppComponent {
+  isLoggedIn: boolean = false
+
   title = 'Meal-Planner';
+
+  onUserLoggedIn(isUserLoggedIn: boolean) {
+    this.isLoggedIn = isUserLoggedIn;
+  }
 
   prepareRoute(outlet: RouterOutlet) {
     return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];

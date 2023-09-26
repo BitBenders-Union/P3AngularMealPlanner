@@ -1,7 +1,16 @@
+<div *ngIf="isLoggedIn">
 
-    <div class="main">
+    <app-navbar></app-navbar>
 
-        <div [@routeFadeAnimation]="getRouteAnimationState(o)">
-            <router-outlet #o="outlet"></router-outlet>
-        </div>
+</div>
+
+<div *ngIf="!isLoggedIn">
+    <app-user-login></app-user-login>
+</div>
+
+<div class="main">
+
+    <div [@routeFadeAnimation]="getRouteAnimationState(o)">
+        <router-outlet #o="outlet"></router-outlet>
     </div>
+</div>
