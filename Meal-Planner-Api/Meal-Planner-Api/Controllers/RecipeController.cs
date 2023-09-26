@@ -696,18 +696,36 @@ namespace Meal_Planner_Api.Controllers
             // instruction handling
 
 
-            ExistingRecipe.Instructions.Clear();
-            // should also delete instruction from db if we do it this way
-
-
-            foreach (var instruction in recipeData.Instructions)
+            foreach (var existingInstruction in ExistingRecipe.Instructions.ToList())
             {
-                var instructionMap = _mapper.Map<Instruction>(instruction);
-                instructionMap.Recipe = ExistingRecipe;
-                _instructionRepository.CreateInstruction(instructionMap);
-                ExistingRecipe.Instructions.Add(_instructionRepository.GetInstruction(instruction.Text));
+                var updatedInstruction = recipeData.Instructions.FirstOrDefault(i => i.Text == existingInstruction.Text);
+
+                if (updatedInstruction != null)
+                {
+                    // Update the existing instruction text
+                    existingInstruction.Text = updatedInstruction.Text;
+                }
+                else
+                {
+                    // Remove the instruction if it doesn't exist in the updated data
+                    ExistingRecipe.Instructions.Remove(existingInstruction);
+                    _instructionRepository.DeleteInstruction(existingInstruction); // Delete from the database
+                }
             }
 
+            foreach (var newInstruction in recipeData.Instructions)
+            {
+                var existingInstruction = ExistingRecipe.Instructions.FirstOrDefault(i => i.Text == newInstruction.Text);
+
+                if (existingInstruction == null)
+                {
+                    // Create and add a new instruction if it doesn't exist in the existing data
+                    var instructionMap = _mapper.Map<Instruction>(newInstruction);
+                    instructionMap.Recipe = ExistingRecipe;
+                    ExistingRecipe.Instructions.Add(instructionMap);
+                    _instructionRepository.CreateInstruction(instructionMap);
+                }
+            }
 
 
 
