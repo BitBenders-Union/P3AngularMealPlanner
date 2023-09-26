@@ -117,6 +117,7 @@ namespace Meal_Planner_Api.Controllers
             return Ok(new {
                 Token = userGet.Token,
                 Message = "Success",
+                id = userGet.Id
             });
         }
 

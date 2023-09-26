@@ -25,7 +25,12 @@ namespace Meal_Planner_Api.Repositories
 
         public Ingredient GetIngredient(string name)
         {
-            return _context.Ingredients.FirstOrDefault(x => x.Name == name);
+            return _context.Ingredients
+                .Include(x => x.IngredientAmount)
+                    .ThenInclude(x => x.amount)
+                .Include(x=> x.IngredientUnit)
+                    .ThenInclude(x => x.unit)
+                .FirstOrDefault(x => x.Name == name);
         }
 
         public ICollection<Ingredient> GetIngredientsFromRecipe(int recipeId)

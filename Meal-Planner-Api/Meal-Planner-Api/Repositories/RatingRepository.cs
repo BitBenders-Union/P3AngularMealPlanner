@@ -32,6 +32,11 @@ namespace Meal_Planner_Api.Repositories
             return _context.Ratings.FirstOrDefault(x => x.Id == id);
         }
 
+        public Rating GetRatingFromScore(float score)
+        {
+            return _context.Ratings.FirstOrDefault(x => x.Score == score);
+        }
+
         public int GetRatingId(float value)
         {
             return _context.Ratings.FirstOrDefault(x => x.Score == value).Id;
