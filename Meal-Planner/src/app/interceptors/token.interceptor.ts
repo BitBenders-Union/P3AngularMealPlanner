@@ -7,7 +7,7 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
-import { LoginService } from '../login.service';
+import { LoginService } from '../service/login.service';
 import { Router } from '@angular/router';
 
 @Injectable()
@@ -30,10 +30,11 @@ export class TokenInterceptor implements HttpInterceptor {
           if(error.status === 401){
             this.auth.signOut();
             this.router.navigate(['login']);
+            
           }
         }
 
-        return throwError(() => new Error("Server Error"));
+        return throwError(() => new Error("FUCK me in the ass"));
       })
     );
   }

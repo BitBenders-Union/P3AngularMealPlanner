@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Ingredient, Recipe } from '../Interfaces';
-import { WeekScheduleService } from '../week-schedule.service'; // Import the service
+import { WeekScheduleService } from '../service/week-schedule.service'; // Import the service
+import { UserStoreService } from '../service/user-store.service';
+import { LoginService } from '../service/login.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,12 +18,23 @@ import { WeekScheduleService } from '../week-schedule.service'; // Import the se
     ]),
   ],
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit{
   shoppingListIngredients: Ingredient[] = []; // List of ingredients we send to the shoppingList componenet
   showShoppingList = true;
 
-  constructor(private weekScheduleService: WeekScheduleService) {} // Inject the service
+  public userName: string = "";
+  public userId: number = 0;
 
+  constructor(private weekScheduleService: WeekScheduleService, private userStore: UserStoreService, private auth: LoginService) {} // Inject the service
+
+  ngOnInit(){
+      this.userStore.getUserFromStore()
+      .subscribe(val =>{
+        let userNameFromToken = this.auth.getUsernameFromToken();
+        this.userName = val || userNameFromToken;
+        console.log(this.userName);
+      })
+  }
 
   // This function is called when the shopping list needs to be updated with new ingredients.
   // It takes an array of Ingredient objects as a parameter.
