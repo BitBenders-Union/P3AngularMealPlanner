@@ -26,6 +26,7 @@ namespace Meal_Planner_Api.Controllers
         private IUserRepository _userRepository;
         private IAmountRepository _amountRepository;
         private IUnitRepository _unitRepository;
+        private DataContext _context;
         private IMapper _mapper;
 
         public RecipeController
@@ -40,7 +41,8 @@ namespace Meal_Planner_Api.Controllers
             IInstructionRepository instructionRepository,
             IUserRepository userRepository,
             IAmountRepository amountRepository,
-            IUnitRepository unitRepository
+            IUnitRepository unitRepository,
+            DataContext context
             )
         {
             _recipeRepository = recipeRepository;
@@ -54,7 +56,7 @@ namespace Meal_Planner_Api.Controllers
             _userRepository = userRepository;
             _amountRepository = amountRepository;
             _unitRepository = unitRepository;
-
+            _context = context;
             _mapper = mapper;
         }
 
@@ -543,7 +545,7 @@ namespace Meal_Planner_Api.Controllers
                     existingAmount = _mapper.Map<Amount>(ingredient.Amount);
                     _amountRepository.CreateAmount(existingAmount);
                     createdAmounts.Add(existingAmount.Quantity, existingAmount);
-                    existingIngredient.IngredientAmount.First().amount = existingAmount;
+                    //existingIngredient.IngredientAmount.First().amount = existingAmount;
                 }
                 else
                 {
@@ -576,7 +578,7 @@ namespace Meal_Planner_Api.Controllers
                     _unitRepository.CreateUnit(existingUnit);
                     createdUnits.Add(existingUnit.Measurement, existingUnit);
 
-                    existingIngredient.IngredientUnit.First().unit = existingUnit;
+                    //existingIngredient.IngredientUnit.First().unit = existingUnit;
                 }
                 else
                 {
@@ -594,6 +596,7 @@ namespace Meal_Planner_Api.Controllers
 
                 // IngredientAmount
                 var ingredientAmount = existingIngredient.IngredientAmount.FirstOrDefault();
+                var existingIngredientAmount = existingIngredient.IngredientAmount.FirstOrDefault();
 
                 if (ingredientAmount == null)
                 {
@@ -604,20 +607,31 @@ namespace Meal_Planner_Api.Controllers
                         amount = existingAmount,
                         amountId = existingAmount.Id
                     };
+                    existingIngredient.IngredientAmount = existingIngredient.IngredientAmount ?? new List<IngredientAmount>();
 
                     existingIngredient.IngredientAmount.Add(ingredientAmount);
                 }
                 else
                 {
-                    // Update the relationship if needed
-                    if (ingredientAmount.amount != existingAmount)
+                    // Remove the existing IngredientAmount
+                    _context.IngredientAmounts.Remove(existingIngredientAmount);
+
+                    // Create a new IngredientAmount
+                    var newIngredientAmount = new IngredientAmount
                     {
-                        ingredientAmount.amount = existingAmount;
-                    }
+                        ingredient = existingIngredient,
+                        ingredientId = existingIngredient.Id,
+                        amount = existingAmount,
+                        amountId = existingAmount.Id
+                    };
+
+                    // Add the new IngredientAmount to the list
+                    existingIngredient.IngredientAmount.Add(newIngredientAmount);
                 }
 
                 // IngredientUnit
                 var ingredientUnit = existingIngredient.IngredientUnit.FirstOrDefault();
+                var existingIngredientUnit = existingIngredient.IngredientUnit.FirstOrDefault();
 
                 if (ingredientUnit == null)
                 {
@@ -635,11 +649,19 @@ namespace Meal_Planner_Api.Controllers
                 }
                 else
                 {
-                    // Update the relationship if needed
-                    if (ingredientUnit.unit != existingUnit)
+                    _context.IngredientUnits.Remove(existingIngredientUnit);
+
+                    // create new relationship
+                    var newIngredientUnit = new IngredientUnit
                     {
-                        ingredientUnit.unit = existingUnit;
-                    }
+                        ingredient = existingIngredient,
+                        ingredientId = existingIngredient.Id,
+                        unit = existingUnit,
+                        unitId = existingUnit.Id
+                    };
+
+                    // add new relationship to list
+                    existingIngredient.IngredientUnit.Add(newIngredientUnit);
                 }
 
                 var recipeIngredient = ExistingRecipe.RecipeIngredients.FirstOrDefault(ri => ri.IngredientId == existingIngredient.Id);
@@ -650,7 +672,9 @@ namespace Meal_Planner_Api.Controllers
                     recipeIngredient = new RecipeIngredient
                     {
                         Recipe = ExistingRecipe,
-                        Ingredient = existingIngredient
+                        RecipeId = ExistingRecipe.Id,
+                        Ingredient = existingIngredient,
+                        IngredientId = existingIngredient.Id
                     };
 
                     // Add the RecipeIngredient to the Recipe
@@ -673,6 +697,8 @@ namespace Meal_Planner_Api.Controllers
 
 
             ExistingRecipe.Instructions.Clear();
+            // should also delete instruction from db if we do it this way
+
 
             foreach (var instruction in recipeData.Instructions)
             {
