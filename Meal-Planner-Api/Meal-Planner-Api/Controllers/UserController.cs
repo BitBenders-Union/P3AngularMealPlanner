@@ -4,6 +4,7 @@ using Meal_Planner_Api.Interfaces;
 using Meal_Planner_Api.Models;
 using Meal_Planner_Api.Repositories;
 using Meal_Planner_Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -29,6 +30,7 @@ namespace Meal_Planner_Api.Controllers
         }
 
         // get all users
+        [Authorize]
         [HttpGet]
         public IActionResult Get()
         {
@@ -45,6 +47,7 @@ namespace Meal_Planner_Api.Controllers
         }
 
         // get user by id
+        [Authorize]
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
@@ -61,6 +64,7 @@ namespace Meal_Planner_Api.Controllers
 
 
         // get user by username
+        [Authorize]
         [HttpGet("/username/{username}")]
         public IActionResult Get(string username)
         {

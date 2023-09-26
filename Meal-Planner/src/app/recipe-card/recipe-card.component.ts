@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { Recipe } from '../Interfaces';
-import { RecipeServiceService } from '../recipe-service.service';
-import { StarService } from '../star.service';
+import { RecipeServiceService } from '../service/recipe-service.service';
+import { StarService } from '../service/star.service';
 
 
 
