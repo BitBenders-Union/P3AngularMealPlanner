@@ -18,13 +18,20 @@ namespace Meal_Planner_Api.Controllers
     {
         private IMapper _mapper;
         private IUserRepository _userRepository;
+        private IRecipeScheduleRepository _recipeScheduleRepository;
         private IHashingService _hashingService;
         private IJwtTokenService _jwtTokenService;
 
-        public UserController(IMapper mapper, IUserRepository userRepository, IHashingService hashingService, IJwtTokenService jwtTokenService)
+        public UserController(
+            IMapper mapper, 
+            IUserRepository userRepository, 
+            IHashingService hashingService, 
+            IJwtTokenService jwtTokenService,
+            IRecipeScheduleRepository recipeScheduleRepository)
         {
             _mapper = mapper;
             _userRepository = userRepository;
+            _recipeScheduleRepository = recipeScheduleRepository;
             _hashingService = hashingService;
             _jwtTokenService = jwtTokenService;
         }
@@ -131,13 +138,10 @@ namespace Meal_Planner_Api.Controllers
                 return BadRequest();
 
             // looks for other users with the same value
-            var userGet = _userRepository.GetUsers()
-                .FirstOrDefault(a => a.Username.Trim().ToUpper() == user.Username.Trim().ToUpper());
+            var userExist = _userRepository.UserExists(user.Username);
 
-            
-
-            // if another quantity does exist
-            if (userGet != null)
+            // if user exist
+            if (userExist)
             {
                 ModelState.AddModelError("", "User Already Exists");
                 return StatusCode(422, ModelState);
@@ -158,12 +162,30 @@ namespace Meal_Planner_Api.Controllers
                 return BadRequest(ModelState);
 
 
-            // create the amount and check if it saved
+            // create the user and check if it saved
             if (!_userRepository.CreateUser(newUser))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);
             }
+            var userGet = _userRepository.GetUser(newUser.Username);
+
+            // after creating a user create a recipe-schedule for that user
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 7; j++)
+                {
+                    RecipeSchedule recipeSchedule = new RecipeSchedule
+                    {
+                        Row = i,
+                        Column = j,
+                        User = userGet,
+                        RecipeId = null
+                    };
+                    _recipeScheduleRepository.CreateRecipeSchedule(recipeSchedule);
+                }
+            }
+
 
             return Ok("Success");
         }
