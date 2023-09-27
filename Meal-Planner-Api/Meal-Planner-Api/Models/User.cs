@@ -9,5 +9,7 @@
         public string Token { get; set; }
         public ICollection<Recipe> Recipes { get; set; }
         public ICollection<UserRating> UserRating { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTime? RefreshTokenExpiryTime { get; set; }
     }
 }

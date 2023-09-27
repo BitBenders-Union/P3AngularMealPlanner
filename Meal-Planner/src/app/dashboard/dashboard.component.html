@@ -10,6 +10,9 @@
  -->
 <app-navbar></app-navbar>
 <h2>Welcome {{userName}}</h2>
+<div *ngFor="let test of testthing">
+    <p>{{test.username}}</p>
+</div>
  <div cdkDropListGroup>
 
     <!-- week-schedule emits a list of ingredients that it gets from the dropped recipe-card we then bind the emit it to the method onShoppingListUpdated -->

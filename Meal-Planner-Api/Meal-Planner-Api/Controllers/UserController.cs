@@ -120,11 +120,18 @@ namespace Meal_Planner_Api.Controllers
                 return BadRequest();
 
             userGet.Token = _jwtTokenService.CreateJwtToken(userGet);
+            var newAccessToken = userGet.Token;
+            var newRefreshToken = _jwtTokenService.CreateRefreshToken();
+            userGet.RefreshToken = newRefreshToken;
+            userGet.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(1);
+            _userRepository.Save();
 
-            return Ok(new {
-                Token = userGet.Token,
-                Message = "Success",
-                id = userGet.Id
+            return Ok(new TokenDTO()
+            {
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken,
+
+
             });
         }
 
@@ -188,6 +195,31 @@ namespace Meal_Planner_Api.Controllers
 
 
             return Ok("Success");
+        }
+
+        [HttpPost("/refresh")]
+        public IActionResult Refresh(TokenDTO tokenDTO)
+        {
+            if(tokenDTO == null)
+                return BadRequest("Invalid client request");
+            string accessToken = tokenDTO.AccessToken;
+            string refreshToken = tokenDTO.RefreshToken;
+            var principal = _jwtTokenService.GetPrincipalFromExpiredToken(accessToken);
+            var username = principal.Identity.Name;
+            var user = _userRepository.GetUser(username);
+            if(user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+                return BadRequest("Invalid client request");
+            var newAccessToken = _jwtTokenService.CreateJwtToken(user);
+            var newRefreshToken = _jwtTokenService.CreateRefreshToken();
+            user.RefreshToken = newRefreshToken;
+            _userRepository.Save();
+            return Ok(new TokenDTO()
+            {
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken
+            });
+            
+
         }
 
         // update user

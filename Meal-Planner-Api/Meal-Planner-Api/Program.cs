@@ -26,8 +26,8 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
         {
 
-            policy.WithOrigins("*") //TODO: change this to AllowedOrigins when sanjit fixes his cors issues
-                  .WithHeaders("content-type")
+            policy.WithOrigins(allowedOrigins)
+                  .WithHeaders("content-type", "authorization")
                   .WithMethods("GET", "POST", "PUT", "DELETE");
         });
 });
@@ -45,7 +45,8 @@ builder.Services.AddAuthentication(x =>
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("iamabouttoblow.....")),
         ValidateIssuer = false,
-        ValidateAudience = false
+        ValidateAudience = false,
+        ClockSkew = TimeSpan.Zero
     };
 });
 
