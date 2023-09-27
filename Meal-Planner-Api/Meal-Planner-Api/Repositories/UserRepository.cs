@@ -59,7 +59,7 @@ namespace Meal_Planner_Api.Repositories
 
         public bool UserExists(string username)
         {
-            return _context.Users.Any(x => x.Username == username);
+            return _context.Users.Any(x => x.Username.Trim().ToLower() == username.Trim().ToLower());
         }
 
         public bool ValidateUser(byte[] hashedPassword, string username)
