@@ -4,6 +4,7 @@ using Meal_Planner_Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Meal_Planner_Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230927103209_recipeSchedule-changes")]
+    partial class recipeSchedulechanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -265,6 +268,8 @@ namespace Meal_Planner_Api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RecipeId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("RecipeSchedules");
@@ -315,12 +320,6 @@ namespace Meal_Planner_Api.Migrations
 
                     b.Property<byte[]>("PasswordSalt")
                         .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("RefreshToken")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("RefreshTokenExpiryTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Token")
                         .HasColumnType("nvarchar(max)");
@@ -468,9 +467,15 @@ namespace Meal_Planner_Api.Migrations
 
             modelBuilder.Entity("Meal_Planner_Api.Models.RecipeSchedule", b =>
                 {
+                    b.HasOne("Meal_Planner_Api.Models.Recipe", "Recipe")
+                        .WithMany()
+                        .HasForeignKey("RecipeId");
+
                     b.HasOne("Meal_Planner_Api.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("Recipe");
 
                     b.Navigation("User");
                 });

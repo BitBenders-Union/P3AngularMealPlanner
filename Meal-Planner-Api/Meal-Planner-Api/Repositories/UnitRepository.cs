@@ -14,7 +14,7 @@ namespace Meal_Planner_Api.Repositories
             _context = context;
         }
 
-        public bool CrateUnit(Unit unit)
+        public bool CreateUnit(Unit unit)
         {
             _context.Add(unit);
             return Save();

@@ -12,11 +12,13 @@ namespace Meal_Planner_Api.Controllers
     {
         private IMapper _mapper;
         private IRecipeScheduleRepository _recipeScheduleRepository;
+        private IRecipeRepository _recipeRepository;
 
-        public RecipeScheduleController(IMapper mapper, IRecipeScheduleRepository recipeScheduleRepository)
+        public RecipeScheduleController(IMapper mapper, IRecipeScheduleRepository recipeScheduleRepository, IRecipeRepository recipeRepository)
         {
             _mapper = mapper;
             _recipeScheduleRepository = recipeScheduleRepository;
+            _recipeRepository = recipeRepository;
         }
 
         // get all schedules
@@ -24,6 +26,7 @@ namespace Meal_Planner_Api.Controllers
         public IActionResult Get()
         {
             var schedule = _mapper.Map<List<RecipeScheduleDTO>>(_recipeScheduleRepository.GetRecipeSchedules());
+            
 
             if(schedule == null || schedule.Count() == 0)
                 return NotFound("Not Found");
@@ -72,14 +75,6 @@ namespace Meal_Planner_Api.Controllers
             if (scheduleCreate == null) 
                 return BadRequest();
             
-            //TODO: figure out how to implement this properly
-            // the post should happen on user creation
-            // it should also take the user and bind it to the schedule
-            // it should also have multiple entries in the table with rows and columns, where recipes are empty.
-
-
-
-
             var scheduleMap = _mapper.Map<RecipeSchedule>(scheduleCreate);
 
             if(!_recipeScheduleRepository.CreateRecipeSchedule(scheduleMap))
@@ -88,6 +83,28 @@ namespace Meal_Planner_Api.Controllers
                 return StatusCode(500, ModelState);
             }
 
+
+            return Ok("Success");
+        }
+
+
+        [HttpPatch("update")]
+        public IActionResult UpdateRecipeInSchedule([FromBody] RecipeScheduleDTO scheduleData)
+        {
+            if (scheduleData == null)
+                return BadRequest();
+
+            if (!_recipeScheduleRepository.RecipeScheduleExists(scheduleData.Id))
+                return NotFound("Not Found");
+
+
+            var getSchedule = _recipeScheduleRepository.GetRecipeSchedule(scheduleData.Id);
+
+            if (!_recipeScheduleRepository.UpdateRecipeInSchedule(getSchedule, scheduleData.RecipeId))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(500, ModelState);
+            }
 
             return Ok("Success");
         }

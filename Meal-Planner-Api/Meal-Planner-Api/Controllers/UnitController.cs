@@ -127,7 +127,7 @@ namespace Meal_Planner_Api.Controllers
             var unitMap = _mapper.Map<Unit>(unitCreate);
 
             // create the amount and check if it saved
-            if (!_unitRepository.CrateUnit(unitMap))
+            if (!_unitRepository.CreateUnit(unitMap))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);
