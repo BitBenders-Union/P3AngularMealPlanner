@@ -24,6 +24,7 @@ export class DashboardComponent implements OnInit{
 
   public userName: string = "";
   public userId: number = 0;
+  public testthing: any[] = [];
 
   constructor(private weekScheduleService: WeekScheduleService, private userStore: UserStoreService, private auth: LoginService) {} // Inject the service
 
@@ -35,6 +36,11 @@ export class DashboardComponent implements OnInit{
         this.userName = val || userNameFromToken;
         console.log(this.userName);
       })      
+
+      this.auth.testApi().subscribe((data: any) =>{
+        this.testthing = data;
+        console.log(this.testthing);
+      })
   }
 
   // This function is called when the shopping list needs to be updated with new ingredients.
