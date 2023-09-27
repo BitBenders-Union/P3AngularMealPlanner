@@ -1,4 +1,5 @@
-﻿using Meal_Planner_Api.Models;
+﻿using Meal_Planner_Api.Dto;
+using Meal_Planner_Api.Models;
 
 namespace Meal_Planner_Api.Interfaces
 {
@@ -11,6 +12,8 @@ namespace Meal_Planner_Api.Interfaces
         bool UserExists(int id);
         bool UserExists(string username);
         bool CreateUser(User user);
+        bool UpdateUser(User user);
+        bool DeleteUser(User user);
         bool Save();
     }
 }
