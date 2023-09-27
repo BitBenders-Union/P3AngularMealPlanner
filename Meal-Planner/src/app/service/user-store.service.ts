@@ -25,4 +25,6 @@ export class UserStoreService {
   public setIdInStore(id: number){
     this.id$.next(id);
   }
+
+
 }

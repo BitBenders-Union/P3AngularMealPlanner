@@ -4,6 +4,7 @@ using Meal_Planner_Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Meal_Planner_Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230927054416_Refreshtoken")]
+    partial class Refreshtoken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -186,6 +189,9 @@ namespace Meal_Planner_Api.Migrations
                     b.Property<int?>("PreparationTimeId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("RecipeScheduleId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("ServingsId")
                         .HasColumnType("int");
 
@@ -203,6 +209,8 @@ namespace Meal_Planner_Api.Migrations
                     b.HasIndex("CookingTimeId");
 
                     b.HasIndex("PreparationTimeId");
+
+                    b.HasIndex("RecipeScheduleId");
 
                     b.HasIndex("ServingsId");
 
@@ -252,9 +260,6 @@ namespace Meal_Planner_Api.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Column")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("RecipeId")
                         .HasColumnType("int");
 
                     b.Property<int>("Row")
@@ -405,6 +410,10 @@ namespace Meal_Planner_Api.Migrations
                         .WithMany("Recipe")
                         .HasForeignKey("PreparationTimeId");
 
+                    b.HasOne("Meal_Planner_Api.Models.RecipeSchedule", null)
+                        .WithMany("Recipes")
+                        .HasForeignKey("RecipeScheduleId");
+
                     b.HasOne("Meal_Planner_Api.Models.Servings", "Servings")
                         .WithMany("Recipe")
                         .HasForeignKey("ServingsId");
@@ -537,6 +546,11 @@ namespace Meal_Planner_Api.Migrations
                     b.Navigation("RecipeIngredients");
 
                     b.Navigation("RecipeRating");
+                });
+
+            modelBuilder.Entity("Meal_Planner_Api.Models.RecipeSchedule", b =>
+                {
+                    b.Navigation("Recipes");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.Servings", b =>
