@@ -23,12 +23,12 @@ namespace Meal_Planner_Api.Repositories
 
         public ICollection<RecipeSchedule> GetRecipeSchedules()
         {
-            return _context.RecipeSchedules.OrderBy(x => x.Id).ToList();
+            return _context.RecipeSchedules.OrderBy(x => x.Id).Include(x=> x.User).ToList();
         }
 
         public RecipeSchedule GetRecipeSchedule(int recipeScheduleId)
         {
-            return _context.RecipeSchedules.FirstOrDefault(x => x.Id == recipeScheduleId);
+            return _context.RecipeSchedules.Include(x => x.User).FirstOrDefault(x => x.Id == recipeScheduleId);
         }
 
         public bool RecipeScheduleExists(int userId)
@@ -51,6 +51,13 @@ namespace Meal_Planner_Api.Repositories
         {
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
+        }
+
+        public bool UpdateRecipeInSchedule(RecipeSchedule recipeSchedule, int? recipeId)
+        {
+            recipeSchedule.RecipeId = recipeId;
+            _context.Update(recipeSchedule);
+            return Save();
         }
     }
 }

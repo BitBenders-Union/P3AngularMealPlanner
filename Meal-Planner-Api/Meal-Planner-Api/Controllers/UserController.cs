@@ -18,13 +18,20 @@ namespace Meal_Planner_Api.Controllers
     {
         private IMapper _mapper;
         private IUserRepository _userRepository;
+        private IRecipeScheduleRepository _recipeScheduleRepository;
         private IHashingService _hashingService;
         private IJwtTokenService _jwtTokenService;
 
-        public UserController(IMapper mapper, IUserRepository userRepository, IHashingService hashingService, IJwtTokenService jwtTokenService)
+        public UserController(
+            IMapper mapper, 
+            IUserRepository userRepository, 
+            IHashingService hashingService, 
+            IJwtTokenService jwtTokenService,
+            IRecipeScheduleRepository recipeScheduleRepository)
         {
             _mapper = mapper;
             _userRepository = userRepository;
+            _recipeScheduleRepository = recipeScheduleRepository;
             _hashingService = hashingService;
             _jwtTokenService = jwtTokenService;
         }
@@ -131,13 +138,10 @@ namespace Meal_Planner_Api.Controllers
                 return BadRequest();
 
             // looks for other users with the same value
-            var userGet = _userRepository.GetUsers()
-                .FirstOrDefault(a => a.Username.Trim().ToUpper() == user.Username.Trim().ToUpper());
+            var userExist = _userRepository.UserExists(user.Username);
 
-            
-
-            // if another quantity does exist
-            if (userGet != null)
+            // if user exist
+            if (userExist)
             {
                 ModelState.AddModelError("", "User Already Exists");
                 return StatusCode(422, ModelState);
@@ -158,15 +162,116 @@ namespace Meal_Planner_Api.Controllers
                 return BadRequest(ModelState);
 
 
-            // create the amount and check if it saved
+            // create the user and check if it saved
             if (!_userRepository.CreateUser(newUser))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);
             }
+            var userGet = _userRepository.GetUser(newUser.Username);
+
+            // after creating a user create a recipe-schedule for that user
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 7; j++)
+                {
+                    RecipeSchedule recipeSchedule = new RecipeSchedule
+                    {
+                        Row = i,
+                        Column = j,
+                        User = userGet,
+                        RecipeId = null
+                    };
+                    _recipeScheduleRepository.CreateRecipeSchedule(recipeSchedule);
+                }
+            }
+
 
             return Ok("Success");
         }
+
+        // update user
+        [Authorize]
+        [HttpPut("update/{userId}")]
+        public IActionResult UpdateUser([FromBody] UserDTO user, int userId)
+        {
+            // validate body
+            if (user == null)
+                return BadRequest();
+
+            // validate user exist
+            if (!_userRepository.UserExists(userId))
+                return NotFound("User Not Found");
+
+            // validate user
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // hash password
+
+            // get new salt for new password
+            byte[] salt = _hashingService.GenerateSalt();
+            byte[] hash = _hashingService.PasswordHashing(user.Password, salt);
+
+
+            // update user
+            User updateUser = new User
+            {
+                Id = userId,
+                Username = _userRepository.GetUser(userId).Username,
+                PasswordSalt = salt,
+                PasswordHash = hash
+            };
+
+
+            if (!_userRepository.UpdateUser(updateUser))
+            {
+                ModelState.AddModelError("", "Something went wrong while updating");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Success");
+        }
+
+
+        [Authorize]
+        [HttpDelete("delete/{userId}")]
+        public IActionResult DeleteUser([FromBody] UserDTO user, int userId)
+        {
+
+            // validate body
+            if (user == null)
+                return BadRequest();
+
+            // validate user exist
+            if (!_userRepository.UserExists(userId))
+                return NotFound("User Not Found");
+
+            // validate user
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // login to the user you are trying to delete
+
+            var existingUser = _userRepository.GetUser(userId);
+            var hash = _hashingService.PasswordHashing(user.Password, existingUser.PasswordSalt);
+            if (hash != existingUser.PasswordHash)
+            {
+                ModelState.AddModelError("", "Username does not match");
+                return StatusCode(500, ModelState);
+            }
+
+            // delete user
+            if(!_userRepository.DeleteUser(_userRepository.GetUser(userId)))
+            {
+                ModelState.AddModelError("", "Something went wrong while deleting");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("User Deleted");
+        }
+
+
 
     }
 }
