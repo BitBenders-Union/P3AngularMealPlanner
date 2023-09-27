@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable, catchError, retry} from 'rxjs';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { TokenModel } from '../models/token.model';
 
 @Injectable({
   providedIn: 'root'
@@ -38,20 +39,28 @@ export class LoginService {
 
   //set usertoken to storage
   storeToken(tokenValue: string){
-    localStorage.setItem('token', tokenValue);
+    localStorage.setItem('accessToken', tokenValue);
+  }
+
+  storeRefreshToken(tokenValue: string){
+    localStorage.setItem('refreshToken', tokenValue);
   }
 
   getToken(){
-    return localStorage.getItem('token');
+    return localStorage.getItem('accessToken');
+  }
+
+  getRefreshToken(){
+    return localStorage.getItem('refreshToken');
   }
 
   //check for token
   isLoggedIn(): boolean{
-    return !! localStorage.getItem('token');
+    return !! localStorage.getItem('accessToken');
   }
 
   signOut(){
-    localStorage.removeItem('token');
+    localStorage.removeItem('accessToken');
     this.router.navigate(['login']);
   }
 
@@ -72,6 +81,21 @@ export class LoginService {
     if(this.userPayload){
       return this.userPayload.nameid;
     }
+  }
+
+  renewToken(token: TokenModel): Observable<any>{
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    })
+    return this.http.post<any>(`${this.apiUrl}api/User/refresh`, token, {headers, responseType: 'json'});
+  }
+
+
+  testApi(): Observable<any>{
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    })
+    return this.http.get(`${this.apiUrl}api/User`, {responseType: 'json'});
   }
 
 }
