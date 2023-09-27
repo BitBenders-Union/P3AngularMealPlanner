@@ -168,5 +168,88 @@ namespace Meal_Planner_Api.Controllers
             return Ok("Success");
         }
 
+        // update user
+        [Authorize]
+        [HttpPut("update/{userId}")]
+        public IActionResult UpdateUser([FromBody] UserDTO user, int userId)
+        {
+            // validate body
+            if (user == null)
+                return BadRequest();
+
+            // validate user exist
+            if (!_userRepository.UserExists(userId))
+                return NotFound("User Not Found");
+
+            // validate user
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // hash password
+
+            // get new salt for new password
+            byte[] salt = _hashingService.GenerateSalt();
+            byte[] hash = _hashingService.PasswordHashing(user.Password, salt);
+
+
+            // update user
+            User updateUser = new User
+            {
+                Id = userId,
+                Username = _userRepository.GetUser(userId).Username,
+                PasswordSalt = salt,
+                PasswordHash = hash
+            };
+
+
+            if (!_userRepository.UpdateUser(updateUser))
+            {
+                ModelState.AddModelError("", "Something went wrong while updating");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Success");
+        }
+
+
+        [Authorize]
+        [HttpDelete("delete/{userId}")]
+        public IActionResult DeleteUser([FromBody] UserDTO user, int userId)
+        {
+
+            // validate body
+            if (user == null)
+                return BadRequest();
+
+            // validate user exist
+            if (!_userRepository.UserExists(userId))
+                return NotFound("User Not Found");
+
+            // validate user
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // login to the user you are trying to delete
+
+            var existingUser = _userRepository.GetUser(userId);
+            var hash = _hashingService.PasswordHashing(user.Password, existingUser.PasswordSalt);
+            if (hash != existingUser.PasswordHash)
+            {
+                ModelState.AddModelError("", "Username does not match");
+                return StatusCode(500, ModelState);
+            }
+
+            // delete user
+            if(!_userRepository.DeleteUser(_userRepository.GetUser(userId)))
+            {
+                ModelState.AddModelError("", "Something went wrong while deleting");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("User Deleted");
+        }
+
+
+
     }
 }
