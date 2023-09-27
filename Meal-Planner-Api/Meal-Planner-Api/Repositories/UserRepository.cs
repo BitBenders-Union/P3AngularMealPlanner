@@ -19,6 +19,12 @@ namespace Meal_Planner_Api.Repositories
             return Save();
         }
 
+        public bool DeleteUser(User user)
+        {
+            _context.Remove(user);
+            return Save();
+        }
+
         public User GetUser(int id)
         {
             return _context.Users.FirstOrDefault(x => x.Id == id);
@@ -40,6 +46,12 @@ namespace Meal_Planner_Api.Repositories
             return saved > 0 ? true : false;
         }
 
+        public bool UpdateUser(User user)
+        {
+            _context.Update(user);
+            return Save();
+        }
+
         public bool UserExists(int id)
         {
             return _context.Users.Any(x => x.Id == id);
@@ -47,7 +59,7 @@ namespace Meal_Planner_Api.Repositories
 
         public bool UserExists(string username)
         {
-            return _context.Users.Any(x => x.Username == username);
+            return _context.Users.Any(x => x.Username.Trim().ToLower() == username.Trim().ToLower());
         }
 
         public bool ValidateUser(byte[] hashedPassword, string username)

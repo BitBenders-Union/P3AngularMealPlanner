@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../service/login.service';
@@ -47,6 +48,9 @@ export class UserLoginComponent implements OnInit{
           this.loginService.storeRefreshToken(data.refreshToken);
           console.log(data.accessToken);
           console.log(data.refreshToken);
+
+          this.loginService.storeToken(data.token);
+          
           const tokenPayload = this.loginService.decodeToken();
           this.userStore.setUserInStore(tokenPayload.unique_name);
           this.userStore.setIdInStore(tokenPayload.userId);

@@ -16,7 +16,7 @@ namespace Meal_Planner_Api.Interfaces
 
         // get a rating by rating ID
         Rating GetRating(int id);
-
+        Rating GetRatingFromScore(float score);
         int GetRatingId(float value);
 
         // get all ratings

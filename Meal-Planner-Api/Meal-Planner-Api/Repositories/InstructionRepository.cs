@@ -31,6 +31,12 @@ namespace Meal_Planner_Api.Repositories
             return _context.Instructions.FirstOrDefault(x => x.Id == id);
         }
 
+        public Instruction GetInstruction(string text)
+        {
+            return _context.Instructions.FirstOrDefault(x => x.Text == text);
+
+        }
+
         public ICollection<Instruction> GetInstructions()
         {
             return _context.Instructions.OrderBy(x => x.Id).ToList();
@@ -54,6 +60,11 @@ namespace Meal_Planner_Api.Repositories
         public bool InstructionExists(int id)
         {
             return _context.Instructions.Any(i => i.Id == id);
+        }        
+        
+        public bool InstructionExistsByText(string text)
+        {
+            return _context.Instructions.Any(i => i.Text == text);
         }
 
         public bool Save()

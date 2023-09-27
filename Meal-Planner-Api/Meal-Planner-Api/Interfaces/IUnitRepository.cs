@@ -11,7 +11,7 @@ namespace Meal_Planner_Api.Interfaces
         Unit GetUnitFromIngredient(int ingredientId);
         bool UnitExists(int id);
         bool UnitExists(string name);
-        bool CrateUnit(Unit unit);
+        bool CreateUnit(Unit unit);
         bool Save();
     }
 }
