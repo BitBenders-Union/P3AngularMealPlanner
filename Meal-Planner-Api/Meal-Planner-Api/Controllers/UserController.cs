@@ -131,7 +131,6 @@ namespace Meal_Planner_Api.Controllers
                 AccessToken = newAccessToken,
                 RefreshToken = newRefreshToken,
 
-
             });
         }
 
