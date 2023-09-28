@@ -130,6 +130,7 @@ namespace Meal_Planner_Api.Controllers
             {
                 AccessToken = newAccessToken,
                 RefreshToken = newRefreshToken,
+
             });
         }
 
@@ -194,7 +195,6 @@ namespace Meal_Planner_Api.Controllers
 
             return Ok("Success");
         }
-
 
         [HttpPost("/refresh")]
         public IActionResult Refresh(TokenDTO tokenDTO)
