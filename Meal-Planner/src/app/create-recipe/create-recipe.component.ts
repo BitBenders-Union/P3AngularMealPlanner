@@ -1,25 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, ReactiveFormsModule  } from '@angular/forms';
-import { Recipe } from '../Interfaces';
+import { Recipe, RecipeDTO } from '../Interfaces';
 import { RecipeServiceService } from '../service/recipe-service.service';
+import { LoginService } from '../service/login.service';
+
 
 @Component({
   selector: 'app-create-recipe',
   templateUrl: './create-recipe.component.html',
   styleUrls: ['./create-recipe.component.css']
 })
-export class CreateRecipeComponent {
+export class CreateRecipeComponent implements OnInit {
   form: FormGroup; // the form binding to the html, this is what we use to get the values from the form
-  categories: string[] = ['Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Snacks']; // these control the dropdown menu for the category, 
-                                                                                // we can add more categories later if we want, 
-                                                                                // we can also make it not hardcoded and fetch from a pre-created database / API
+  categories: string[] = []; // string array to store fetched categories
+
   loading: boolean = false; // conrol the spinner
+
 
   // constructor initializes the form with default values, for now they are test values.
   // since ingredients and instructions are arrays, we need to initialize them as an array instead of single values
   // we also inject the createRecipeService so we can fetch from our API
   constructor(private formBuilder: FormBuilder,
-    private recipeService: RecipeServiceService
+    private recipeService: RecipeServiceService,
+    private tokenService: LoginService
     ) {
     this.form = this.formBuilder.group({
       title: 'test',
@@ -30,7 +33,7 @@ export class CreateRecipeComponent {
       servings: 123,
       rating: 1.5,
       ingredients: this.formBuilder.array([]),
-      instructions: this.formBuilder.array([])
+      instructions: this.formBuilder.array([]),
     });
 
     // this is to initialize the form with one ingredient and one instruction
@@ -38,6 +41,15 @@ export class CreateRecipeComponent {
     // for it to render the form properly
     this.addIngredients();
     this.addInstruction();
+  }
+  ngOnInit(): void {
+    this.recipeService.getCategories().subscribe({
+      next: categories => {
+        this.categories = categories.map(category => category.categoryName);
+      },
+      error: error => console.error('There was an error!', error)
+    });
+
   }
 
   // this is to get the ingredients and instructions from the form
@@ -106,50 +118,48 @@ export class CreateRecipeComponent {
     if (this.form.valid) {
       this.loading = true;
 
-      const formattedRecipe: Recipe = {
-        id: 0,
+      const formattedRecipe: RecipeDTO = {
         title: this.form.get('title')?.value,
-        category: this.form.get('category')?.value ,
         description: this.form.get('description')?.value ,
+        category: this.form.get('category')?.value ,
         preparationTime: this.form.get('prepTime')?.value,
         cookingTime: this.form.get('cookTime')?.value,
         servings: this.form.get('servings')?.value,
         rating: this.form.get('rating')?.value,
         ingredients: this.ingredients.controls.map(control => ({
-          id: 0,
           name: control.get('name')?.value,
           amount: {
-            id: 0,
             quantity: control.get('amounts')?.value,
           },
           unit: {
-            id: 0,
             measurement: control.get('unit')?.value
           }
         })),
         instructions: this.instructions.controls.map(control => ({
-          id: 0,
           text: control.get('text')?.value
         })),
         user: {
-          id: localStorage.getItem('userId') ? parseInt(localStorage.getItem('userId')!): 0,
-          username: localStorage.getItem('username')!
+          id: this.tokenService.getIdFromToken()!,
+          username: this.tokenService.getUsernameFromToken()!
         }
       };
 
-      this.recipeService.createRecipe(formattedRecipe).subscribe({
-        next: response => {
-          console.log('Recipe created successfully', response);
-          this.form.reset();
-        },
-        error: error => console.error('There was an error!', error),
-        complete: () => {
-          this.loading = false
-          this.onReset();
-          }
-        });
-    } else {
-      console.log('Form is invalid');
+
+      console.log(formattedRecipe);
+    //   this.recipeService.createRecipe(formattedRecipe).subscribe({
+    //     next: response => {
+    //       console.log('Recipe created successfully', response);
+    //       this.form.reset();
+    //     },
+    //     error: error => console.error('There was an error!', error),
+    //     complete: () => {
+    //       this.loading = false
+    //       this.onReset();
+    //       }
+    //     });
+    // } else {
+    //   console.log('Form is invalid');
+    this.loading = false
     }
 
   }
@@ -196,6 +206,8 @@ export class CreateRecipeComponent {
     if (value < 0) this.ingredients.controls[0].get('amounts')?.setValue(0);
 
   }
+
+  
 
 }
 

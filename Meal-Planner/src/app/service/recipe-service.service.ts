@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpHeaderResponse } from '@angular/common/http';
 import { Observable, catchError } from 'rxjs';
-import { Recipe } from '../Interfaces';
+import { Category, Recipe, RecipeDTO } from '../Interfaces';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -14,7 +14,7 @@ export class RecipeServiceService{
   }
 
 
-  url: string = 'https://localhost:7268/api/Recipe';
+  url: string = 'https://localhost:7268/api';
   // url = '../assets/Recipes.json';
 
 
@@ -40,22 +40,31 @@ export class RecipeServiceService{
 
   }
 
-  // temporary method that gets data from json file instead of api
-  getRecipeFromJson(id: number): Observable<Recipe | undefined> {
-    return this.http.get<Recipe[]>(this.url).pipe(
-      map((data) => {
-        const recipe = data.find((x) => x.id === id);
-        return recipe;
-      })
-    );
+
+  getCategories(): Observable<Category[]> {
+    return this.http.get<Category[]>(`${this.url}/Category`).pipe(
+      catchError(error => {
+        console.error('Error getting categories:', error);
+        throw error;
+      }));
   }
 
+  // // temporary method that gets data from json file instead of api
+  // getRecipeFromJson(id: number): Observable<Recipe | undefined> {
+  //   return this.http.get<Recipe[]>(this.url).pipe(
+  //     map((data) => {
+  //       const recipe = data.find((x) => x.id === id);
+  //       return recipe;
+  //     })
+  //   );
+  // }
 
-  createRecipe(recipeData: Recipe): Observable<any> {
+
+  createRecipe(recipeData: RecipeDTO): Observable<any> {
     const url = `${this.url}`; 
 
     // Send a POST request to the API
-    return this.http.post(url, recipeData).pipe(
+    return this.http.post(`${this.url}/Recipe/create`, recipeData).pipe(
       catchError(error => {
         console.error('Error creating recipe:', error);
         throw error;
