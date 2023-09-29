@@ -41,6 +41,7 @@ namespace Meal_Planner_Api.Services
                 Subject = identity,
                 Expires = DateTime.UtcNow.AddSeconds(10),
                 SigningCredentials = credentials
+                
             };
 
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
@@ -72,7 +73,8 @@ namespace Meal_Planner_Api.Services
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateLifetime = false
+                ValidateLifetime = false,
+                ClockSkew = TimeSpan.Zero
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

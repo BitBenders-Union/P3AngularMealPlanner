@@ -24,14 +24,18 @@ export class LoginService {
     };
 
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': 'http://localhost:4200',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
     });
     return this.http.post(`${this.apiUrl}validate`, body,{headers, responseType: 'json'});
   }
 
   createLogin(data: any): Observable<any>{
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': 'http://localhost:4200',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
     })
 
     return this.http.post(`${this.apiUrl}api/User`, data,{headers, responseType: 'text'});
@@ -39,6 +43,7 @@ export class LoginService {
 
   //set usertoken to storage
   storeToken(tokenValue: string){
+    console.log(tokenValue);
     localStorage.setItem('accessToken', tokenValue);
   }
 
@@ -85,7 +90,9 @@ export class LoginService {
 
   renewToken(token: TokenModel): Observable<any>{
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': 'http://localhost:4200',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
     })
     return this.http.post<any>(`${this.apiUrl}api/User/refresh`, token, {headers, responseType: 'json'});
   }
@@ -93,9 +100,11 @@ export class LoginService {
 
   testApi(): Observable<any>{
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': 'http://localhost:4200',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
     })
-    return this.http.get(`${this.apiUrl}api/User`, {responseType: 'json'});
+    return this.http.get(`${this.apiUrl}api/User`, {headers, responseType: 'json'});
   }
 
 }

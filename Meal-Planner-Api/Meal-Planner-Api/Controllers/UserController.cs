@@ -5,13 +5,16 @@ using Meal_Planner_Api.Models;
 using Meal_Planner_Api.Repositories;
 using Meal_Planner_Api.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Mvc.Cors;
 
 
 namespace Meal_Planner_Api.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
