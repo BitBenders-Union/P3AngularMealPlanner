@@ -8,11 +8,22 @@ using System;
 using System.Text;
 using System.Security.Claims;
 using Meal_Planner_Api.Interfaces;
+using System.Security.Cryptography;
+using Microsoft.EntityFrameworkCore;
+using Meal_Planner_Api.Data;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Meal_Planner_Api.Services
 {
     public class JwtTokenService : IJwtTokenService
     {
+        private readonly DataContext _authContext;
+
+        public JwtTokenService(DataContext authContext)
+        {
+            _authContext = authContext;
+        }
+
         public string CreateJwtToken(User user)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
@@ -28,12 +39,53 @@ namespace Meal_Planner_Api.Services
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = identity,
-                Expires = DateTime.UtcNow.AddDays(1),
+                Expires = DateTime.UtcNow.AddSeconds(10),
                 SigningCredentials = credentials
             };
 
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
             return jwtTokenHandler.WriteToken(token);
+        }
+
+        public string CreateRefreshToken()
+        {
+            var tokenBytes = RandomNumberGenerator.GetBytes(64);
+            var refreshToken = Convert.ToBase64String(tokenBytes);
+
+
+            var tokenInUser = _authContext.Users.Any(x => x.RefreshToken == refreshToken);
+
+            if (tokenInUser)
+            {
+                return CreateRefreshToken();
+            }
+
+            return refreshToken;
+        }
+
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        {
+            var key = Encoding.ASCII.GetBytes("iamabouttoblow.....");
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateLifetime = false
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+            if (jwtSecurityToken == null || jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new SecurityTokenException("Invalid token");
+            }
+
+            return principal;
         }
     }
 }
