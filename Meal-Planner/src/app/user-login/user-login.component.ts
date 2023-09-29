@@ -49,8 +49,6 @@ export class UserLoginComponent implements OnInit{
           console.log(data.accessToken);
           console.log(data.refreshToken);
 
-          this.loginService.storeToken(data.token);
-          
           const tokenPayload = this.loginService.decodeToken();
           this.userStore.setUserInStore(tokenPayload.unique_name);
           this.userStore.setIdInStore(tokenPayload.userId);
