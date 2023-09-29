@@ -27,7 +27,9 @@ export class UserLoginComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    localStorage.removeItem('token');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refereshToken');
+
   }
 
   onSubmit(): void{
