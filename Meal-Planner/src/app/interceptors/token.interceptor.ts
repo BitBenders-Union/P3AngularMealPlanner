@@ -39,7 +39,6 @@ export class TokenInterceptor implements HttpInterceptor {
             
           }
         }
-
         return throwError(() => new Error("FUCK me in the ass"));
       })
     );
