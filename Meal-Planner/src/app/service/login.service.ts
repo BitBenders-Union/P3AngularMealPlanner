@@ -39,6 +39,7 @@ export class LoginService {
 
   //set usertoken to storage
   storeToken(tokenValue: string){
+    console.log(tokenValue);
     localStorage.setItem('accessToken', tokenValue);
   }
 

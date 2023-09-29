@@ -26,9 +26,13 @@ export class TokenInterceptor implements HttpInterceptor {
       })
     }
     return next.handle(request).pipe(
-      catchError((error: any) => {
-        if(error instanceof HttpErrorResponse){
-          if(error.status === 401){
+      catchError((err: any) => {
+        if(err instanceof HttpErrorResponse){
+
+          //this gets error status 0 instate of 401 or other status code for some reason
+          console.log(err.status + " The fuck is this cunt");
+          if(err.status === 401){
+            console.log("401 error");
             // this.auth.signOut();
             // this.router.navigate(['login']);
             return this.handleUnAuthError(request, next);
