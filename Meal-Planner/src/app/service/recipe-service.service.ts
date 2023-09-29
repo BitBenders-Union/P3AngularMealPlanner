@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpHeaderResponse } from '@angular/common/http';
 import { Observable, catchError } from 'rxjs';
-import { CreateRecipe, Recipe } from '../Interfaces';
+import { Recipe } from '../Interfaces';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -14,8 +14,8 @@ export class RecipeServiceService{
   }
 
 
-  // url: string = 'https://localhost:7268/api/Recipe';
-  url = '../assets/Recipes.json';
+  url: string = 'https://localhost:7268/api/Recipe';
+  // url = '../assets/Recipes.json';
 
 
 
@@ -51,7 +51,7 @@ export class RecipeServiceService{
   }
 
 
-  createRecipe(recipeData: CreateRecipe): Observable<any> {
+  createRecipe(recipeData: Recipe): Observable<any> {
     const url = `${this.url}`; 
 
     // Send a POST request to the API
@@ -73,7 +73,7 @@ export class RecipeServiceService{
     );
   }
 
-  updateRecipe( recipeData: CreateRecipe, recipeId: number): Observable<any> {
+  updateRecipe( recipeData: Recipe, recipeId: number): Observable<any> {
     const url = `${this.url}/${recipeId}`;
 
     // Send a PUT request to the API

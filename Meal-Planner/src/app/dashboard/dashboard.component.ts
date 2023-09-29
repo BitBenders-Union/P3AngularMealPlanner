@@ -61,13 +61,15 @@ export class DashboardComponent implements OnInit{
       if (existingIngredientIndex !== -1) {
         
         // Add the amount of the new ingredient to the existing ingredient's amount
-        this.shoppingListIngredients[existingIngredientIndex].amounts.value += newIngredient.amounts.value;
+        this.shoppingListIngredients[existingIngredientIndex].amount.quantity += newIngredient.amount.quantity;
       } else {
         
         // If the ingredient is not already in the shopping list, create a new entry
         const shoppingListIngredient: Ingredient = {
+          id: newIngredient.id,
           name: newIngredient.name,
-          amounts: { ...newIngredient.amounts, value: newIngredient.amounts.value },
+          amount: { ...newIngredient.amount, quantity: newIngredient.amount.quantity, },
+          unit: { ...newIngredient.unit, measurement: newIngredient.unit.measurement },
         };
         
         // Add the new ingredient to the shopping list
@@ -77,7 +79,7 @@ export class DashboardComponent implements OnInit{
 
     // Remove ingredients with 0 amount from the shopping list
     this.shoppingListIngredients = this.shoppingListIngredients.filter(
-      ingredient => ingredient.amounts.value > 0
+      ingredient => ingredient.amount.quantity > 0
     );
   }
 
