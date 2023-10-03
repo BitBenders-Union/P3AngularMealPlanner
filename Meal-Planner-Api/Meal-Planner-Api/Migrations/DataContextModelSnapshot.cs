@@ -3,6 +3,8 @@
 
 #nullable disable
 
+using Microsoft.EntityFrameworkCore.Infrastructure;
+
 namespace Meal_Planner_Api.Migrations
 {
     [DbContext(typeof(DataContext))]
