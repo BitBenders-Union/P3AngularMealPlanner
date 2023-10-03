@@ -1,9 +1,4 @@
-﻿using AutoMapper;
-using Meal_Planner_Api.Dto;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-using Microsoft.AspNetCore.Mvc;
-
+﻿
 namespace Meal_Planner_Api.Controllers
 {
     [Route("api/[controller]")]
@@ -24,8 +19,8 @@ namespace Meal_Planner_Api.Controllers
         public IActionResult Get()
         {
             var ratings = _mapper.Map<List<RatingDTO>>(_ratingRepository.GetRatings());
-            
-            if(ratings == null || ratings.Count() == 0)
+
+            if (ratings == null || ratings.Count() == 0)
                 return NotFound("Not Found");
 
             if (!ModelState.IsValid)
@@ -40,7 +35,7 @@ namespace Meal_Planner_Api.Controllers
         {
             if (!_ratingRepository.ratingExists(id))
                 return NotFound("Not Found");
-            
+
             var ratings = _mapper.Map<RatingDTO>(_ratingRepository.GetRating(id));
 
             if (!ModelState.IsValid)
@@ -54,12 +49,12 @@ namespace Meal_Planner_Api.Controllers
         [HttpGet("byRecipeId/{recipeId}")]
         public IActionResult GetByRecipeId(int recipeId)
         {
-            if(!_ratingRepository.recipeRatingsExists(recipeId))
+            if (!_ratingRepository.recipeRatingsExists(recipeId))
                 return NotFound("Not Found");
 
             var ratings = _mapper.Map<List<RatingDTO>>(_ratingRepository.GetRatingsForRecipe(recipeId));
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(ratings);
@@ -108,7 +103,7 @@ namespace Meal_Planner_Api.Controllers
             var rating = _ratingRepository.GetRatings()
                 .FirstOrDefault(r => r.Score == ratingCreate.Score);
 
-            if(rating != null)
+            if (rating != null)
             {
                 ModelState.AddModelError("", "Rating Already Exists");
                 return StatusCode(422, ModelState);

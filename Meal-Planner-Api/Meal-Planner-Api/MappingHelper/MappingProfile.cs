@@ -1,12 +1,8 @@
-﻿using AutoMapper;
-using Meal_Planner_Api.Dto;
-using Meal_Planner_Api.Models;
-
-namespace Meal_Planner_Api.MappingHelper
+﻿namespace Meal_Planner_Api.MappingHelper
 {
-    public class MappingProfile: Profile
+    public class MappingProfile : Profile
     {
-        public MappingProfile() 
+        public MappingProfile()
         {
             CreateMap<Amount, AmountDTO>();
             CreateMap<AmountDTO, Amount>();
@@ -49,11 +45,11 @@ namespace Meal_Planner_Api.MappingHelper
             CreateMap<User, UserDTO>();
             CreateMap<UserDTO, User>();
 
-            CreateMap<UserOnlyNameDTO, UserDTO >();
+            CreateMap<UserOnlyNameDTO, UserDTO>();
             CreateMap<UserDTO, UserOnlyNameDTO>();
 
             CreateMap<User, UserOnlyNameDTO>();
-            CreateMap<UserOnlyNameDTO, User >();
+            CreateMap<UserOnlyNameDTO, User>();
 
 
 

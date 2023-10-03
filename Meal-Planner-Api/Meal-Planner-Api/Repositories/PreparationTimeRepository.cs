@@ -1,10 +1,4 @@
-﻿using Meal_Planner_Api.Data;
-using Meal_Planner_Api.Dto;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace Meal_Planner_Api.Repositories
+﻿namespace Meal_Planner_Api.Repositories
 {
     public class PreparationTimeRepository : IPreparationTimeRepository
     {
@@ -53,7 +47,7 @@ namespace Meal_Planner_Api.Repositories
         {
             return _context.PreparationTimes.Any(x => x.Id == id);
         }
-        
+
         public bool PreparationTimeExists(PreparationTimeDTO prepTime)
         {
             return _context.PreparationTimes.Any(x => x.Minutes == prepTime.Minutes);

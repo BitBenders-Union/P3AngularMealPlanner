@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Meal_Planner_Api.Models
+﻿namespace Meal_Planner_Api.Models
 {
     public class RecipeIngredient
     {

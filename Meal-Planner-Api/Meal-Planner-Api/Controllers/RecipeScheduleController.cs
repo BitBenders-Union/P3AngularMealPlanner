@@ -1,9 +1,4 @@
-﻿using AutoMapper;
-using Meal_Planner_Api.Dto;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-using Microsoft.AspNetCore.Mvc;
-
+﻿
 namespace Meal_Planner_Api.Controllers
 {
     [Route("api/[controller]")]
@@ -26,9 +21,9 @@ namespace Meal_Planner_Api.Controllers
         public IActionResult Get()
         {
             var schedule = _mapper.Map<List<RecipeScheduleDTO>>(_recipeScheduleRepository.GetRecipeSchedules());
-            
 
-            if(schedule == null || schedule.Count() == 0)
+
+            if (schedule == null || schedule.Count() == 0)
                 return NotFound("Not Found");
 
             if (!ModelState.IsValid)
@@ -47,11 +42,11 @@ namespace Meal_Planner_Api.Controllers
 
             var schedule = _mapper.Map<RecipeScheduleDTO>(_recipeScheduleRepository.GetRecipeSchedule(id));
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(schedule);
-            
+
         }
 
         // get schedule for a user
@@ -72,12 +67,12 @@ namespace Meal_Planner_Api.Controllers
         [HttpPost]
         public IActionResult CreateRecipeSchedule([FromBody] RecipeScheduleDTO scheduleCreate)
         {
-            if (scheduleCreate == null) 
+            if (scheduleCreate == null)
                 return BadRequest();
-            
+
             var scheduleMap = _mapper.Map<RecipeSchedule>(scheduleCreate);
 
-            if(!_recipeScheduleRepository.CreateRecipeSchedule(scheduleMap))
+            if (!_recipeScheduleRepository.CreateRecipeSchedule(scheduleMap))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);

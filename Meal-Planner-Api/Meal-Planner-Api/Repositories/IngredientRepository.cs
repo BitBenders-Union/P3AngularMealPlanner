@@ -1,22 +1,12 @@
-﻿using Meal_Planner_Api.Data;
-using Meal_Planner_Api.Dto;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace Meal_Planner_Api.Repositories
+﻿namespace Meal_Planner_Api.Repositories
 {
     public class IngredientRepository : IIngredientRepository
     {
-        private readonly DataContext _context;
-        private IAmountRepository _amountRepository;
-        private IUnitRepository _unitRepository;
+        private readonly DataContext _context;        
 
-        public IngredientRepository(DataContext context, IAmountRepository amountRepository, IUnitRepository unitRepository)
+        public IngredientRepository(DataContext context)
         {
             _context = context;
-            _amountRepository = amountRepository;
-            _unitRepository = unitRepository;
         }
         public Ingredient GetIngredient(int id)
         {
@@ -28,7 +18,7 @@ namespace Meal_Planner_Api.Repositories
             return _context.Ingredients
                 .Include(x => x.IngredientAmount)
                     .ThenInclude(x => x.amount)
-                .Include(x=> x.IngredientUnit)
+                .Include(x => x.IngredientUnit)
                     .ThenInclude(x => x.unit)
                 .FirstOrDefault(x => x.Name == name);
         }
@@ -102,7 +92,7 @@ namespace Meal_Planner_Api.Repositories
         public bool Save()
         {
             var saved = _context.SaveChanges();
-            return saved > 0 ? true : false;
+            return saved > 0;
         }
 
     }

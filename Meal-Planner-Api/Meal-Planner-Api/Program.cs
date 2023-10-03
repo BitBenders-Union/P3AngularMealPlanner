@@ -1,13 +1,4 @@
-using Meal_Planner_Api.Data;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Repositories;
-using Meal_Planner_Api.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.Text.Json.Serialization;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

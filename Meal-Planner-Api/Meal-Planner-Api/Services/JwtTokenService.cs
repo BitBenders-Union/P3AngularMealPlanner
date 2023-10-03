@@ -1,18 +1,4 @@
-﻿using Meal_Planner_Api.Models;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.IdentityModel.Tokens.Jwt;
-using System;
-using System.Text;
-using System.Security.Claims;
-using Meal_Planner_Api.Interfaces;
-using System.Security.Cryptography;
-using Microsoft.EntityFrameworkCore;
-using Meal_Planner_Api.Data;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-
+﻿
 namespace Meal_Planner_Api.Services
 {
     public class JwtTokenService : IJwtTokenService
@@ -41,7 +27,7 @@ namespace Meal_Planner_Api.Services
                 Subject = identity,
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = credentials
-                
+
             };
 
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
@@ -82,6 +68,7 @@ namespace Meal_Planner_Api.Services
             var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
             var jwtSecurityToken = securityToken as JwtSecurityToken;
             if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+
             {
                 throw new SecurityTokenException("Invalid token");
             }

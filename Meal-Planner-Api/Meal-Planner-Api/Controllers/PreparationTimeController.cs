@@ -1,10 +1,4 @@
-﻿using AutoMapper;
-using Meal_Planner_Api.Dto;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
+﻿
 namespace Meal_Planner_Api.Controllers
 {
     [Route("api/[controller]")]
@@ -27,10 +21,10 @@ namespace Meal_Planner_Api.Controllers
         {
             var preparationTime = _mapper.Map<List<PreparationTimeDTO>>(_preparationTimeRepository.GetPreparationTimes());
 
-            if(preparationTime == null || preparationTime.Count() == 0)
+            if (preparationTime == null || preparationTime.Count() == 0)
                 return NotFound("Not Found");
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(preparationTime);
@@ -46,7 +40,7 @@ namespace Meal_Planner_Api.Controllers
 
             var preparationTime = _mapper.Map<PreparationTimeDTO>(_preparationTimeRepository.GetPreparationTime(id));
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(preparationTime);
@@ -79,7 +73,7 @@ namespace Meal_Planner_Api.Controllers
             var preparation = _preparationTimeRepository.GetPreparationTimes()
                 .FirstOrDefault(p => p.Minutes == preparationCreate.Minutes);
 
-            if(preparation != null)
+            if (preparation != null)
             {
                 ModelState.AddModelError("", "Preparationtime already exists");
                 return StatusCode(422, ModelState);
@@ -91,7 +85,7 @@ namespace Meal_Planner_Api.Controllers
 
             var preparationMap = _mapper.Map<PreparationTime>(preparationCreate);
 
-            if(!_preparationTimeRepository.CreatePreparationTime(preparationMap))
+            if (!_preparationTimeRepository.CreatePreparationTime(preparationMap))
             {
                 ModelState.AddModelError("", "Somethind Went Wrong While Trying To Save");
                 return StatusCode(500, ModelState);

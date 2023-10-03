@@ -4,9 +4,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
 import { ReactiveFormsModule } from '@angular/forms';
-
-
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AppRoutingModule } from './app-routing.module';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -60,7 +61,8 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    
+    MatSlideToggleModule,
+    MatAutocompleteModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
