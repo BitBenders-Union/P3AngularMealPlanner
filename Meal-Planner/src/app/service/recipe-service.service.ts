@@ -61,10 +61,12 @@ export class RecipeServiceService{
 
 
   createRecipe(recipeData: RecipeDTO): Observable<any> {
-    const url = `${this.url}`; 
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
 
     // Send a POST request to the API
-    return this.http.post(`${this.url}/Recipe/create`, recipeData).pipe(
+    return this.http.post(`${this.url}/Recipe/create`, recipeData, {headers}).pipe(
       catchError(error => {
         console.error('Error creating recipe:', error);
         throw error;
