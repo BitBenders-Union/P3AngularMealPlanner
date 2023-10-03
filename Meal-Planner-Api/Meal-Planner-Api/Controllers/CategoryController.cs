@@ -1,19 +1,12 @@
-﻿using AutoMapper;
-using Meal_Planner_Api.Dto;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-using Meal_Planner_Api.Repositories;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
+﻿
 namespace Meal_Planner_Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private ICategoryRepository _categoryRepository;
-        private IMapper _mapper;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly IMapper _mapper;
 
         public CategoryController(IMapper mapper, ICategoryRepository categoryRepository)
         {
@@ -23,11 +16,11 @@ namespace Meal_Planner_Api.Controllers
 
         // get all categories
         [HttpGet]
-        public IActionResult Get() 
+        public IActionResult Get()
         {
             var categories = _mapper.Map<List<CategoryDTO>>(_categoryRepository.GetCategories());
 
-            if (categories == null || categories.Count() == 0)
+            if (categories == null || categories.Count == 0)
                 return NotFound();
 
             if (!ModelState.IsValid)
@@ -40,12 +33,12 @@ namespace Meal_Planner_Api.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            if(!_categoryRepository.CategoriesExists(id))
+            if (!_categoryRepository.CategoriesExists(id))
                 return NotFound();
 
             var category = _mapper.Map<CategoryDTO>(_categoryRepository.GetCategory(id));
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest();
 
             return Ok(category);
@@ -53,14 +46,14 @@ namespace Meal_Planner_Api.Controllers
 
         // get category from recipeId
         [HttpGet("byRecipeId/{recipeId}")]
-        public IActionResult GetCategoryByRecipeId(int recipeId) 
+        public IActionResult GetCategoryByRecipeId(int recipeId)
         {
             var category = _mapper.Map<CategoryDTO>(_categoryRepository.GetCategoryByRecipeId(recipeId));
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest();
 
-            if(category == null)
+            if (category == null)
                 return NotFound();
 
             return Ok(category);
@@ -70,16 +63,16 @@ namespace Meal_Planner_Api.Controllers
         [HttpPost]
         public IActionResult CreateCategory([FromBody] CategoryDTO categoryCreate)
         {
-            if(categoryCreate == null)
+            if (categoryCreate == null)
                 return BadRequest();
 
-            
+
             // looks for other categories with the same name
             var category = _categoryRepository.GetCategories()
                 .FirstOrDefault(c => c.CategoryName.Trim().ToUpper() == categoryCreate.CategoryName.Trim().ToUpper());
 
-            // if a category with the same name as the input exists, return 422 statuscode
-            if(category != null)
+            // if a category with the same name as the input exists, return 422 status code
+            if (category != null)
             {
                 ModelState.AddModelError("", "Category already exists");
                 return StatusCode(422, ModelState);
@@ -89,9 +82,9 @@ namespace Meal_Planner_Api.Controllers
                 return BadRequest(ModelState);
 
             var categoryMap = _mapper.Map<Category>(categoryCreate);
-            
+
             // create the category if it returns false it didn't save properly, something went wrong.
-            if(!_categoryRepository.CreateCategory(categoryMap))
+            if (!_categoryRepository.CreateCategory(categoryMap))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);

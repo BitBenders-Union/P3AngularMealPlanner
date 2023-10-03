@@ -1,18 +1,12 @@
-﻿using AutoMapper;
-using Meal_Planner_Api.Dto;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
+﻿
 namespace Meal_Planner_Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class CookingTimeController : ControllerBase
     {
-        private IMapper _mapper;
-        private ICookingTimeRepository _cookingTimeRepository;
+        private readonly IMapper _mapper;
+        private readonly ICookingTimeRepository _cookingTimeRepository;
 
         public CookingTimeController(IMapper mapper, ICookingTimeRepository cookingTimeRepository)
         {
@@ -20,22 +14,22 @@ namespace Meal_Planner_Api.Controllers
             _cookingTimeRepository = cookingTimeRepository;
         }
 
-        // get all cookingtimes
+        // get all cooking times
         [HttpGet]
         public IActionResult Get()
         {
             var cookingTime = _mapper.Map<List<CookingTimeDTO>>(_cookingTimeRepository.GetCookingTimes());
 
-            if (cookingTime == null || cookingTime.Count() == 0)
+            if (cookingTime == null || cookingTime.Count == 0)
                 return NotFound("Not Found");
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            
+
             return Ok(cookingTime);
         }
 
-        // get cookingtime from id
+        // get cooking time from id
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
@@ -50,13 +44,13 @@ namespace Meal_Planner_Api.Controllers
             return Ok(cookingTime);
         }
 
-        // get cookingtime from recipeId
+        // get cooking time from recipeId
         [HttpGet("byRecipeId/{recipeId}")]
         public IActionResult GetByRecipeId(int recipeId)
         {
             var cookingTime = _mapper.Map<CookingTimeDTO>(_cookingTimeRepository.GetCookingTimeForRecipe(recipeId));
 
-            if(cookingTime == null)
+            if (cookingTime == null)
                 return NotFound("Not Found");
 
             if (!ModelState.IsValid)
@@ -72,13 +66,13 @@ namespace Meal_Planner_Api.Controllers
         [HttpPost]
         public IActionResult CreateCookingTime([FromBody] CookingTimeDTO cookingCreate)
         {
-            if(cookingCreate == null)
+            if (cookingCreate == null)
                 return BadRequest();
 
             var cookingTime = _cookingTimeRepository.GetCookingTimes()
                 .FirstOrDefault(c => c.Minutes == cookingCreate.Minutes);
 
-            if(cookingTime != null)
+            if (cookingTime != null)
             {
                 ModelState.AddModelError("", "CookingTime Already Exist");
                 return StatusCode(422, ModelState);
@@ -92,7 +86,7 @@ namespace Meal_Planner_Api.Controllers
 
             if (!_cookingTimeRepository.CreateCookingTime(cookingMap))
             {
-                ModelState.AddModelError("","Something Went Wrong While Saving");
+                ModelState.AddModelError("", "Something Went Wrong While Saving");
                 return StatusCode(500, ModelState);
             }
 
