@@ -10,6 +10,7 @@ namespace Meal_Planner_Api.Services
             _authContext = authContext;
         }
 
+        //create jwt token on login
         public string CreateJwtToken(User user)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
@@ -34,6 +35,7 @@ namespace Meal_Planner_Api.Services
             return jwtTokenHandler.WriteToken(token);
         }
 
+        //create refresh token
         public string CreateRefreshToken()
         {
             var tokenBytes = RandomNumberGenerator.GetBytes(64);
@@ -50,6 +52,8 @@ namespace Meal_Planner_Api.Services
             return refreshToken;
         }
 
+
+        //get principal from expired token
         public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
             var key = Encoding.ASCII.GetBytes("iamabouttoblow.....");

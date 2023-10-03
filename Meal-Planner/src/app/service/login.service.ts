@@ -82,6 +82,8 @@ export class LoginService {
     return this.http.post<any>(`${this.apiUrl}api/User/refresh`, token, {responseType: 'json'});
   }
 
+
+  //just to test if the api is working with the token
   testApi(): Observable<any>{
     return this.http.get(`${this.apiUrl}api/User`, {responseType: 'json'});
   }
