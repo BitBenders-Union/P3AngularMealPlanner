@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CreateAmounts, CreateIngredient, CreateInstruction, CreateRecipe, Recipe } from '../Interfaces';
+import { Amount, Unit, Ingredient, Recipe, Instruction } from '../Interfaces';
 import { RecipeServiceService } from '../service/recipe-service.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, FormControl, AbstractControl } from '@angular/forms';
@@ -10,7 +10,7 @@ import { FormBuilder, FormGroup, FormArray, FormControl, AbstractControl } from 
   styleUrls: ['./update-recipe.component.css']
 })
 export class UpdateRecipeComponent implements OnInit{
-  recipe: CreateRecipe | undefined;
+  recipe: Recipe | undefined;
   recipeId: number | undefined;
 
   updateForm: FormGroup;
@@ -62,10 +62,10 @@ export class UpdateRecipeComponent implements OnInit{
           this.updateForm.addControl('rating', new FormControl(this.recipe!.rating));
           
           if (this.recipe!.ingredients && this.recipe!.ingredients.length > 0) {
-            this.recipe!.ingredients.forEach((ingredient, index) => {
+            this.recipe!.ingredients.forEach((ingredient) => {
               const nameControl = new FormControl(ingredient.name);
-              const valueControl = new FormControl(ingredient.amounts.value);
-              const unitControl = new FormControl(ingredient.amounts.unit);
+              const valueControl = new FormControl(ingredient.amount.quantity);
+              const unitControl = new FormControl(ingredient.unit.measurement);
         
               const ingredientGroup = this.formBuilder.group({
                 name: nameControl,
@@ -80,7 +80,7 @@ export class UpdateRecipeComponent implements OnInit{
         
           if (this.recipe!.instructions && this.recipe!.instructions.length > 0) {
 
-            this.recipe!.instructions.forEach((instruction, index) => {
+            this.recipe!.instructions.forEach((instruction) => {
 
               const textControl = new FormControl(instruction.text);
               const instructionGroup = this.formBuilder.group({
@@ -91,7 +91,7 @@ export class UpdateRecipeComponent implements OnInit{
             });
           }
 
-          this.updateForm.addControl('deleted', new FormControl(this.recipe!.deleted));
+          // this.updateForm.addControl('deleted', new FormControl(this.recipe!.deleted));
 
         });
       }
@@ -141,25 +141,31 @@ export class UpdateRecipeComponent implements OnInit{
     if (this.updateForm.valid) {
       const formData = this.updateForm.value;
 
-      const ingredients: CreateIngredient[] = formData.ingredients.map((ingredient: any) => {
-        const amounts: CreateAmounts = {
-          value: ingredient.value,
-          unit: ingredient.unit
+      const ingredients: Ingredient[] = formData.ingredients.map((ingredient: any) => {
+        const amounts: Amount = {
+          id: 0,
+          quantity: ingredient.value,
         };
+        const unit: Unit ={
+          id: 0,
+          measurement: ingredient.unit
+        }
 
         return {
           name: ingredient.name,
-          amounts: amounts
+          amounts: amounts,
+          unit: unit
         };
       });
 
-      const instructions: CreateInstruction[] = formData.instructions.map((instruction: any) => {
+      const instructions: Instruction[] = formData.instructions.map((instruction: any) => {
         return {
           text: instruction.text
         };
       });
 
-      const updatedRecipe: CreateRecipe = {
+      const updatedRecipe: Recipe = {
+        id: this.recipeId!,
         title: formData.title,
         category: formData.category,
         description: formData.description,
@@ -169,7 +175,7 @@ export class UpdateRecipeComponent implements OnInit{
         rating: formData.rating,
         ingredients: ingredients,
         instructions: instructions,
-        deleted: formData.deleted
+        user: this.recipe!.user
       };
       console.log(updatedRecipe);
 

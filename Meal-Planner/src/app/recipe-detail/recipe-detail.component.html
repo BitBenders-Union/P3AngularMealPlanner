@@ -3,12 +3,12 @@
 
       <h2>{{ recipe.title }}</h2>
 
-      <div class="rating">
+      <!-- <div class="rating">
         <ng-container *ngFor="let star of starService.getRatingStars(recipe.rating)">
           <i class="fas fa-star" *ngIf="star === true"></i>
           <i class="fas fa-star-half-alt" *ngIf="star === 'half'"></i>
         </ng-container>
-      </div>
+      </div> -->
       
       <div class="description">
         <p>{{ recipe.description }}</p>
@@ -17,7 +17,7 @@
       <div class="list">
         <h3>Ingredients:</h3>
         <ul>
-          <li *ngFor="let ingredient of recipe.ingredients">{{ ingredient.name }} - {{ ingredient.amounts.value }} {{ ingredient.amounts.unit }}</li>
+          <li *ngFor="let ingredient of recipe.ingredients">{{ ingredient.name }} - {{ ingredient.amount.quantity }} {{ ingredient.unit.measurement }}</li>
         </ul>
       </div>
 
