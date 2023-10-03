@@ -10,10 +10,11 @@ import { FormBuilder, FormGroup, FormArray, FormControl, AbstractControl } from 
   styleUrls: ['./update-recipe.component.css']
 })
 export class UpdateRecipeComponent implements OnInit{
+  updateForm: FormGroup;
+
   recipe: Recipe | undefined;
   recipeId: number | undefined;
 
-  updateForm: FormGroup;
 
   categories: string[] = ['Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Snacks'];
 
@@ -36,9 +37,23 @@ export class UpdateRecipeComponent implements OnInit{
     ) 
     { 
       this.updateForm = this.formBuilder.group({
-        rating: [0],
-        instructions: this.formBuilder.array([]),
-        ingredients: this.formBuilder.array([])
+        title: '',
+        description: '',
+        category: this.formBuilder.group({
+          categoryName: ['']
+        }),
+        preparationTimes: this.formBuilder.group({
+          minutes: [0]
+        }),
+        cookingTimes: this.formBuilder.group({
+          minutes: [0]
+        }),
+        servings: this.formBuilder.group({
+          quantity: [0]
+        }),
+        ratings: [[]],
+        ingredients: [[]],
+        instructions: [[]],
       });
     }
 
@@ -53,13 +68,26 @@ export class UpdateRecipeComponent implements OnInit{
           
           this.recipe = recipe;
 
-          this.updateForm.addControl('title', new FormControl(this.recipe!.title));
-          this.updateForm.addControl('category', new FormControl(this.recipe!.category));
-          this.updateForm.addControl('description', new FormControl(this.recipe!.description));
-          this.updateForm.addControl('preparationTime', new FormControl(this.recipe!.preparationTime));
-          this.updateForm.addControl('cookingTime', new FormControl(this.recipe!.cookingTime));
-          this.updateForm.addControl('servings', new FormControl(this.recipe!.servings));
-          this.updateForm.addControl('rating', new FormControl(this.recipe!.rating));
+          this.updateForm.patchValue({
+            title: this.recipe!.title,
+            description: this.recipe!.description,
+            category: {
+              categoryName: this.recipe!.category.categoryName
+            },
+            preparationTimes: {
+              minutes: this.recipe!.preparationTime.minutes
+            },
+            cookingTimes: {
+              minutes: this.recipe!.cookingTime.mintues
+            },
+            servings: {
+              quantity: this.recipe!.servings.Quantity
+            },
+            ratings: this.recipe!.rating,
+            ingredients: this.recipe!.ingredients,
+            instructions: this.recipe!.instructions
+          });
+
           
           if (this.recipe!.ingredients && this.recipe!.ingredients.length > 0) {
             this.recipe!.ingredients.forEach((ingredient) => {
@@ -174,7 +202,7 @@ export class UpdateRecipeComponent implements OnInit{
         Ratings: [formData.rating],
         Ingredients: formData.ingredients,
         Instructions: formData.instructions,
-        User: this.recipe!.user
+        User: this.recipe!.user,
       };
       console.log(updatedRecipe);
 
