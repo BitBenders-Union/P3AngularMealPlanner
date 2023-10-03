@@ -11,6 +11,7 @@ export class CreateRecipeService {
   constructor(private http: HttpClient) {}
 
   createRecipe(recipeData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/create`, recipeData);
+    console.log(recipeData);
+    return this.http.post(`${this.apiUrl}/Recipe/create`, recipeData);
   }
 }

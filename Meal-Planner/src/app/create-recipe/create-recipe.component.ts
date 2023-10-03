@@ -16,7 +16,6 @@ export class CreateRecipeComponent implements OnInit {
 
   loading: boolean = false; // conrol the spinner
 
-
   // constructor initializes the form with default values, for now they are test values.
   // since ingredients and instructions are arrays, we need to initialize them as an array instead of single values
   // we also inject the createRecipeService so we can fetch from our API
@@ -49,6 +48,10 @@ export class CreateRecipeComponent implements OnInit {
       },
       error: error => console.error('There was an error!', error)
     });
+
+
+    // this.userId = this.tokenService.getIdFromToken();
+    // this.username = this.tokenService.getUsernameFromToken();
 
   }
 
@@ -119,48 +122,59 @@ export class CreateRecipeComponent implements OnInit {
       this.loading = true;
 
       const formattedRecipe: RecipeDTO = {
-        title: this.form.get('title')?.value,
-        description: this.form.get('description')?.value ,
-        category: this.form.get('category')?.value ,
-        preparationTime: this.form.get('prepTime')?.value,
-        cookingTime: this.form.get('cookTime')?.value,
-        servings: this.form.get('servings')?.value,
-        rating: this.form.get('rating')?.value,
-        ingredients: this.ingredients.controls.map(control => ({
-          name: control.get('name')?.value,
-          amount: {
-            quantity: control.get('amounts')?.value,
+        Title: this.form.get('title')?.value,
+        Description: this.form.get('description')?.value ,
+        Category: {
+          CategoryName: this.form.get('category')?.value
+        },
+        PreparationTimes: { 
+          Minutes: this.form.get('prepTime')?.value
+        },
+        CookingTimes: { 
+          Minutes: this.form.get('cookTime')?.value
+         },
+        Servings: { 
+          Quantity: this.form.get('servings')?.value
+        },
+        Ratings: [{
+          Score: this.form.get('rating')?.value
+        }],
+        Ingredients: this.ingredients.controls.map(control => ({
+          Name: control.get('name')?.value,
+          Amount: {
+            Quantity: control.get('amounts')?.value,
           },
-          unit: {
-            measurement: control.get('unit')?.value
+          Unit: {
+            Measurement: control.get('unit')?.value
           }
         })),
-        instructions: this.instructions.controls.map(control => ({
-          text: control.get('text')?.value
+        Instructions: this.instructions.controls.map(control => ({
+          Text: control.get('text')?.value
         })),
-        user: {
-          id: this.tokenService.getIdFromToken()!,
-          username: this.tokenService.getUsernameFromToken()!
+        User: {
+          Id: this.tokenService.getIdFromToken(),
+          Username: this.tokenService.getUsernameFromToken()
         }
       };
 
 
       console.log(formattedRecipe);
-    //   this.recipeService.createRecipe(formattedRecipe).subscribe({
-    //     next: response => {
-    //       console.log('Recipe created successfully', response);
-    //       this.form.reset();
-    //     },
-    //     error: error => console.error('There was an error!', error),
-    //     complete: () => {
-    //       this.loading = false
-    //       this.onReset();
-    //       }
-    //     });
-    // } else {
-    //   console.log('Form is invalid');
-    this.loading = false
+      this.recipeService.createRecipe(formattedRecipe).subscribe({
+        next: response => {
+          console.log('Recipe created successfully', response);
+          this.form.reset();
+        },
+        error: error => console.error('There was an error!', error),
+        complete: () => {
+          console.log('Completed');
+          this.onReset();
+          }
+        });
+    } else {
+      console.log('Form is invalid');
     }
+    this.loading = false
+
 
   }
   

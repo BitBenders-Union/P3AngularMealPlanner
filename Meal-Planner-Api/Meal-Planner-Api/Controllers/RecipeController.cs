@@ -188,6 +188,7 @@ namespace Meal_Planner_Api.Controllers
 
 
         // this also checks if all the necessary data exist, creates them if it doesn't and binds them to the recipe
+        
         [HttpPost("create")]
         public IActionResult CreateRecipe([FromBody] RecipeDTO recipeData)
         {
@@ -195,6 +196,9 @@ namespace Meal_Planner_Api.Controllers
             // Get a full recipe from body.
 
             if (recipeData == null)
+                return NotFound("input is null");
+
+            if(!ModelState.IsValid)
                 return BadRequest();
 
             var recipe = _recipeRepository.GetRecipes()

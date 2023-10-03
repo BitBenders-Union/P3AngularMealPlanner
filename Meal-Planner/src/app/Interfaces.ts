@@ -60,34 +60,34 @@ export interface Category {
   }
 
   export interface User {
-    id: number,
-    username: string
+    Id: number,
+    Username: string
   }
 
 
   export interface RecipeDTO {
-    title: string
-    description: string
-    category: CategoryDTO
-    preparationTime: PreparationTimeDTO
-    cookingTime: CookingTimeDTO
-    servings: ServingsDTO
-    rating: RatingDTO
-    ingredients: IngredientDTO[]
-    instructions: InstructionDTO[]
-    user: User
+    Title: string
+    Description: string
+    Category: CategoryDTO
+    PreparationTimes: PreparationTimeDTO
+    CookingTimes: CookingTimeDTO
+    Servings: ServingsDTO
+    Ratings: RatingDTO[]
+    Ingredients: IngredientDTO[]
+    Instructions: InstructionDTO[]
+    User: User
   }
 
 export interface CategoryDTO {
-    categoryName: string
+    CategoryName: string
   }
 
   export interface PreparationTimeDTO {
-    minutes: number
+    Minutes: number
   }
 
   export interface CookingTimeDTO {
-    mintues: number
+    Minutes: number
   }
 
   export interface ServingsDTO {
@@ -95,25 +95,25 @@ export interface CategoryDTO {
   }
 
   export interface RatingDTO {
-    score: number
+    Score: number
   }
 
   export interface IngredientDTO {
-    name: string,
-    amount: AmountDTO,
-    unit: UnitDTO
+    Name: string,
+    Amount: AmountDTO,
+    Unit: UnitDTO
   }
 
   export interface AmountDTO {
-    quantity: number
+    Quantity: number
   }
 
   export interface UnitDTO {
-    measurement: string
+    Measurement: string
   }
 
   export interface InstructionDTO {
-    text: string
+    Text: string
   }
 
 
