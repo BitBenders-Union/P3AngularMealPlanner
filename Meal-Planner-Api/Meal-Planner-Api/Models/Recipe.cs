@@ -1,6 +1,4 @@
-﻿using Meal_Planner_Api.Dto;
-
-namespace Meal_Planner_Api.Models
+﻿namespace Meal_Planner_Api.Models
 {
     public class Recipe
     {

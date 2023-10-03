@@ -6,7 +6,7 @@
     <hr>
     <ul>
       <li *ngFor="let ingredient of ingredients">
-        {{ ingredient.amounts.value }} {{ ingredient.amounts.unit }} - {{ ingredient.name }}
+        {{ ingredient.amount.quantity }} {{ ingredient.unit.measurement }} - {{ ingredient.name }}
         <hr>
       </li>
     </ul>

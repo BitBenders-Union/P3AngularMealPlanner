@@ -1,9 +1,4 @@
-﻿using Meal_Planner_Api.Data;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace Meal_Planner_Api.Repositories
+﻿namespace Meal_Planner_Api.Repositories
 {
     public class RecipeScheduleRepository : IRecipeScheduleRepository
     {
@@ -23,7 +18,7 @@ namespace Meal_Planner_Api.Repositories
 
         public ICollection<RecipeSchedule> GetRecipeSchedules()
         {
-            return _context.RecipeSchedules.OrderBy(x => x.Id).Include(x=> x.User).ToList();
+            return _context.RecipeSchedules.OrderBy(x => x.Id).Include(x => x.User).ToList();
         }
 
         public RecipeSchedule GetRecipeSchedule(int recipeScheduleId)

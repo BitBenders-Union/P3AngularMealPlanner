@@ -1,20 +1,14 @@
-﻿using AutoMapper;
-using Meal_Planner_Api.Dto;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
+﻿
 namespace Meal_Planner_Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class IngredientController : ControllerBase
     {
-        private IMapper _mapper;
-        private IIngredientRepository _ingredientRepository;
-        private IAmountRepository _amountRepository;
-        private IUnitRepository _unitRepository;
+        private readonly IMapper _mapper;
+        private readonly IIngredientRepository _ingredientRepository;
+        private readonly IAmountRepository _amountRepository;
+        private readonly IUnitRepository _unitRepository;
 
         public IngredientController(IMapper mapper, IIngredientRepository ingredientRepository, IAmountRepository amountRepository, IUnitRepository unitRepository)
         {
@@ -33,7 +27,7 @@ namespace Meal_Planner_Api.Controllers
             if (ingredients == null || ingredients.Count() == 0)
                 return NotFound("Not Found");
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(ingredients);
@@ -47,8 +41,8 @@ namespace Meal_Planner_Api.Controllers
                 return NotFound("Not Found");
 
             var ingredient = _mapper.Map<IngredientDTO>(_ingredientRepository.GetIngredient(id));
-        
-            if(!ModelState.IsValid)
+
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(ingredient);
@@ -97,7 +91,7 @@ namespace Meal_Planner_Api.Controllers
                 return BadRequest();
 
 
-            
+
             var ingredient = _ingredientRepository.GetIngredient(ingredientCreate.Name);
 
             if (ingredient != null)

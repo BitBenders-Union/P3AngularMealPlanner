@@ -1,21 +1,12 @@
-﻿using AutoMapper;
-using Meal_Planner_Api.Data;
-using Meal_Planner_Api.Dto;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace Meal_Planner_Api.Repositories
+﻿namespace Meal_Planner_Api.Repositories
 {
-    public class RecipeRepository: IRecipeRepository
+    public class RecipeRepository : IRecipeRepository
     {
-        private DataContext _context;
-        private IMapper _mapper;
+        private readonly DataContext _context;
 
-        public RecipeRepository(DataContext context, IMapper map)
+        public RecipeRepository(DataContext context)
         {
             _context = context;
-            _mapper = map;
         }
 
 
@@ -42,7 +33,7 @@ namespace Meal_Planner_Api.Repositories
                 .FirstOrDefault(x => x.Id == id);
 
         }
-         
+
         public Recipe GetRecipe(string name)
         {
             return _context.Recipes
@@ -110,14 +101,14 @@ namespace Meal_Planner_Api.Repositories
         {
             return _context.Recipes.Any(r => r.Id == recipeId);
         }
-        public bool CreateRecipe(Recipe recipe, List<int> ratingIds, List<int> ingredientIds )
+        public bool CreateRecipe(Recipe recipe, List<int> ratingIds, List<int> ingredientIds)
         {
 
-            // foreach id in rating and ingredient
+            // forEach id in rating and ingredient
             // create a RecipeRating and RecipeIngredient
             // add them to context
 
-            foreach(var id in ratingIds)
+            foreach (var id in ratingIds)
             {
                 var rating = _context.Ratings.FirstOrDefault(r => r.Id == id);
 
@@ -145,7 +136,7 @@ namespace Meal_Planner_Api.Repositories
 
 
             _context.Add(recipe);
-            
+
             // save
 
 
@@ -156,7 +147,7 @@ namespace Meal_Planner_Api.Repositories
         {
             // save changes updates the database with the current context.
             var saved = _context.SaveChanges();
-            return saved > 0 ? true : false;
+            return saved > 0;
         }
 
         public ICollection<Ingredient> GetIngredients(int recipeId)
