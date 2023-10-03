@@ -70,7 +70,7 @@ export class WeekScheduleComponent implements OnInit {
 
       // Update the cellContents with the new recipe
       this.cellContents[colIndex][rowIndex] = newRecipe;
-      this.cellContents[colIndex][rowIndex].deleted = false;
+      // this.cellContents[colIndex][rowIndex].deleted = false;
 
       // Emit ingredients to update shopping list
       this.shoppingListUpdated.emit(newRecipe.ingredients);
@@ -94,12 +94,12 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
       // Emit an update to the shopping list, subtracting the ingredient amounts
       // The ingredient's value is negated to indicate subtraction
       this.shoppingListUpdated.emit([
-        { ...ingredient, amounts: { ...ingredient.amounts, value: -ingredient.amounts.value } },
+        { ...ingredient, amount: { ...ingredient.amount, quantity: -ingredient.amount.quantity } },
       ]);
     });
 
     // Mark the recipe as deleted by setting the 'deleted' property to true
-    deletedRecipe.deleted = true;
+    // deletedRecipe.deleted = true;
 
     // Save the updated cellContents to the server
     this.saveCellContents();

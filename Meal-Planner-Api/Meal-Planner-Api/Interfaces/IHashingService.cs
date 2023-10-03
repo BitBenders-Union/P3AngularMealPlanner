@@ -1,4 +1,5 @@
-﻿namespace Meal_Planner_Api.Interfaces
+﻿
+namespace Meal_Planner_Api.Interfaces
 {
     public interface IHashingService
     {
@@ -6,4 +7,3 @@
         byte[] GenerateSalt();
     }
 }
- 

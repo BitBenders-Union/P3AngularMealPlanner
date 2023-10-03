@@ -1,14 +1,4 @@
-﻿using AutoMapper;
-using Meal_Planner_Api.Data;
-using Meal_Planner_Api.Dto;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-using Meal_Planner_Api.Repositories;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-
+﻿
 namespace Meal_Planner_Api.Controllers
 {
     [Route("api/[controller]")]
@@ -412,13 +402,13 @@ namespace Meal_Planner_Api.Controllers
         [HttpPut("update/{recipeId}")]
         public IActionResult UpdateRecipe([FromBody] RecipeDTO recipeData, int recipeId)
         {
-            if(recipeData == null)
+            if (recipeData == null)
                 return BadRequest();
 
-            if(!_recipeRepository.RecipeExists(recipeId))
+            if (!_recipeRepository.RecipeExists(recipeId))
                 return NotFound("Recipe with given id, does not exist");
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             recipeData.Id = recipeId;
@@ -429,7 +419,7 @@ namespace Meal_Planner_Api.Controllers
             // validate all data
             // if data doesn't exist, create it
             // then update recipe with the new data
-                
+
             // category
             var categoryExist = _categoryRepository.CategoriesExists(recipeData.Category.CategoryName);
             if (!categoryExist)
@@ -445,7 +435,7 @@ namespace Meal_Planner_Api.Controllers
 
             // preparationTime
             var prepTimeExist = _preparationTimeRepository.PreparationTimeExists(recipeData.PreparationTimes);
-            if(!prepTimeExist)
+            if (!prepTimeExist)
             {
                 var prepTime = _mapper.Map<PreparationTime>(recipeData.PreparationTimes);
                 _preparationTimeRepository.CreatePreparationTime(prepTime);
@@ -459,7 +449,7 @@ namespace Meal_Planner_Api.Controllers
             // cookingTime
 
             var cookTimeExist = _cookingTimeRepository.CookingTimeExists(recipeData.CookingTimes);
-            if(!cookTimeExist)
+            if (!cookTimeExist)
             {
                 var cookTime = _mapper.Map<CookingTime>(recipeData.CookingTimes);
                 _cookingTimeRepository.CreateCookingTime(cookTime);
@@ -472,7 +462,7 @@ namespace Meal_Planner_Api.Controllers
 
             // servings
             var servingsExist = _servingsRepository.servingExist(recipeData.Servings);
-            if(!servingsExist)
+            if (!servingsExist)
             {
                 var servings = _mapper.Map<Servings>(recipeData.Servings);
                 _servingsRepository.CreateServing(servings);
@@ -482,12 +472,12 @@ namespace Meal_Planner_Api.Controllers
             {
                 ExistingRecipe.Servings = _servingsRepository.GetServingsFromQuantity(recipeData.Servings.Quantity);
             }
-            
+
 
             // ratings
             // only change first rating since we only allow one rating on creation
-            
-            if(!_ratingRepository.ratingExists(recipeData.Ratings))
+
+            if (!_ratingRepository.ratingExists(recipeData.Ratings))
             {
                 var rating = _mapper.Map<Rating>(recipeData.Ratings.FirstOrDefault());
                 _ratingRepository.CreateRating(rating);
@@ -525,7 +515,7 @@ namespace Meal_Planner_Api.Controllers
                     if (existingIngredient.Name != ingredient.Name)
                     {
                         existingIngredient.Name = ingredient.Name;
-                        
+
                     }
                 }
 
@@ -539,7 +529,7 @@ namespace Meal_Planner_Api.Controllers
                     existingAmount.Quantity = amountEntity.Quantity;
                     existingIngredient.IngredientAmount.First().amount = existingAmount;
                 }
-                else if(existingAmount == null)
+                else if (existingAmount == null)
                 {
                     // create new amount since it doesn't exist
                     existingAmount = _mapper.Map<Amount>(ingredient.Amount);
@@ -549,7 +539,7 @@ namespace Meal_Planner_Api.Controllers
                 }
                 else
                 {
-                    if(existingAmount.Quantity != ingredient.Amount.Quantity)
+                    if (existingAmount.Quantity != ingredient.Amount.Quantity)
                     {
                         existingAmount.Quantity = ingredient.Amount.Quantity;
                         existingIngredient.IngredientAmount.First().amount = existingAmount;
@@ -731,23 +721,23 @@ namespace Meal_Planner_Api.Controllers
 
             if (!_recipeRepository.UpdateRecipe(ExistingRecipe))
             {
-                ModelState.AddModelError("" , "Something went wrong while updating");
+                ModelState.AddModelError("", "Something went wrong while updating");
                 return StatusCode(500, ModelState);
             }
 
             return Ok("Success");
         }
-        
-        
+
+
         // delete recipe
 
         [HttpDelete("delete/{recipeId}")]
         public IActionResult DeleteRecipe(int recipeId)
         {
-            if(!_recipeRepository.RecipeExists(recipeId))
+            if (!_recipeRepository.RecipeExists(recipeId))
                 return NotFound();
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
 
@@ -760,7 +750,7 @@ namespace Meal_Planner_Api.Controllers
 
             var recipe = _recipeRepository.GetRecipe(recipeId);
 
-            if(!_recipeRepository.DeleteRecipe(recipe))
+            if (!_recipeRepository.DeleteRecipe(recipe))
             {
                 ModelState.AddModelError("", "Something went wrong while deleting");
                 return StatusCode(500, ModelState);

@@ -1,8 +1,4 @@
-﻿using Meal_Planner_Api.Data;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-
-namespace Meal_Planner_Api.Repositories
+﻿namespace Meal_Planner_Api.Repositories
 {
     public class UserRepository : IUserRepository
     {
@@ -42,8 +38,8 @@ namespace Meal_Planner_Api.Repositories
 
         public bool Save()
         {
-            var saved =_context.SaveChanges();
-            return saved > 0 ? true : false;
+            var saved = _context.SaveChanges();
+            return saved > 0;
         }
 
         public bool UpdateUser(User user)
@@ -67,9 +63,9 @@ namespace Meal_Planner_Api.Repositories
             bool user = _context.Users.Any(x => x.Username == username);
             bool psw = _context.Users.Any(y => y.PasswordHash == hashedPassword);
 
-            if(!user)
+            if (!user)
                 return false;
-            else if(!psw)
+            else if (!psw)
                 return false;
             return true;
 

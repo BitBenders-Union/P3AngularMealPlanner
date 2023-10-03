@@ -1,11 +1,4 @@
-﻿using AutoMapper;
-using Meal_Planner_Api.Dto;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-using Meal_Planner_Api.Repositories;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
+﻿
 namespace Meal_Planner_Api.Controllers
 {
     [Route("api/[controller]")]
@@ -25,9 +18,9 @@ namespace Meal_Planner_Api.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var instructions = _mapper.Map<List<InstructionDTO>>(_instructionRepository.GetInstructions()); 
-            
-            if(instructions == null || instructions.Count() == 0)
+            var instructions = _mapper.Map<List<InstructionDTO>>(_instructionRepository.GetInstructions());
+
+            if (instructions == null || instructions.Count() == 0)
                 return NotFound("Not Found");
 
             if (!ModelState.IsValid)
@@ -42,10 +35,10 @@ namespace Meal_Planner_Api.Controllers
         {
             var instructions = _mapper.Map<List<InstructionDTO>>(_instructionRepository.GetInstructionsByRecipeID(recipeId));
 
-            if(instructions == null)
+            if (instructions == null)
                 return NotFound("Not Found");
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(instructions);
@@ -88,7 +81,7 @@ namespace Meal_Planner_Api.Controllers
 
             var instruction = _mapper.Map<Instruction>(instructionCreate);
 
-            if(!_instructionRepository.CreateInstruction(instruction))
+            if (!_instructionRepository.CreateInstruction(instruction))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return BadRequest(ModelState);

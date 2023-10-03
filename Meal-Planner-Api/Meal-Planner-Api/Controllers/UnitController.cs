@@ -1,11 +1,4 @@
-﻿using AutoMapper;
-using Meal_Planner_Api.Dto;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-using Meal_Planner_Api.Repositories;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
+﻿
 namespace Meal_Planner_Api.Controllers
 {
     [Route("api/[controller]")]
@@ -23,11 +16,11 @@ namespace Meal_Planner_Api.Controllers
 
         // get all
         [HttpGet]
-        public IActionResult Get() 
+        public IActionResult Get()
         {
             var units = _mapper.Map<List<UnitDTO>>(_unitRepository.GetUnits());
 
-            if(units == null || units.Count() == 0)
+            if (units == null || units.Count() == 0)
                 return NotFound("Not Found");
 
             if (!ModelState.IsValid)
@@ -45,7 +38,7 @@ namespace Meal_Planner_Api.Controllers
 
             var units = _mapper.Map<UnitDTO>(_unitRepository.GetUnitById(id));
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(units);
@@ -69,14 +62,14 @@ namespace Meal_Planner_Api.Controllers
 
         // get unit by name
         [HttpGet("{name}")]
-        public IActionResult GetById(string name) 
+        public IActionResult GetById(string name)
         {
             if (!_unitRepository.UnitExists(name))
                 return NotFound("Not Found");
 
             var unit = _mapper.Map<UnitDTO>(_unitRepository.GetUnitByName(name));
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(unit);

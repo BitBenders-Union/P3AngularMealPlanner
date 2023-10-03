@@ -1,10 +1,4 @@
-﻿using Meal_Planner_Api.Data;
-using Meal_Planner_Api.Dto;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace Meal_Planner_Api.Repositories
+﻿namespace Meal_Planner_Api.Repositories
 {
     public class RatingRepository : IRatingRepository
     {
@@ -66,7 +60,7 @@ namespace Meal_Planner_Api.Repositories
 
             var user = _context.Users.Include(x => x.UserRating)
                 .ThenInclude(x => x.Rating)
-                .FirstOrDefault(x => x.Id ==  userId);
+                .FirstOrDefault(x => x.Id == userId);
 
             if (user == null)
                 return null;
@@ -85,7 +79,7 @@ namespace Meal_Planner_Api.Repositories
 
             // find the recipe inside the userRatings
 
-            
+
 
             //TODO: After implementing user and rating binding, and the GetRatingsForUser method, complete this method.
             throw new NotImplementedException();
@@ -99,7 +93,7 @@ namespace Meal_Planner_Api.Repositories
 
         public bool ratingExists(ICollection<RatingDTO> rating)
         {
-            
+
             return _context.Ratings.Any(x => x.Score == rating.First().Score);
         }
 

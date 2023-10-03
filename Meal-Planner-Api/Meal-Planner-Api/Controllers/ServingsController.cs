@@ -1,11 +1,4 @@
-﻿using AutoMapper;
-using Meal_Planner_Api.Dto;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-using Meal_Planner_Api.Repositories;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
+﻿
 namespace Meal_Planner_Api.Controllers
 {
     [Route("api/[controller]")]
@@ -27,7 +20,7 @@ namespace Meal_Planner_Api.Controllers
         {
             var serving = _mapper.Map<List<ServingsDTO>>(_servingsRepository.GetServings());
 
-            if(serving == null|| serving.Count() == 0)
+            if (serving == null || serving.Count() == 0)
                 return NotFound("Not Found");
 
             if (!ModelState.IsValid)
