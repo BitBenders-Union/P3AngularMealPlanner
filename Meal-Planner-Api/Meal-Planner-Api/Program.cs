@@ -9,22 +9,7 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-//var MyAllowSpecificOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>().ToString();
-//var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
-//builder.Logging.AddConsole();
-
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy(name: MyAllowSpecificOrigins,
-//                             policy =>
-//                             {
-//                                 policy.WithOrigins("http://localhost:4200")
-//                                 .AllowAnyHeader()
-//                                 .AllowAnyMethod();
-//                      });
-//});
-
+//fixed
 builder.Services.AddCors(options =>
 {
     var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
