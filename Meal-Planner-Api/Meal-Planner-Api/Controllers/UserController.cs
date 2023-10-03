@@ -127,7 +127,7 @@ namespace Meal_Planner_Api.Controllers
             var newAccessToken = userGet.Token;
             var newRefreshToken = _jwtTokenService.CreateRefreshToken();
             userGet.RefreshToken = newRefreshToken;
-            userGet.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(1);
+            userGet.RefreshTokenExpiryTime = DateTime.UtcNow.AddHours(2);
             _userRepository.Save();
 
             return Ok(new TokenDTO()
@@ -203,7 +203,8 @@ namespace Meal_Planner_Api.Controllers
         [HttpPost("refresh")]
         public IActionResult Refresh([FromBody]TokenDTO tokenDTO)
         {
-        
+
+            // Check if the token is valid if not send a new one
             if(tokenDTO is null)
                 return BadRequest("Invalid client request");
             string accessToken = tokenDTO.AccessToken;
