@@ -8,23 +8,23 @@ import { Recipe, Ingredient, WeekData } from '../Interfaces';
 })
 export class WeekScheduleService {
 
-  private dataUrl = '/assets/recipes-data.json'; // Adjust the path if needed
+  private dataUrl = 'https://localhost:7268/api'; // Adjust the path if needed
 
   constructor(private http: HttpClient) { }
 
   getData(): Observable<any> {
-    return this.http.get(this.dataUrl);
+    return this.http.get(`${this.dataUrl}/RecipeSchedule`);
   }
 
   updateData(updatedData: any): Observable<any> {
-    return this.http.put(this.dataUrl, updatedData);
+    return this.http.put(`${this.dataUrl}/RecipeSchedule/update`, updatedData);
   }
 
 
   // this should get a list of rows, columns, and recipeID's
   // based on the user id
   getWeekScheduleData(userId: number): Observable<any>{
-    return this.http.get(`${this.dataUrl}/${userId}`).pipe(error=>{
+    return this.http.get(`${this.dataUrl}/RecipeSchedule/byUserId/${userId}`).pipe(error=>{
       console.log(error);
       return error;
     })
@@ -41,16 +41,16 @@ export class WeekScheduleService {
   }
 
   // post
-  createScheduleEntry(weekData: WeekData): Observable<any>{
-    return this.http.post(this.dataUrl + '/endpoint', weekData).pipe(error=>{
-      console.log(error);
-      return error;
-    })   
-  }
+  // createScheduleEntry(weekData: WeekData): Observable<any>{
+  //   return this.http.post(this.dataUrl + '/endpoint', weekData).pipe(error=>{
+  //     console.log(error);
+  //     return error;
+  //   })   
+  // }
 
-  // put / update
+  // patch
   updateScheduleEntry(weekData: WeekData): Observable<any>{
-    return this.http.put(this.dataUrl + '/endpoint', weekData).pipe(error=>{
+    return this.http.put(`${this.dataUrl}/RecipeSchedule/update`, weekData).pipe(error=>{
       console.log(error);
       return error;
     })
@@ -59,12 +59,12 @@ export class WeekScheduleService {
 
   // delete
 
-  deleteScheduleEntry(weekDataId: number): Observable<any>{
-    return this.http.delete(`${this.dataUrl}/endpoint/${weekDataId}`).pipe(error=>{
-      console.log(error);
-      return error;
-    })
-  }
+  // deleteScheduleEntry(weekDataId: number): Observable<any>{
+  //   return this.http.delete(`${this.dataUrl}/endpoint/${weekDataId}`).pipe(error=>{
+  //     console.log(error);
+  //     return error;
+  //   })
+  // }
 
 
 }
