@@ -9,6 +9,21 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+//var MyAllowSpecificOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>().ToString();
+//var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+//builder.Logging.AddConsole();
+
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy(name: MyAllowSpecificOrigins,
+//                             policy =>
+//                             {
+//                                 policy.WithOrigins("http://localhost:4200")
+//                                 .AllowAnyHeader()
+//                                 .AllowAnyMethod();
+//                      });
+//});
 
 builder.Services.AddCors(options =>
 {
@@ -19,7 +34,7 @@ builder.Services.AddCors(options =>
 
             policy.WithOrigins(allowedOrigins)
                   .AllowAnyHeader()
-                  //.WithHeaders("Content-Type", "Authorization", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin")
+                  .WithHeaders("Content-Type", "Authorization", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin")
                   .WithMethods("GET", "POST", "PUT", "DELETE");
         });
 });
@@ -80,6 +95,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+//app.UseCors(MyAllowSpecificOrigins);
+app.UseCors();
 
 app.UseAuthentication();
 
@@ -87,7 +104,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.UseCors();
 
 app.MapControllers();
 
