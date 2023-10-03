@@ -1,9 +1,4 @@
-﻿using Meal_Planner_Api.Data;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace Meal_Planner_Api.Repositories
+﻿namespace Meal_Planner_Api.Repositories
 {
     public class AmountRepository : IAmountRepository
     {
@@ -32,7 +27,7 @@ namespace Meal_Planner_Api.Repositories
                 .SelectMany(i => i.IngredientAmount)
                 .Select(ia => ia.amount)
                 .ToList();
-            
+
         }
 
         public Amount GetAmountForIngredient(int ingredientId)
@@ -42,7 +37,7 @@ namespace Meal_Planner_Api.Repositories
                 .SelectMany(i => i.IngredientAmount)
                 .Select(ia => ia.amount)
                 .FirstOrDefault();
-                           
+
         }
 
 
@@ -60,7 +55,7 @@ namespace Meal_Planner_Api.Repositories
         public bool Save()
         {
             var saved = _context.SaveChanges();
-            return saved > 0 ? true : false;
+            return saved > 0;
         }
 
         public Amount GetAmountByQuantity(float quantity)

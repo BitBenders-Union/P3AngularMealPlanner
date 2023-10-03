@@ -1,6 +1,4 @@
-﻿using Meal_Planner_Api.Models;
-using Microsoft.EntityFrameworkCore;
-
+﻿
 namespace Meal_Planner_Api.Data
 {
     public class DataContext : DbContext
@@ -28,7 +26,7 @@ namespace Meal_Planner_Api.Data
         public DbSet<IngredientAmount> IngredientAmounts { get; set; }
         public DbSet<IngredientUnit> IngredientUnits { get; set; }
         public DbSet<RecipeRating> RecipeRatings { get; set; }
- 
+
 
         // Customize the tables
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -56,7 +54,7 @@ namespace Meal_Planner_Api.Data
 
 
             modelBuilder.Entity<RecipeRating>()
-                .HasKey(rr => new {rr.RecipeID, rr.RatingID});
+                .HasKey(rr => new { rr.RecipeID, rr.RatingID });
             modelBuilder.Entity<RecipeRating>()
                 .HasOne(r => r.Recipe)
                 .WithMany(rr => rr.RecipeRating)
@@ -68,7 +66,7 @@ namespace Meal_Planner_Api.Data
 
 
             modelBuilder.Entity<UserRating>()
-                .HasKey(ur => new {ur.UserId, ur.RatingId});
+                .HasKey(ur => new { ur.UserId, ur.RatingId });
             modelBuilder.Entity<UserRating>()
                 .HasOne(u => u.User)
                 .WithMany(ur => ur.UserRating)

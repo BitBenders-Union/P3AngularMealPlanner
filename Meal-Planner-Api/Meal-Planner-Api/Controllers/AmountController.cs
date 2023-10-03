@@ -1,18 +1,12 @@
-﻿using AutoMapper;
-using Meal_Planner_Api.Dto;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
+﻿
 namespace Meal_Planner_Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class AmountController : ControllerBase
     {
-        private IMapper _mapper;
-        private IAmountRepository _amountRepository;
+        private readonly IMapper _mapper;
+        private readonly IAmountRepository _amountRepository;
 
         public AmountController(IMapper mapper, IAmountRepository amountRepository)
         {
@@ -26,7 +20,7 @@ namespace Meal_Planner_Api.Controllers
         {
             // get the amounts from the repository method & map it to only show data in DTO format
             var amounts = _mapper.Map<List<AmountDTO>>(_amountRepository.GetAmounts());
-            
+
             // check if any amounts was found
             if (amounts == null || amounts.Count() == 0)
                 return NotFound("Not Found");
@@ -44,7 +38,7 @@ namespace Meal_Planner_Api.Controllers
         public IActionResult Get(int id)
         {
             // check if amount exists from id
-            if(!_amountRepository.AmountExists(id))
+            if (!_amountRepository.AmountExists(id))
                 return NotFound("Not Found");
 
             // get the amount from id
@@ -66,7 +60,7 @@ namespace Meal_Planner_Api.Controllers
             if (amount == null)
                 return NotFound("Not Found");
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(amount);
@@ -101,7 +95,7 @@ namespace Meal_Planner_Api.Controllers
                 .FirstOrDefault(a => a.Quantity == amountCreate.Quantity);
 
             // if another quantity does exist
-            if(amount != null)
+            if (amount != null)
             {
                 //TODO: logic that makes it so the created amount uses the existing amount
                 ModelState.AddModelError("", "Quantity Already Exists");
@@ -114,7 +108,7 @@ namespace Meal_Planner_Api.Controllers
             var amountMap = _mapper.Map<Amount>(amountCreate);
 
             // create the amount and check if it saved
-            if(!_amountRepository.CreateAmount(amountMap))
+            if (!_amountRepository.CreateAmount(amountMap))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);

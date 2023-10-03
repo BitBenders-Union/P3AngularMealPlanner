@@ -1,17 +1,4 @@
-﻿using AutoMapper;
-using Meal_Planner_Api.Dto;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-using Meal_Planner_Api.Repositories;
-using Meal_Planner_Api.Services;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Mvc.Cors;
-
-
+﻿
 namespace Meal_Planner_Api.Controllers
 {
 
@@ -19,16 +6,16 @@ namespace Meal_Planner_Api.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private IMapper _mapper;
-        private IUserRepository _userRepository;
-        private IRecipeScheduleRepository _recipeScheduleRepository;
-        private IHashingService _hashingService;
-        private IJwtTokenService _jwtTokenService;
+        private readonly IMapper _mapper;
+        private readonly IUserRepository _userRepository;
+        private readonly IRecipeScheduleRepository _recipeScheduleRepository;
+        private readonly IHashingService _hashingService;
+        private readonly IJwtTokenService _jwtTokenService;
 
         public UserController(
-            IMapper mapper, 
-            IUserRepository userRepository, 
-            IHashingService hashingService, 
+            IMapper mapper,
+            IUserRepository userRepository,
+            IHashingService hashingService,
             IJwtTokenService jwtTokenService,
             IRecipeScheduleRepository recipeScheduleRepository)
         {
@@ -46,10 +33,10 @@ namespace Meal_Planner_Api.Controllers
         {
             var users = _mapper.Map<List<UserOnlyNameDTO>>(_userRepository.GetUsers());
 
-            if(users == null || users.Count() == 0)
+            if (users == null || users.Count == 0)
                 return NotFound("Not Found");
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(users);
@@ -93,7 +80,7 @@ namespace Meal_Planner_Api.Controllers
 
         // validate user
         [HttpPost("/validate")]
-        public IActionResult validateUser([FromBody] UserDTO user)
+        public IActionResult ValidateUser([FromBody] UserDTO user)
         {
             // first find user by username
             // then find salt
@@ -110,7 +97,7 @@ namespace Meal_Planner_Api.Controllers
 
             // get user & user.passwordSalt
             var userGet = _userRepository.GetUser(user.Username);
-            
+
 
             // hash the password
             byte[] hash = _hashingService.PasswordHashing(user.Password, userGet.PasswordSalt);
@@ -119,7 +106,7 @@ namespace Meal_Planner_Api.Controllers
             // maybe change to not use username, since we already validate username before this
             // we can't change previous methodology since password hashing requires the correct salt
             var validate = _userRepository.ValidateUser(hash, user.Username);
-            if(!validate)
+            if (!validate)
                 return BadRequest();
 
             userGet.Token = _jwtTokenService.CreateJwtToken(userGet);
@@ -160,7 +147,7 @@ namespace Meal_Planner_Api.Controllers
             byte[] salt = _hashingService.GenerateSalt();
             byte[] hash = _hashingService.PasswordHashing(user.Password, salt);
 
-            User newUser = new User
+            User newUser = new()
             {
                 Username = user.Username,
                 PasswordSalt = salt,
@@ -184,7 +171,7 @@ namespace Meal_Planner_Api.Controllers
             {
                 for (int j = 0; j < 7; j++)
                 {
-                    RecipeSchedule recipeSchedule = new RecipeSchedule
+                    RecipeSchedule recipeSchedule = new()
                     {
                         Row = i,
                         Column = j,
@@ -202,14 +189,14 @@ namespace Meal_Planner_Api.Controllers
         [HttpPost("/refresh")]
         public IActionResult Refresh(TokenDTO tokenDTO)
         {
-            if(tokenDTO == null)
+            if (tokenDTO == null)
                 return BadRequest("Invalid client request");
             string accessToken = tokenDTO.AccessToken;
             string refreshToken = tokenDTO.RefreshToken;
             var principal = _jwtTokenService.GetPrincipalFromExpiredToken(accessToken);
             var username = principal.Identity.Name;
             var user = _userRepository.GetUser(username);
-            if(user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+            if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
                 return BadRequest("Invalid client request");
             var newAccessToken = _jwtTokenService.CreateJwtToken(user);
             var newRefreshToken = _jwtTokenService.CreateRefreshToken();
@@ -220,7 +207,7 @@ namespace Meal_Planner_Api.Controllers
                 AccessToken = newAccessToken,
                 RefreshToken = newRefreshToken
             });
-            
+
 
         }
 
@@ -249,7 +236,7 @@ namespace Meal_Planner_Api.Controllers
 
 
             // update user
-            User updateUser = new User
+            User updateUser = new()
             {
                 Id = userId,
                 Username = _userRepository.GetUser(userId).Username,
@@ -296,7 +283,7 @@ namespace Meal_Planner_Api.Controllers
             }
 
             // delete user
-            if(!_userRepository.DeleteUser(_userRepository.GetUser(userId)))
+            if (!_userRepository.DeleteUser(_userRepository.GetUser(userId)))
             {
                 ModelState.AddModelError("", "Something went wrong while deleting");
                 return StatusCode(500, ModelState);
