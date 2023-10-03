@@ -34,7 +34,7 @@ export class DashboardComponent implements OnInit{
       .subscribe(val =>{
         let userNameFromToken = this.auth.getUsernameFromToken();
         this.userName = val || userNameFromToken;
-        console.log(this.userName);
+        // console.log(this.userName);
       })      
 
       this.auth.testApi().subscribe((data: any) =>{
