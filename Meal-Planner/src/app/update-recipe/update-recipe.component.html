@@ -29,7 +29,7 @@
           <label for="" class="ingredient-label">Amount</label>
           <label for="" class="ingredient-label">Unit</label>
         </div>
-          <div *ngIf="recipe?.Ingredients">
+          <div *ngIf="recipe?.ingredients">
             <div formArrayName="ingredients">
               <div *ngFor="let ingredientGroup of ingredients.controls; let i = index" [formGroupName]="i" class="ingredient-inputs">
                 <input formControlName="name" placeholder="Ingredient Name" class="input-field" required>
@@ -49,7 +49,7 @@
         <h2>Instructions</h2>
 
         <label class="instruction-label">Instructions:</label>
-        <div *ngIf="recipe?.Instructions">
+        <div *ngIf="recipe?.instructions">
           <div formArrayName="instructions">
             <div *ngFor="let instructionControl of instructions.controls; let i = index" [formGroupName]="i" >
               <input formControlName="text" placeholder="Instruction {{ i + 1 }}" class="input-field" required>
