@@ -20,12 +20,12 @@ namespace Meal_Planner_Api.Services
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             });
 
-            var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature);
+            var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
 
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = identity,
-                Expires = DateTime.UtcNow.AddSeconds(10),
+                Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = credentials
 
             };
@@ -60,7 +60,6 @@ namespace Meal_Planner_Api.Services
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(key),
                 ValidateLifetime = false,
-                ClockSkew = TimeSpan.Zero
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -68,7 +67,8 @@ namespace Meal_Planner_Api.Services
 
             var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
             var jwtSecurityToken = securityToken as JwtSecurityToken;
-            if (jwtSecurityToken == null || jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+
             {
                 throw new SecurityTokenException("Invalid token");
             }

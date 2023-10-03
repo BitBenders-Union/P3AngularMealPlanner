@@ -22,8 +22,11 @@ export class TokenInterceptor implements HttpInterceptor {
 
     if(myToken){
       request = request.clone({
-        setHeaders: {Authorization:`Bearer ${myToken}`}
-      })
+        setHeaders: {
+          'Authorization':`Bearer ${myToken}`,
+        'Content-Type': 'application/json'
+        },
+      });
     }
     return next.handle(request).pipe(
       catchError((err: any) => {
@@ -33,8 +36,6 @@ export class TokenInterceptor implements HttpInterceptor {
           console.log(err.status + " something went wrong ");
           if(err.status === 401){
             console.log("401 error");
-            // this.auth.signOut();
-            // this.router.navigate(['login']);
             return this.handleUnAuthError(request, next);
             
           }
@@ -55,7 +56,8 @@ export class TokenInterceptor implements HttpInterceptor {
       this.auth.storeRefreshToken(data.refreshToken);
       this.auth.storeToken(data.accessToken);
       req = req.clone({
-        setHeaders: {Authorization:`Bearer ${data.accessToken}`}
+        setHeaders: {Authorization:`Bearer ${data.accessToken}`,
+        'Content-Type': 'application/json'}
       })
       return next.handle(req);
     }),

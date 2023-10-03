@@ -1,3 +1,17 @@
+﻿using AutoMapper;
+using Meal_Planner_Api.Dto;
+using Meal_Planner_Api.Interfaces;
+using Meal_Planner_Api.Models;
+using Meal_Planner_Api.Repositories;
+using Meal_Planner_Api.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Mvc.Cors;
+using System.Web.Http.Description;
+
 
 namespace Meal_Planner_Api.Controllers
 {
@@ -186,10 +200,11 @@ namespace Meal_Planner_Api.Controllers
             return Ok("Success");
         }
 
-        [HttpPost("/refresh")]
-        public IActionResult Refresh(TokenDTO tokenDTO)
+        [HttpPost("refresh")]
+        public IActionResult Refresh([FromBody]TokenDTO tokenDTO)
         {
-            if (tokenDTO == null)
+            if(tokenDTO is null)
+
                 return BadRequest("Invalid client request");
             string accessToken = tokenDTO.AccessToken;
             string refreshToken = tokenDTO.RefreshToken;
@@ -207,7 +222,6 @@ namespace Meal_Planner_Api.Controllers
                 AccessToken = newAccessToken,
                 RefreshToken = newRefreshToken
             });
-
 
         }
 
