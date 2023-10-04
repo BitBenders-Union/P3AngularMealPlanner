@@ -16,7 +16,7 @@ export class UpdateRecipeComponent implements OnInit{
   recipeId: number | undefined;
 
 
-  categories: string[] = ['Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Snacks'];
+  categories: string[] = [];
 
   get instructions(): FormArray {
     return this.updateForm.get('instructions') as FormArray;
@@ -37,23 +37,15 @@ export class UpdateRecipeComponent implements OnInit{
     ) 
     { 
       this.updateForm = this.formBuilder.group({
-        title: '',
-        description: '',
-        category: this.formBuilder.group({
-          categoryName: ['']
-        }),
-        preparationTimes: this.formBuilder.group({
-          minutes: [0]
-        }),
-        cookingTimes: this.formBuilder.group({
-          minutes: [0]
-        }),
-        servings: this.formBuilder.group({
-          quantity: [0]
-        }),
-        ratings: [[]],
-        ingredients: [[]],
-        instructions: [[]],
+      title: '',
+      category: '',
+      description: '',
+      prepTime: null,
+      cookTime: null,
+      servings: null,
+      rating: null,
+      ingredients: this.formBuilder.array([]),
+      instructions: this.formBuilder.array([]),
       });
     }
 
@@ -67,25 +59,17 @@ export class UpdateRecipeComponent implements OnInit{
         this.recipeService.getRecipeById(this.recipeId).subscribe(recipe => {
           
           this.recipe = recipe;
-
+          console.log(this.recipe);
           this.updateForm.patchValue({
             title: this.recipe!.title,
             description: this.recipe!.description,
-            category: {
-              categoryName: this.recipe!.category.categoryName
-            },
-            preparationTimes: {
-              minutes: this.recipe!.preparationTime.minutes
-            },
-            cookingTimes: {
-              minutes: this.recipe!.cookingTime.mintues
-            },
-            servings: {
-              quantity: this.recipe!.servings.Quantity
-            },
-            ratings: this.recipe!.rating,
+            category: this.recipe!.category.categoryName,
+            prepTime: this.recipe!.preparationTimes.minutes,
+            cookTime: this.recipe!.cookingTimes.minutes,
+            servings: this.recipe!.servings.quantity,
+            rating: this.recipe!.ratings[0].score,
             ingredients: this.recipe!.ingredients,
-            instructions: this.recipe!.instructions
+            instructions: this.recipe!.instructions,
           });
 
           
@@ -119,11 +103,20 @@ export class UpdateRecipeComponent implements OnInit{
             });
           }
 
-          // this.updateForm.addControl('deleted', new FormControl(this.recipe!.deleted));
 
         });
       }
-    });  
+    });
+
+    this.recipeService.getCategories().subscribe(categories => {
+      this.categories = categories.map(category => category.categoryName)
+      console.log(this.categories);
+    });
+
+
+
+
+
   }
 
 

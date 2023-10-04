@@ -8,14 +8,26 @@
         <label>Title: <input required formControlName="title" class="input-field" /></label>
         <label>
           Category:
-          <select formControlName="category" class="input-field">
-            <option value="" disabled selected>Choose a category</option>
-            <option *ngFor="let cat of categories" [value]="cat" required>{{ cat }}</option>
-          </select>
         </label>
+
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let option of categories" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+  
+        <input type="text"
+        placeholder="Category"
+        aria-label="Number"
+        matInput
+        class="input-field"
+        formControlName="category"
+        [matAutocomplete]="auto"
+        required>
+
         <label>Description: <input required formControlName="description" class="input-field" type="text"/></label>
-        <label>Preparation Time: <input required formControlName="preparationTime" type="number" class="input-field" min="0"/></label>
-        <label>Cooking Time: <input required formControlName="cookingTime" type="number" class="input-field" min="0"/></label>
+        <label>Preparation Time: <input required formControlName="prepTime" type="number" class="input-field" min="0"/></label>
+        <label>Cooking Time: <input required formControlName="cookTime" type="number" class="input-field" min="0"/></label>
         <label>Servings: <input required formControlName="servings" type="number" class="input-field" min="0"/></label>
         <label>Rating: <input required formControlName="rating" type="number" class="input-field" min="0" max="5" (keyup)="validateRating()"/></label>
       </div>
