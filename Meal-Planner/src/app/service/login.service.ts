@@ -22,28 +22,17 @@ export class LoginService {
       username: username,
       password: password
     };
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': 'http://localhost:4200',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-    });
-    return this.http.post(`${this.apiUrl}validate`, body,{headers, responseType: 'json'});
+    return this.http.post(`${this.apiUrl}validate`, body,{responseType: 'json'});
   }
 
   createLogin(data: any): Observable<any>{
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': 'http://localhost:4200',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-    })
 
-    return this.http.post(`${this.apiUrl}api/User`, data,{headers, responseType: 'text'});
+    return this.http.post(`${this.apiUrl}api/User`, data,{responseType: 'text'});
   }
 
   //set usertoken to storage
   storeToken(tokenValue: string){
-    console.log(tokenValue);
+    // console.log(tokenValue);
     localStorage.setItem('accessToken', tokenValue);
   }
 
@@ -72,7 +61,7 @@ export class LoginService {
   decodeToken(){
     const jwtHelper = new JwtHelperService();
     const token = this.getToken()!;
-    console.log(jwtHelper.decodeToken(token))
+    // console.log(jwtHelper.decodeToken(token))
     return jwtHelper.decodeToken(token);
   }
 
@@ -89,22 +78,13 @@ export class LoginService {
   }
 
   renewToken(token: TokenModel): Observable<any>{
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': 'http://localhost:4200',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-    })
-    return this.http.post<any>(`${this.apiUrl}api/User/refresh`, token, {headers, responseType: 'json'});
+
+    return this.http.post<any>(`${this.apiUrl}api/User/refresh`, token, {responseType: 'json'});
   }
 
 
+  //just to test if the api is working with the token
   testApi(): Observable<any>{
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': 'http://localhost:4200',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-    })
-    return this.http.get(`${this.apiUrl}api/User`, {headers, responseType: 'json'});
+    return this.http.get(`${this.apiUrl}api/User`, {responseType: 'json'});
   }
-
 }

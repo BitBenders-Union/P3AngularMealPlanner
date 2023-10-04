@@ -48,8 +48,8 @@ export class UserLoginComponent implements OnInit{
           // console.log("User ID: ", data.id);
           this.loginService.storeToken(data.accessToken);
           this.loginService.storeRefreshToken(data.refreshToken);
-          console.log(data.accessToken);
-          console.log(data.refreshToken);
+          // console.log(data.accessToken);
+          // console.log(data.refreshToken);
 
           const tokenPayload = this.loginService.decodeToken();
           this.userStore.setUserInStore(tokenPayload.unique_name);

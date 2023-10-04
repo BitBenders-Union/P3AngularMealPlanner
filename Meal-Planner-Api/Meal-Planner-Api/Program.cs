@@ -9,7 +9,7 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-
+//fixed
 builder.Services.AddCors(options =>
 {
     var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
@@ -19,7 +19,7 @@ builder.Services.AddCors(options =>
 
             policy.WithOrigins(allowedOrigins)
                   .AllowAnyHeader()
-                  //.WithHeaders("Content-Type", "Authorization", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin")
+                  .WithHeaders("Content-Type", "Authorization", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin")
                   .WithMethods("GET", "POST", "PUT", "DELETE");
         });
 });
@@ -80,6 +80,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+//app.UseCors(MyAllowSpecificOrigins);
+app.UseCors();
 
 app.UseAuthentication();
 
@@ -87,7 +89,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.UseCors();
 
 app.MapControllers();
 

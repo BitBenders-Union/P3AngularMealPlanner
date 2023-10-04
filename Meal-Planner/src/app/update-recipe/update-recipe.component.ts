@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Amount, Unit, Ingredient, Recipe, Instruction } from '../Interfaces';
+import { Amount, Unit, Ingredient, Recipe, Instruction, RecipeDTO } from '../Interfaces';
 import { RecipeServiceService } from '../service/recipe-service.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, FormControl, AbstractControl } from '@angular/forms';
@@ -164,18 +164,17 @@ export class UpdateRecipeComponent implements OnInit{
         };
       });
 
-      const updatedRecipe: Recipe = {
-        id: this.recipeId!,
-        title: formData.title,
-        category: formData.category,
-        description: formData.description,
-        preparationTime: formData.preparationTime,
-        cookingTime: formData.cookingTime,
-        servings: formData.servings,
-        rating: formData.rating,
-        ingredients: ingredients,
-        instructions: instructions,
-        user: this.recipe!.user
+      const updatedRecipe: RecipeDTO = {
+        Title: formData.title,
+        Category: formData.category,
+        Description: formData.description,
+        PreparationTimes: formData.preparationTime,
+        CookingTimes: formData.cookingTime,
+        Servings: formData.servings,
+        Ratings: [formData.rating],
+        Ingredients: formData.ingredients,
+        Instructions: formData.instructions,
+        User: this.recipe!.user
       };
       console.log(updatedRecipe);
 

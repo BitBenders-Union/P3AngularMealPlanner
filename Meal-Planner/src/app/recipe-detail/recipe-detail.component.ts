@@ -38,14 +38,13 @@ export class RecipeDetailComponent implements OnInit {
       this.route.paramMap.subscribe(params => {
         const recipeId = Number(params.get('id'));
         if(!isNaN(recipeId)){
-            
-
-          // change this to getRecipeById when we are using the api
             this.recipeService.getRecipeById(recipeId!).subscribe(recipe =>{
               this.recipe = recipe;
             });
         }   
     });
+
+    
   }
 
   // routes to the update page using the recipe id
