@@ -1,5 +1,4 @@
 <app-navbar></app-navbar>
-
 <div class="recipe-detail-container">
     <div *ngIf="recipe" class="recipe-card">
 
@@ -24,9 +23,9 @@
       </div>
 
       <div class="list">
+        <h6 class="time">Cooking Time: {{recipe.cookingTimes.minutes}} - Preparation time: {{recipe.preparationTimes.minutes}}</h6>
+        <h6 class="servings">Servings: {{recipe.servings.quantity}}</h6>
         <h3>Instructions</h3>
-        <h6 class="time">Cooking Time: {{recipe.cookingTime}} - Preparation time: {{recipe.preparationTime}}</h6>
-        <h6 class="servings">Servings: {{recipe.servings}}</h6>
         <ul>
           <li *ngFor="let instruction of recipe.instructions">{{ instruction.text }}</li>
         </ul>

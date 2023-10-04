@@ -3,6 +3,7 @@ import { Amount, Unit, Ingredient, Recipe, Instruction, RecipeDTO } from '../Int
 import { RecipeServiceService } from '../service/recipe-service.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, FormControl, AbstractControl } from '@angular/forms';
+import { LoginService } from '../service/login.service';
 
 @Component({
   selector: 'app-update-recipe',
@@ -10,12 +11,13 @@ import { FormBuilder, FormGroup, FormArray, FormControl, AbstractControl } from 
   styleUrls: ['./update-recipe.component.css']
 })
 export class UpdateRecipeComponent implements OnInit{
+  updateForm: FormGroup;
+
   recipe: Recipe | undefined;
   recipeId: number | undefined;
 
-  updateForm: FormGroup;
 
-  categories: string[] = ['Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Snacks'];
+  categories: string[] = [];
 
   get instructions(): FormArray {
     return this.updateForm.get('instructions') as FormArray;
@@ -32,13 +34,20 @@ export class UpdateRecipeComponent implements OnInit{
     private route: ActivatedRoute, 
     private recipeService: RecipeServiceService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private tokenService: LoginService
     ) 
     { 
       this.updateForm = this.formBuilder.group({
-        rating: [0],
-        instructions: this.formBuilder.array([]),
-        ingredients: this.formBuilder.array([])
+      title: '',
+      category: '',
+      description: '',
+      prepTime: null,
+      cookTime: null,
+      servings: null,
+      rating: null,
+      ingredients: this.formBuilder.array([]),
+      instructions: this.formBuilder.array([]),
       });
     }
 
@@ -52,14 +61,18 @@ export class UpdateRecipeComponent implements OnInit{
         this.recipeService.getRecipeById(this.recipeId).subscribe(recipe => {
           
           this.recipe = recipe;
+          this.updateForm.patchValue({
+            title: this.recipe!.title,
+            description: this.recipe!.description,
+            category: this.recipe!.category.categoryName,
+            prepTime: this.recipe!.preparationTimes.minutes,
+            cookTime: this.recipe!.cookingTimes.minutes,
+            servings: this.recipe!.servings.quantity,
+            rating: this.recipe!.ratings[0].score,
+            ingredients: this.recipe!.ingredients,
+            instructions: this.recipe!.instructions,
+          });
 
-          this.updateForm.addControl('title', new FormControl(this.recipe!.title));
-          this.updateForm.addControl('category', new FormControl(this.recipe!.category));
-          this.updateForm.addControl('description', new FormControl(this.recipe!.description));
-          this.updateForm.addControl('preparationTime', new FormControl(this.recipe!.preparationTime));
-          this.updateForm.addControl('cookingTime', new FormControl(this.recipe!.cookingTime));
-          this.updateForm.addControl('servings', new FormControl(this.recipe!.servings));
-          this.updateForm.addControl('rating', new FormControl(this.recipe!.rating));
           
           if (this.recipe!.ingredients && this.recipe!.ingredients.length > 0) {
             this.recipe!.ingredients.forEach((ingredient) => {
@@ -91,11 +104,19 @@ export class UpdateRecipeComponent implements OnInit{
             });
           }
 
-          // this.updateForm.addControl('deleted', new FormControl(this.recipe!.deleted));
 
         });
       }
-    });  
+    });
+
+    this.recipeService.getCategories().subscribe(categories => {
+      this.categories = categories.map(category => category.categoryName)
+    });
+
+
+
+
+
   }
 
 
@@ -139,56 +160,38 @@ export class UpdateRecipeComponent implements OnInit{
 
   updateRecipe(): void {
     if (this.updateForm.valid) {
-      const formData = this.updateForm.value;
-
-      const ingredients: Ingredient[] = formData.ingredients.map((ingredient: any) => {
-        const amounts: Amount = {
-          id: 0,
-          quantity: ingredient.value,
-        };
-        const unit: Unit ={
-          id: 0,
-          measurement: ingredient.unit
+      const recipeDTO: RecipeDTO = {
+        Title: this.updateForm.get('title')!.value,
+        Description: this.updateForm.get('description')!.value,
+        Category: this.updateForm.get('category')!.value,
+        PreparationTimes: this.updateForm.get('prepTime')!.value,
+        CookingTimes: this.updateForm.get('cookTime')!.value,
+        Servings: this.updateForm.get('servings')!.value,
+        Ratings: [{
+          Score: this.updateForm.get('rating')!.value
+        }],
+        Ingredients: this.ingredients.controls.map(control => ({
+          Name: control.get('name')?.value,
+          Amount: {
+            Quantity: control.get('amounts')?.value,
+          },
+          Unit: {
+            Measurement: control.get('unit')?.value
+          }
+        })),
+        Instructions: this.instructions.controls.map(control => ({
+          Text: control.get('text')?.value
+        })),
+        User: {
+          Id: this.tokenService.getIdFromToken(),
+          Username: this.tokenService.getUsernameFromToken()
         }
-
-        return {
-          name: ingredient.name,
-          amounts: amounts,
-          unit: unit
-        };
-      });
-
-      const instructions: Instruction[] = formData.instructions.map((instruction: any) => {
-        return {
-          text: instruction.text
-        };
-      });
-
-      const updatedRecipe: RecipeDTO = {
-        Title: formData.title,
-        Category: formData.category,
-        Description: formData.description,
-        PreparationTimes: formData.preparationTime,
-        CookingTimes: formData.cookingTime,
-        Servings: formData.servings,
-        Ratings: [formData.rating],
-        Ingredients: formData.ingredients,
-        Instructions: formData.instructions,
-        User: this.recipe!.user
       };
-      console.log(updatedRecipe);
 
-
-      this.recipeService.updateRecipe(updatedRecipe, this.recipeId!).subscribe(() => {
-        console.log('recipe updated');
-        
-        // navigate back to search component
-        this.router.navigate(['/search']);
+      console.log(recipeDTO);
+      this.recipeService.updateRecipe(recipeDTO, this.recipeId!).subscribe(() => {
+        this.router.navigate(['/recipe-detail/' + this.recipeId]);
       });
-      
-      
-
-
     }
   }
 
