@@ -412,8 +412,8 @@ namespace Meal_Planner_Api.Controllers
             if (!_recipeRepository.RecipeExists(recipeId))
                 return NotFound("Recipe with given id, does not exist");
 
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            //if (!ModelState.IsValid)
+            //    return BadRequest(ModelState);
 
             recipeData.Id = recipeId;
             var ExistingRecipe = _recipeRepository.GetRecipe(recipeId);

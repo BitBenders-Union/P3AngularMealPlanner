@@ -37,10 +37,10 @@ export class DashboardComponent implements OnInit{
         // console.log(this.userName);
       })      
 
-      this.auth.testApi().subscribe((data: any) =>{
-        this.testthing = data;
-        console.log(this.testthing);
-      })
+      // this.auth.testApi().subscribe((data: any) =>{
+      //   this.testthing = data;
+      //   console.log(this.testthing);
+      // })
   }
 
   // This function is called when the shopping list needs to be updated with new ingredients.
