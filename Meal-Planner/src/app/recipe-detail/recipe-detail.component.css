@@ -74,19 +74,19 @@
 }
 
 .btn-update {
-  background-color: var(--color-primary);
+  background-color: var(--color-button);
   color: white;
 }
 
 .btn-delete {
-  background-color: var(--color-primary);
+  background-color: var(--color-button);
   color: white;
   margin-left: 10px;
 }
 
 .btn-update:hover,
 .btn-delete:hover {
-  background-color: var(--color-text);
+  background-color: var(--color-button-hover);
 }
 
 /* ... Other existing CSS ... */

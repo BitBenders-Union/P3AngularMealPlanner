@@ -3,7 +3,7 @@ namespace Meal_Planner_Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AmountController : ControllerBase // Delete this
+    public class AmountController : ControllerBase 
     {
         private readonly IMapper _mapper;
         private readonly IAmountRepository _amountRepository;

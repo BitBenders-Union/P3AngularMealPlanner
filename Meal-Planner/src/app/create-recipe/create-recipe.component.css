@@ -105,8 +105,7 @@
 }
 
 button {
-  background-color: var(--color-primary);
-  color: white;
+  background-color: var(--color-button);
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -119,7 +118,7 @@ button[type="button"] {
 }
 
 button:hover {
-  background-color: var(--color-text);
+  background-color: var(--color-button-hover);
 }
 
 
@@ -130,13 +129,11 @@ width: 20%; /* Adjust the width as needed */
 
 /* Apply specific styles to Confirm button */
 .confirm-button {
-background-color: var(--color-primary);
 margin-left: 10px;
 }
 
 /* Apply specific styles to Cancel button */
 .cancel-button {
-  background-color: var(--color-primary);
   margin-right: 10px;
 }
 
