@@ -163,17 +163,25 @@ export class UpdateRecipeComponent implements OnInit{
       const recipeDTO: RecipeDTO = {
         Title: this.updateForm.get('title')!.value,
         Description: this.updateForm.get('description')!.value,
-        Category: this.updateForm.get('category')!.value,
-        PreparationTimes: this.updateForm.get('prepTime')!.value,
-        CookingTimes: this.updateForm.get('cookTime')!.value,
-        Servings: this.updateForm.get('servings')!.value,
+        Category: {
+          CategoryName: this.updateForm.get('category')!.value
+        },
+        PreparationTimes: {
+          Minutes: this.updateForm.get('prepTime')!.value
+        },
+        CookingTimes:{
+          Minutes: this.updateForm.get('cookTime')!.value        
+        },          
+        Servings:{ 
+          Quantity: this.updateForm.get('servings')!.value
+        },
         Ratings: [{
           Score: this.updateForm.get('rating')!.value
         }],
         Ingredients: this.ingredients.controls.map(control => ({
           Name: control.get('name')?.value,
           Amount: {
-            Quantity: control.get('amounts')?.value,
+            Quantity: control.get('value')?.value
           },
           Unit: {
             Measurement: control.get('unit')?.value

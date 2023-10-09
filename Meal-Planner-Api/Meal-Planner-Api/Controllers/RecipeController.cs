@@ -589,6 +589,7 @@ namespace Meal_Planner_Api.Controllers
                 // Create or update the relationships
 
                 // IngredientAmount
+                //TODO: fix this
                 var ingredientAmount = existingIngredient.IngredientAmount.FirstOrDefault();
                 var existingIngredientAmount = existingIngredient.IngredientAmount.FirstOrDefault();
 

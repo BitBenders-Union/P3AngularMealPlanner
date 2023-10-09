@@ -52,6 +52,7 @@ input[type="text"] {
 
 }
 
+
 .recipe-card:hover{
 
   border: 2px solid var(--color-button-hover);
