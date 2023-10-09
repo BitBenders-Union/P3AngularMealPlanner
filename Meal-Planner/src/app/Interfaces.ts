@@ -3,10 +3,10 @@ export interface Recipe {
     title: string
     description: string
     category: Category
-    preparationTime: PreparationTime
-    cookingTime: CookingTime
+    preparationTimes: PreparationTime
+    cookingTimes: CookingTime
     servings: Servings
-    rating: Rating
+    ratings: Rating[]
     ingredients: Ingredient[]
     instructions: Instruction[]
     user: User
@@ -24,12 +24,12 @@ export interface Category {
 
   export interface CookingTime {
     id: number,
-    mintues: number
+    minutes: number
   }
 
   export interface Servings {
     id: number,
-    Quantity: number
+    quantity: number
   }
 
   export interface Rating {

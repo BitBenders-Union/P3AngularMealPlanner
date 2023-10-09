@@ -44,40 +44,51 @@
     </div>
     
     <div formArrayName="ingredients" class="form-array-container">
+
       <h4>Ingredients</h4>
+
         <div class="ingredient-labels">
           <label class="ingredient-label">Name:</label>
           <label class="ingredient-label">Amount:</label>
           <label class="ingredient-label">Unit:</label>
         </div>
+
         <div *ngFor="let ingredient of ingredients.controls; let i = index" class="ingredient-row">
+          
           <div [formGroupName]="i" class="ingredient-group">
             <input required formControlName="name" class="ingredient-input" />
             <input required formControlName="amounts" type="number" class="ingredient-input" min="0" (input)="aboveZeroIngredient()"/>
             <input required formControlName="unit" class="ingredient-input" />
+          
           </div>
         </div>
+
         <div class="buttons">
           <button type="button" (click)="addIngredients()" class="fas fa-plus"></button>
           <button type="button" (click)="removeIngredients()" class="fas fa-minus"></button>
         </div>
+        
       </div>
       
     
     <div formArrayName="instructions" class="form-array-container">
-  <div class="instruction-labels">
-    <label class="instruction-label">Instructions:</label>
-  </div>
-  <div *ngFor="let instruction of instructions.controls; let i = index" class="instruction-row">
-    <div [formGroupName]="i" class="instruction-group">
-      <input required formControlName="text" class="instruction-input"/>
+
+      <div class="instruction-labels">
+        <label class="instruction-label">Instructions:</label>
+      </div>
+
+        <div *ngFor="let instruction of instructions.controls; let i = index" class="instruction-row">
+          <div [formGroupName]="i" class="instruction-group">
+            <input required formControlName="text" class="instruction-input"/>
+          </div>
+        </div>
+
+      <div class="buttons">
+        <button type="button" (click)="addInstruction()" class="fas fa-plus"></button>
+        <button type="button" (click)="removeLastInstruction()" class="fas fa-minus"></button>
+      </div>
+
     </div>
-  </div>
-  <div class="buttons">
-    <button type="button" (click)="addInstruction()" class="fas fa-plus"></button>
-    <button type="button" (click)="removeLastInstruction()" class="fas fa-minus"></button>
-  </div>
-</div>
 
 <!-- Display loading spinner while loading -->
 <!-- 
