@@ -1,4 +1,5 @@
-using AutoMapper;
+﻿using AutoMapper;
+
 using Meal_Planner_Api.Dto;
 using Meal_Planner_Api.Interfaces;
 using Meal_Planner_Api.Models;
@@ -204,8 +205,10 @@ namespace Meal_Planner_Api.Controllers
         public IActionResult Refresh([FromBody]TokenDTO tokenDTO)
         {
 
+
             // Check if the token is valid if not send a new one
             if(tokenDTO is null)
+
                 return BadRequest("Invalid client request");
             string accessToken = tokenDTO.AccessToken;
             string refreshToken = tokenDTO.RefreshToken;
@@ -223,6 +226,7 @@ namespace Meal_Planner_Api.Controllers
                 AccessToken = newAccessToken,
                 RefreshToken = newRefreshToken
             });
+
         }
 
         // update user
