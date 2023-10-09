@@ -4,16 +4,21 @@ namespace Meal_Planner_Api.Services
     public class JwtTokenService : IJwtTokenService
     {
         private readonly DataContext _authContext;
+        private readonly IConfiguration _configuration;
 
-        public JwtTokenService(DataContext authContext)
+        public JwtTokenService(DataContext authContext, IConfiguration configuration)
         {
             _authContext = authContext;
+            _configuration = configuration;
         }
 
+        //create jwt token on login
         public string CreateJwtToken(User user)
         {
+            //get secret key from appsettings.json
+            var secretkey = _configuration.GetSection("JwtSettings:SecretKey").Value;
             var jwtTokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("iamabouttoblow.....");
+            var key = Encoding.ASCII.GetBytes(secretkey);
             var identity = new ClaimsIdentity(new Claim[]
             {
                 new Claim(ClaimTypes.Name, user.Username),
@@ -34,6 +39,7 @@ namespace Meal_Planner_Api.Services
             return jwtTokenHandler.WriteToken(token);
         }
 
+        //create refresh token
         public string CreateRefreshToken()
         {
             var tokenBytes = RandomNumberGenerator.GetBytes(64);
@@ -50,9 +56,12 @@ namespace Meal_Planner_Api.Services
             return refreshToken;
         }
 
+
+        //get principal from expired token
         public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
-            var key = Encoding.ASCII.GetBytes("iamabouttoblow.....");
+            var secretkey = _configuration.GetSection("JwtSettings:SecretKey").Value;
+            var key = Encoding.ASCII.GetBytes(secretkey);
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience = false,
