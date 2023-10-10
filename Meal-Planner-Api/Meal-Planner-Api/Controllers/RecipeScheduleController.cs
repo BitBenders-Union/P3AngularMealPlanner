@@ -1,4 +1,6 @@
 ﻿
+using Meal_Planner_Api.Models;
+
 namespace Meal_Planner_Api.Controllers
 {
     [Route("api/[controller]")]
@@ -24,7 +26,7 @@ namespace Meal_Planner_Api.Controllers
 
 
             if (schedule == null || schedule.Count() == 0)
-                return NotFound("Not Found");
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -38,7 +40,7 @@ namespace Meal_Planner_Api.Controllers
         public IActionResult Get(int id)
         {
             if (!_recipeScheduleRepository.RecipeScheduleExists(id))
-                return NotFound("Not Found");
+                return NotFound();
 
             var schedule = _mapper.Map<RecipeScheduleDTO>(_recipeScheduleRepository.GetRecipeSchedule(id));
 
@@ -79,7 +81,7 @@ namespace Meal_Planner_Api.Controllers
             }
 
 
-            return Ok("Success");
+            return Ok();
         }
 
 
@@ -89,11 +91,7 @@ namespace Meal_Planner_Api.Controllers
             if (scheduleData == null)
                 return BadRequest();
 
-            if (!_recipeScheduleRepository.RecipeScheduleExists(scheduleData.Id))
-                return NotFound("Not Found");
-
-
-            var getSchedule = _recipeScheduleRepository.GetRecipeSchedule(scheduleData.Id);
+            var getSchedule = _recipeScheduleRepository.GetRecipeSchedule(scheduleData.UserId, scheduleData.Row, scheduleData.Column);
 
             if (!_recipeScheduleRepository.UpdateRecipeInSchedule(getSchedule, scheduleData.RecipeId))
             {
@@ -101,7 +99,7 @@ namespace Meal_Planner_Api.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok("Success");
+            return Ok();
         }
 
     }

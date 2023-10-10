@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Recipe, Ingredient, WeekData } from '../Interfaces';
+import { Recipe, Ingredient, RecipeScheduleDTO, RecipeDTO } from '../Interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,8 @@ export class WeekScheduleService {
     return this.http.get(`${this.dataUrl}/RecipeSchedule`);
   }
 
-  updateData(updatedData: any): Observable<any> {
+  updateData(updatedData: RecipeScheduleDTO): Observable<any> {
+    console.log("updating database")
     return this.http.put(`${this.dataUrl}/RecipeSchedule/update`, updatedData);
   }
 
@@ -49,7 +50,7 @@ export class WeekScheduleService {
   // }
 
   // patch
-  updateScheduleEntry(weekData: WeekData): Observable<any>{
+  updateScheduleEntry(weekData: RecipeScheduleDTO): Observable<any>{
     return this.http.put(`${this.dataUrl}/RecipeSchedule/update`, weekData).pipe(error=>{
       console.log(error);
       return error;
