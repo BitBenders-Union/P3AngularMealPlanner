@@ -78,31 +78,12 @@ export class RecipeServiceService{
   }
 
   deleteRecipe(recipeId: number): Observable<any> {
-    return this.http.delete(`${this.url}/Recipe/delete/${recipeId}`).pipe(
-      catchError(error => {
-        console.error('Error deleting recipe:', error);
-        throw error;
-      })
-    );
+    return this.http.delete(`${this.url}/Recipe/delete/${recipeId}`);
   }
 
   //------------------- changing -------------------------------
   updateRecipe( recipeData: RecipeDTO, recipeId: number): Observable<any> {
     // Send a PUT request to the API
-    return this.http.put(`${this.url}/Recipe/update/${recipeId}`, recipeData)
+    return this.http.put(`${this.url}/Recipe/update/${recipeId}`, recipeData);
   }
-
-  //-------------------- before changes -------------------------------
-  // updateRecipe( recipeData: RecipeDTO, recipeId: number): Observable<any> {
-  //   // Send a PUT request to the API
-  //   return this.http.put(`${this.url}/Recipe/update/${recipeId}`, recipeData).pipe(
-  //     catchError(error => {
-  //       console.error('Error updating recipe:', error);
-  //       throw error;
-  //     })
-  //   );
-  // }
-
-  
-
 }

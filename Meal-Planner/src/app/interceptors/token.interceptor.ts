@@ -40,7 +40,7 @@ export class TokenInterceptor implements HttpInterceptor {
           }
 
           if(err.status === 404){
-            console.log("404 my ass");
+            console.log("404 Error");
           }
         }
         return throwError(() => new Error("Something went wrong new error",));

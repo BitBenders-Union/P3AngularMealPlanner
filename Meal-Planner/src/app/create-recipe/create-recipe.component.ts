@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, FormArray, FormControl, ReactiveFormsModule  } 
 import { Recipe, RecipeDTO } from '../Interfaces';
 import { RecipeServiceService } from '../service/recipe-service.service';
 import { LoginService } from '../service/login.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -21,7 +22,8 @@ export class CreateRecipeComponent implements OnInit {
   // we also inject the createRecipeService so we can fetch from our API
   constructor(private formBuilder: FormBuilder,
     private recipeService: RecipeServiceService,
-    private tokenService: LoginService
+    private tokenService: LoginService,
+    private router: Router
     ) {
     this.form = this.formBuilder.group({
       title: 'test',
@@ -163,12 +165,9 @@ export class CreateRecipeComponent implements OnInit {
         next: response => {
           console.log('Recipe created successfully', response);
           this.form.reset();
+          this.router.navigate([`/recipe-detail/${response}`])
         },
-        error: error => console.error('There was an error!', error),
-        complete: () => {
-          console.log('Completed');
-          this.onReset();
-          }
+        error: error => console.error('There was an error!', error)
         });
     } else {
       console.log('Form is invalid');

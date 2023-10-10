@@ -399,7 +399,9 @@ namespace Meal_Planner_Api.Controllers
 
             }
 
-            return Ok();
+            var recipeId = _recipeRepository.GetRecipeId(recipeData.Title);
+
+            return Ok(recipeId);
         }
 
         // Update recipe
@@ -762,7 +764,7 @@ namespace Meal_Planner_Api.Controllers
             }
 
 
-            return NoContent();
+            return Ok();
         }
 
 

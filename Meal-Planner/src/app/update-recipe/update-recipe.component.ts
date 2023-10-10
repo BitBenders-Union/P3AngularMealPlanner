@@ -203,14 +203,9 @@ export class UpdateRecipeComponent implements OnInit{
           this.router.navigate(['/recipe-detail/' + this.recipeId]);
         },
         error:(error) => {
-          console.error("Cunt error: ", error);
+          console.error("Update recipe error: ", error);
         }
       })
-      //----------- before change --------------
-      // console.log(recipeDTO);
-      // this.recipeService.updateRecipe(recipeDTO, this.recipeId!).subscribe(() => {
-      //   this.router.navigate(['/recipe-detail/' + this.recipeId]);
-      // });
     }
   }
 // test 1234
