@@ -24,7 +24,7 @@ export class TokenInterceptor implements HttpInterceptor {
       request = request.clone({
         setHeaders: {
           'Authorization':`Bearer ${myToken}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
         },
       });
     }
@@ -36,11 +36,14 @@ export class TokenInterceptor implements HttpInterceptor {
           //this gets error status 0 instate of 401 or other status code for some reason
           if(err.status === 401){
             console.log("401 error");
-            return this.handleUnAuthError(request, next);
-            
+            return this.handleUnAuthError(request, next); 
+          }
+
+          if(err.status === 404){
+            console.log("404 Error");
           }
         }
-        return throwError(() => new Error("Something went wrong new error"));
+        return throwError(() => new Error("Something went wrong new error",));
       })
     );
   }

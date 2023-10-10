@@ -12,7 +12,7 @@
 <!-- renders recipes based on searchbar -->
   <div class="recipes">
     <div *ngFor="let recipe of filteredRecipes" class="recipe-card" (click)="goToRecipeDetail(recipe)">
-     <h3>{{ recipe.title }}</h3>
+     <h2>{{ recipe.title }}</h2>
       <!-- Render other recipe details here -->
     </div>
   </div>
