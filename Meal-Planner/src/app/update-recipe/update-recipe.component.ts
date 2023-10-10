@@ -197,9 +197,20 @@ export class UpdateRecipeComponent implements OnInit{
       };
 
       console.log(recipeDTO);
-      this.recipeService.updateRecipe(recipeDTO, this.recipeId!).subscribe(() => {
-        this.router.navigate(['/recipe-detail/' + this.recipeId]);
-      });
+      this.recipeService.updateRecipe(recipeDTO, this.recipeId!).subscribe({
+        next:(data: any) => {
+          console.log("Success", data);
+          this.router.navigate(['/recipe-detail/' + this.recipeId]);
+        },
+        error:(error) => {
+          console.error("Cunt error: ", error);
+        }
+      })
+      //----------- before change --------------
+      // console.log(recipeDTO);
+      // this.recipeService.updateRecipe(recipeDTO, this.recipeId!).subscribe(() => {
+      //   this.router.navigate(['/recipe-detail/' + this.recipeId]);
+      // });
     }
   }
 // test 1234
