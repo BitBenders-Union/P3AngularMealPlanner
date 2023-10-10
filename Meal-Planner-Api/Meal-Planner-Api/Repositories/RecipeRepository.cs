@@ -173,5 +173,10 @@
             _context.Remove(recipe);
             return Save();
         }
+
+        public int GetRecipeId(string name)
+        {
+            return _context.Recipes.FirstOrDefault(r => r.Title == name).Id;
+        }
     }
 }
