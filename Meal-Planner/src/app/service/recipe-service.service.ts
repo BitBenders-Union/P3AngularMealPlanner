@@ -21,11 +21,14 @@ export class RecipeServiceService{
 
   getRecipes(): Observable<Recipe[]> {
     
-    const headers = new HttpHeaders().set('content-type', 'application/json')
+    // const headers = new HttpHeaders().set('content-type', 'application/json')
 
-    return this.http.get<Recipe[]>(`${this.url}/Recipe`, { headers }).pipe(
+    return this.http.get<Recipe[]>(`${this.url}/Recipe`).pipe(
       catchError(error => {
-        console.error('Error getting recipes:', error);
+        if(error.status === 404){
+          console.log("404 error ", error);
+        }
+        // console.error('Error getting recipes:', error);
         throw error;
       }));
   }
@@ -83,15 +86,22 @@ export class RecipeServiceService{
     );
   }
 
+  //------------------- changing -------------------------------
   updateRecipe( recipeData: RecipeDTO, recipeId: number): Observable<any> {
     // Send a PUT request to the API
-    return this.http.put(`${this.url}/Recipe/update/${recipeId}`, recipeData).pipe(
-      catchError(error => {
-        console.error('Error updating recipe:', error);
-        throw error;
-      })
-    );
+    return this.http.put(`${this.url}/Recipe/update/${recipeId}`, recipeData)
   }
+
+  //-------------------- before changes -------------------------------
+  // updateRecipe( recipeData: RecipeDTO, recipeId: number): Observable<any> {
+  //   // Send a PUT request to the API
+  //   return this.http.put(`${this.url}/Recipe/update/${recipeId}`, recipeData).pipe(
+  //     catchError(error => {
+  //       console.error('Error updating recipe:', error);
+  //       throw error;
+  //     })
+  //   );
+  // }
 
   
 
