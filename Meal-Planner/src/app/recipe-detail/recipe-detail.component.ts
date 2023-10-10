@@ -61,13 +61,28 @@ export class RecipeDetailComponent implements OnInit {
   deleteRecipe() {
     if (this.recipe) {
       if (confirm('Are you sure you want to delete this recipe?')) {
-        this.recipeService.deleteRecipe(this.recipe.id).subscribe(() => {
-          // Handle successful deletion (e.g., navigate back to the recipe list)
-          this.router.navigate(['/search']);
-        });
+        this.recipeService.deleteRecipe(this.recipe.id).subscribe({
+          next: () => {
+            // Handle successful deletion (e.g., navigate back to the recipe list)
+            this.router.navigate(['/search']);
+          },
+          error: (error) => {
+            console.error("Recipe delete Error: ",error);
+          }
+        })
       }
     }
   }
+  // deleteRecipe() {
+  //   if (this.recipe) {
+  //     if (confirm('Are you sure you want to delete this recipe?')) {
+  //       this.recipeService.deleteRecipe(this.recipe.id).subscribe(() => {
+  //         // Handle successful deletion (e.g., navigate back to the recipe list)
+  //         this.router.navigate(['/search']);
+  //       });
+  //     }
+  //   }
+  // }
 
 
 
