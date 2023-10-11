@@ -33,7 +33,8 @@ export class WeekScheduleComponent implements OnInit {
   savedRecipes: Recipe[] = [];
 
 
-  constructor(private weekScheduleService: WeekScheduleService, 
+  constructor(private weekScheduleService: WeekScheduleService,
+    private recipeService: RecipeServiceService,
     private starService: StarService,
     private router:Router, 
     private route: ActivatedRoute, 
@@ -41,15 +42,8 @@ export class WeekScheduleComponent implements OnInit {
     private auth: LoginService ) {}
 
   ngOnInit(): void {
-    // get user id from url
-    // get week schedule data from user id
-    // remember to change to actual user ID instead of 1
     this.getScheduleData(this.auth.getIdFromToken());
-
-    this.loadCellContents(); // Load cell contents when the component initializes
-
-    
-}
+  }
 
     // Handles the dropping of recipes into time slots
   Drop(event: CdkDragDrop<Recipe[]>, rowIndex: number, colIndex: number): void {
@@ -74,12 +68,40 @@ export class WeekScheduleComponent implements OnInit {
       // Emit ingredients to update shopping list
       this.shoppingListUpdated.emit(newRecipe.ingredients);
 
+      console.log("ROW:" + rowIndex + " COL:" + colIndex)
+
       // Save the updated cellContents to db
       this.saveCellContents(rowIndex, colIndex);
       console.log(this.cellContents[colIndex][rowIndex]);
     }
   }
   
+  // get week scheduel data from user id
+  // store it in schedule
+  // populate cellcontents with recipes from schedule
+  // fetch recipes from database when needed
+  // emit shopping list updates when needed
+
+  initializeCells(): void {
+    // Loop through schedule
+    this.schedule.forEach((entry) => {
+      // Check if recipeId is not null
+      if (entry.recipeId !== null) {
+        let newRecipe: Recipe;
+        // console.log(entry.recipeId  + " a " + entry.Row + " b " + entry.Column)
+        this.recipeService.getRecipeById(entry.recipeId).subscribe({
+          next: (data) => {
+            newRecipe = data;
+            // console.log(this.cellContents[entry.Row][entry.Column]);
+            this.cellContents[entry.row][entry.column] = newRecipe;
+          },
+          error: (err) => console.log(err),
+        });
+      }
+    });
+  }
+  
+
 
 // Handles the removal of a recipe from the schedule
 // rowIndex: The index of the row (weekday) where the recipe is located
@@ -109,29 +131,18 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
  // Saves the cellContents to the server
  private saveCellContents(rowIndex: number, colIndex: number): void {
     const updatedData: RecipeScheduleDTO = {
-      Row: colIndex,
-      Column: rowIndex,
+      row: colIndex,
+      column: rowIndex,
       recipeId: this.cellContents[colIndex][rowIndex].id,
       user: {
         Id: this.auth.getIdFromToken(),
         Username: this.auth.getUsernameFromToken()
       }
     };
-    console.log(updatedData);
     this.weekScheduleService.updateData(updatedData).subscribe();
   }
 
-  // Loads cellContents from the server
-  private loadCellContents(): void {
-    this.weekScheduleService.getData().subscribe((data: Recipe[][]) => {
-      this.cellContents = data;
-    });
-    this.cellContents.forEach((row) => {
-      // logs the element at index 0 of each row
-      console.log(row[0]);
-    });
 
-  }
 
 
   // get week schedule data from user id
@@ -144,22 +155,13 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
               this.schedule = data
             },
             error: (err) => console.log(err),
+            complete: () => {
+              this.initializeCells()
+            }
         })
   }
 
-  // gets recipes from an array of recipe ids
-  // is called in getScheduleData
-  // stores it in savedRecipes
-  getRecipes(recipIds: number[]): void{
-    this.weekScheduleService.getScheduledRecipes(recipIds)
-        .subscribe({
-            next: (data) => {
-              // console.log(data)
-              this.savedRecipes = data;
-            },
-            error: (err) => console.log(err),
-        })
-  }
+
 
 
 
