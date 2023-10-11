@@ -4,8 +4,6 @@ import { Recipe, Ingredient, RecipeScheduleDTO } from '../Interfaces';
 import { WeekScheduleService } from '../service/week-schedule.service';
 import { StarService } from '../service/star.service';
 import { RecipeServiceService } from '../service/recipe-service.service';
-import { Observable } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
 import { UserStoreService } from '../service/user-store.service';
 import { LoginService } from '../service/login.service';
 
@@ -38,15 +36,13 @@ export class WeekScheduleComponent implements OnInit {
   constructor(private weekScheduleService: WeekScheduleService,
     private recipeService: RecipeServiceService,
     private starService: StarService,
-    private router:Router, 
-    private route: ActivatedRoute, 
     private userStore: UserStoreService, 
     private auth: LoginService ) {}
 
   ngOnInit(): void {
     this.userStore.getIdFromStore().subscribe(val =>{
       let id = this.auth.getIdFromToken();
-      this.userId = id;
+      this.userId = val || id;
       this.getScheduleData(this.userId);
     })
   }

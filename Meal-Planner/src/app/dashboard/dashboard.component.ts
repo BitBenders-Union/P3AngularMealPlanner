@@ -37,13 +37,6 @@ export class DashboardComponent implements OnInit{
         // console.log(this.userName);
       })
 
-      this.userStore.getIdFromStore()
-      .subscribe(val =>{
-        let id = this.auth.getIdFromToken();
-        this.userId = val || id;
-        // console.log(this.userId);
-      })
-
       // this.auth.testApi().subscribe((data: any) =>{
       //   this.testthing = data;
       //   console.log(this.testthing);
