@@ -55,6 +55,7 @@ export class LoginService {
 
   signOut(){
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     this.router.navigate(['login']);
   }
 
