@@ -26,13 +26,13 @@ export class CreateRecipeComponent implements OnInit {
     private router: Router
     ) {
     this.form = this.formBuilder.group({
-      title: 'test',
-      category: 'test',
-      description: 'test',
-      prepTime: 123,
-      cookTime: 123,
-      servings: 123,
-      rating: 1.5,
+      title: '',
+      category: '',
+      description: '',
+      prepTime: 0,
+      cookTime: 0,
+      servings: 0,
+      rating: 0,
       ingredients: this.formBuilder.array([]),
       instructions: this.formBuilder.array([]),
     });
