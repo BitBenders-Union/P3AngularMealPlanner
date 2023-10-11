@@ -23,6 +23,7 @@ export class WeekScheduleComponent implements OnInit {
 
   isDragging = false; // Flag to indicate dragging state
 
+  public userId: number = 0;
   // Holds the recipes/events for each time slot and day
   cellContents: Recipe[][] = Array.from({ length: this.timeSlots.length }, () =>
     Array(this.days.length).fill(null)
@@ -32,6 +33,7 @@ export class WeekScheduleComponent implements OnInit {
   schedule: RecipeScheduleDTO[] = [];
   savedRecipes: Recipe[] = [];
 
+  
 
   constructor(private weekScheduleService: WeekScheduleService,
     private recipeService: RecipeServiceService,
@@ -42,7 +44,11 @@ export class WeekScheduleComponent implements OnInit {
     private auth: LoginService ) {}
 
   ngOnInit(): void {
-    this.getScheduleData(this.auth.getIdFromToken());
+    this.userStore.getIdFromStore().subscribe(val =>{
+      let id = this.auth.getIdFromToken();
+      this.userId = id;
+      this.getScheduleData(this.userId);
+    })
   }
 
     // Handles the dropping of recipes into time slots
