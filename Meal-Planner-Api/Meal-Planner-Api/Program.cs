@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
             policy.WithOrigins(allowedOrigins)
                   .AllowAnyHeader()
                   .WithHeaders("Content-Type", "Authorization", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin")
-                  .WithMethods("GET", "POST", "PUT", "DELETE");
+                  .WithMethods("GET", "POST", "PUT", "DELETE", "PATCH");
         });
 });
 
