@@ -123,5 +123,10 @@ export interface CategoryDTO {
     Row: number;
     Column: number;
     recipeId: number;
-    userId: number;
+    user: UserOnlyName;
+  }
+
+  export interface UserOnlyName{
+    Id: number; 
+    Username: string;
   }
