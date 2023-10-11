@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Recipe, Ingredient, WeekData } from '../Interfaces';
+import { Recipe, Ingredient, RecipeScheduleDTO } from '../Interfaces';
 import { WeekScheduleService } from '../service/week-schedule.service';
 import { StarService } from '../service/star.service';
 import { RecipeServiceService } from '../service/recipe-service.service';
@@ -30,26 +30,27 @@ export class WeekScheduleComponent implements OnInit {
 
   userID: number = 0;
 
-  test: WeekData[] = [];
+  schedule: RecipeScheduleDTO[] = [];
   savedRecipes: Recipe[] = [];
 
 
-  constructor(private weekScheduleService: WeekScheduleService, public starService: StarService,
-    private router:Router, private route: ActivatedRoute, private userStore: UserStoreService, private auth: LoginService ) {}
+  constructor(private weekScheduleService: WeekScheduleService, 
+    private starService: StarService,
+    private router:Router, 
+    private route: ActivatedRoute, 
+    private userStore: UserStoreService, 
+    private auth: LoginService ) {}
 
   ngOnInit(): void {
     // get user id from url
-    this.userStore.getUserFromStore()
-      .subscribe(val =>{
-        let userIdFromToken = this.auth.getIdFromToken();
-        this.userID = val || userIdFromToken;
-        // console.log(this.userName);
-      })
-    this.loadCellContents(); // Load cell contents when the component initializes
-
+    this.userID = this.auth.getIdFromToken();
     // get week schedule data from user id
     // remember to change to actual user ID instead of 1
-    // this.getScheduleData(this.userID);
+    this.getScheduleData(this.userID);
+
+    this.loadCellContents(); // Load cell contents when the component initializes
+
+    
 }
 
     // Handles the dropping of recipes into time slots
@@ -76,7 +77,8 @@ export class WeekScheduleComponent implements OnInit {
       this.shoppingListUpdated.emit(newRecipe.ingredients);
 
       // Save the updated cellContents
-      this.saveCellContents();
+      this.saveCellContents(rowIndex, colIndex);
+      console.log(this.cellContents[colIndex][rowIndex]);
     }
   }
   
@@ -98,18 +100,24 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
       ]);
     });
 
-    // Mark the recipe as deleted by setting the 'deleted' property to true
-    // deletedRecipe.deleted = true;
+
 
     // Save the updated cellContents to the server
-    this.saveCellContents();
+    this.saveCellContents(rowIndex, colIndex);
   }
 }
 
 
  // Saves the cellContents to the server
- private saveCellContents(): void {
-  this.weekScheduleService.updateData(this.cellContents).subscribe();
+ private saveCellContents(rowIndex: number, colIndex: number): void {
+    const updatedData: RecipeScheduleDTO = {
+      Row: rowIndex,
+      Column: colIndex,
+      recipeId: this.cellContents[colIndex][rowIndex].id,
+      userId: this.userID,
+    };
+    console.log(updatedData);
+    // this.weekScheduleService.updateData(updatedData).subscribe();
   }
 
   // Loads cellContents from the server
@@ -117,37 +125,40 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
     this.weekScheduleService.getData().subscribe((data: Recipe[][]) => {
       this.cellContents = data;
     });
+    this.cellContents.forEach((row) => {
+      // logs the element at index 0 of each row
+      console.log(row[0]);
+    });
+
   }
 
 
   // get week schedule data from user id
   // stores it in test
-  // getScheduleData(userID: number): void {
-  //   // console.log("dumb cunt id: ", userID)
-  //   this.weekScheduleService.getWeekScheduleData(userID)
-  //       .subscribe({
-  //           next: (data) => {
-  //             this.test = data
-  //             const recipeIDs = data.map((item: WeekData) => item.recipeId);
-  //             this.getRecipes(recipeIDs);
-  //           },
-  //           error: (err) => console.log(err),
-  //       })
-  // }
+  getScheduleData(userID: number): void {
+    
+    this.weekScheduleService.getWeekScheduleData(userID)
+        .subscribe({
+            next: (data) => {
+              this.schedule = data
+            },
+            error: (err) => console.log(err),
+        })
+  }
 
-  // // gets recipes from an array of recipe ids
-  // // is called in getScheduleData
-  // // stores it in savedRecipes
-  // getRecipes(recipIds: number[]): void{
-  //   this.weekScheduleService.getScheduledRecipes(recipIds)
-  //       .subscribe({
-  //           next: (data) => {
-  //             // console.log(data)
-  //             this.savedRecipes = data;
-  //           },
-  //           error: (err) => console.log(err),
-  //       })
-  // }
+  // gets recipes from an array of recipe ids
+  // is called in getScheduleData
+  // stores it in savedRecipes
+  getRecipes(recipIds: number[]): void{
+    this.weekScheduleService.getScheduledRecipes(recipIds)
+        .subscribe({
+            next: (data) => {
+              // console.log(data)
+              this.savedRecipes = data;
+            },
+            error: (err) => console.log(err),
+        })
+  }
 
 
 

@@ -119,10 +119,9 @@ export interface CategoryDTO {
 
 
 
-  export interface WeekData{
-    WeekDataId: number;
-    userId: number;
-    row: number;
-    column: number;
+  export interface RecipeScheduleDTO{
+    Row: number;
+    Column: number;
     recipeId: number;
+    userId: number;
   }
