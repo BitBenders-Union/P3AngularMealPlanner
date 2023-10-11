@@ -31,8 +31,7 @@
             CreateMap<Recipe, RecipeDTO>();
             CreateMap<RecipeDTO, Recipe>();
 
-            CreateMap<RecipeSchedule, RecipeScheduleDTO>()
-                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User.Id));
+            CreateMap<RecipeSchedule, RecipeScheduleDTO>();
 
             CreateMap<RecipeScheduleDTO, RecipeSchedule>();
 

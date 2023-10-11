@@ -55,7 +55,7 @@ namespace Meal_Planner_Api.Controllers
         [HttpGet("byUserId/{userId}")]
         public IActionResult GetByUserId(int userId)
         {
-            var schedule = _mapper.Map<RecipeScheduleDTO>(_recipeScheduleRepository.GetRecipeScheduleForUser(userId));
+            var schedule = _recipeScheduleRepository.GetRecipeScheduleForUser(userId);
 
             if (schedule == null)
                 return NotFound("Not Found");
@@ -63,7 +63,28 @@ namespace Meal_Planner_Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(schedule);
+
+            List<RecipeScheduleDTO> userSchedules = new();
+            foreach (var sched in schedule)
+            {
+
+                RecipeScheduleDTO scheduleDTO = new RecipeScheduleDTO
+                {
+                    Row = sched.Row,
+                    Column = sched.Column,
+                    RecipeId = sched.RecipeId,
+                    User = new UserOnlyNameDTO
+                    {
+                        Id = sched.User.Id,
+                        Username = sched.User.Username
+                    }
+
+                };
+
+                userSchedules.Add(scheduleDTO);
+            }
+
+            return Ok(userSchedules);
         }
 
         [HttpPost]
@@ -91,7 +112,7 @@ namespace Meal_Planner_Api.Controllers
             if (scheduleData == null)
                 return BadRequest();
 
-            var getSchedule = _recipeScheduleRepository.GetRecipeSchedule(scheduleData.UserId, scheduleData.Row, scheduleData.Column);
+            var getSchedule = _recipeScheduleRepository.GetRecipeSchedule(scheduleData.User.Id, scheduleData.Row, scheduleData.Column);
 
             if (!_recipeScheduleRepository.UpdateRecipeInSchedule(getSchedule, scheduleData.RecipeId))
             {

@@ -8,34 +8,36 @@
         {
             _context = context;
         }
-        public RecipeSchedule GetRecipeScheduleForUser(int userId)
+        public List<RecipeSchedule> GetRecipeScheduleForUser(int userId)
         {
-            // this can't work properly since a user has 21 entries in the recipe schedule table
-            // I guess it just takes the first
             var recipeScheudle = _context.RecipeSchedules.Include(x => x.User)
-                .FirstOrDefault(x => x.User.Id == userId);
+                .Where(x => x.User.Id == userId)
+                .ToList();
 
             return recipeScheudle;
         }
 
         public ICollection<RecipeSchedule> GetRecipeSchedules()
         {
-            return _context.RecipeSchedules.OrderBy(x => x.Id).Include(x => x.User).ToList();
+            return _context.RecipeSchedules.OrderBy(x => x.Id)
+                .Include(x => x.User)
+                .ToList();
         }
 
         public RecipeSchedule GetRecipeSchedule(int recipeScheduleId)
         {
-            return _context.RecipeSchedules.Include(x => x.User).FirstOrDefault(x => x.Id == recipeScheduleId);
+            return _context.RecipeSchedules.Include(x => x.User)
+                .FirstOrDefault(x => x.Id == recipeScheduleId);
         }
 
         public bool RecipeScheduleExists(int userId)
         {
             // finds recipe schedule where user.id is == userId
             var recipeSchedule = _context.RecipeSchedules.Include(x => x.User)
-                .Select(x => x.User.Id == userId);
+                 .Any(x => x.User.Id == userId);
 
             // returns true if any exists
-            return recipeSchedule.Any();
+            return recipeSchedule;
         }
 
         public bool CreateRecipeSchedule(RecipeSchedule recipeSchedule)
@@ -47,7 +49,7 @@
         public bool Save()
         {
             var saved = _context.SaveChanges();
-            return saved > 0 ? true : false;
+            return saved > 0;
         }
 
         public bool UpdateRecipeInSchedule(RecipeSchedule recipeSchedule, int? recipeId)
