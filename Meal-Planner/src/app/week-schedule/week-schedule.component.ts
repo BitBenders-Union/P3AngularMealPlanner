@@ -28,7 +28,6 @@ export class WeekScheduleComponent implements OnInit {
     Array(this.days.length).fill(null)
   );
 
-  userID: number = 0;
 
   schedule: RecipeScheduleDTO[] = [];
   savedRecipes: Recipe[] = [];
@@ -43,10 +42,9 @@ export class WeekScheduleComponent implements OnInit {
 
   ngOnInit(): void {
     // get user id from url
-    this.userID = this.auth.getIdFromToken();
     // get week schedule data from user id
     // remember to change to actual user ID instead of 1
-    this.getScheduleData(this.userID);
+    this.getScheduleData(this.auth.getIdFromToken());
 
     this.loadCellContents(); // Load cell contents when the component initializes
 
@@ -111,10 +109,13 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
  // Saves the cellContents to the server
  private saveCellContents(rowIndex: number, colIndex: number): void {
     const updatedData: RecipeScheduleDTO = {
-      Row: rowIndex,
-      Column: colIndex,
+      Row: colIndex,
+      Column: rowIndex,
       recipeId: this.cellContents[colIndex][rowIndex].id,
-      userId: this.userID,
+      user: {
+        Id: this.auth.getIdFromToken(),
+        Username: this.auth.getUsernameFromToken()
+      }
     };
     console.log(updatedData);
     this.weekScheduleService.updateData(updatedData).subscribe();
