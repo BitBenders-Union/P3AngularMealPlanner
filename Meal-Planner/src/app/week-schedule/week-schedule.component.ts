@@ -71,12 +71,12 @@ export class WeekScheduleComponent implements OnInit {
 
       // Update the cellContents with the new recipe
       this.cellContents[colIndex][rowIndex] = newRecipe;
-      // this.cellContents[colIndex][rowIndex].deleted = false;
+
 
       // Emit ingredients to update shopping list
       this.shoppingListUpdated.emit(newRecipe.ingredients);
 
-      // Save the updated cellContents
+      // Save the updated cellContents to db
       this.saveCellContents(rowIndex, colIndex);
       console.log(this.cellContents[colIndex][rowIndex]);
     }
@@ -117,7 +117,7 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
       userId: this.userID,
     };
     console.log(updatedData);
-    // this.weekScheduleService.updateData(updatedData).subscribe();
+    this.weekScheduleService.updateData(updatedData).subscribe();
   }
 
   // Loads cellContents from the server
