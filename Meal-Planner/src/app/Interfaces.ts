@@ -120,8 +120,8 @@ export interface CategoryDTO {
 
 
   export interface RecipeScheduleDTO{
-    Row: number;
-    Column: number;
+    row: number;
+    column: number;
     recipeId: number;
     user: UserOnlyName;
   }

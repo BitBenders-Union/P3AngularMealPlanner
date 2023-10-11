@@ -52,16 +52,6 @@ export class RecipeServiceService{
       }));
   }
 
-  // // temporary method that gets data from json file instead of api
-  // getRecipeFromJson(id: number): Observable<Recipe | undefined> {
-  //   return this.http.get<Recipe[]>(this.url).pipe(
-  //     map((data) => {
-  //       const recipe = data.find((x) => x.id === id);
-  //       return recipe;
-  //     })
-  //   );
-  // }
-
 
   createRecipe(recipeData: RecipeDTO): Observable<any> {
     const headers = new HttpHeaders({
