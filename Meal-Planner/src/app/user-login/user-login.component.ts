@@ -28,7 +28,6 @@ export class UserLoginComponent implements OnInit{
 
   ngOnInit(): void {
     this.loginService.signOut();
-
   }
 
   onSubmit(): void{
