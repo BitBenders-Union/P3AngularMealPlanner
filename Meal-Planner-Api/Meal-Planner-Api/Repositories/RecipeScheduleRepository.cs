@@ -10,6 +10,8 @@
         }
         public RecipeSchedule GetRecipeScheduleForUser(int userId)
         {
+            // this can't work properly since a user has 21 entries in the recipe schedule table
+            // I guess it just takes the first
             var recipeScheudle = _context.RecipeSchedules.Include(x => x.User)
                 .FirstOrDefault(x => x.User.Id == userId);
 
@@ -53,6 +55,11 @@
             recipeSchedule.RecipeId = recipeId;
             _context.Update(recipeSchedule);
             return Save();
+        }
+
+        public RecipeSchedule GetRecipeSchedule(int userId, int row, int col)
+        {
+            return _context.RecipeSchedules.FirstOrDefault(x => x.User.Id == userId && x.Row == row && x.Column == col);
         }
     }
 }
