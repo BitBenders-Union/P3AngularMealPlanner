@@ -37,7 +37,7 @@ export class UserRegisterComponent {
 
       this.loginService.createLogin(userData).subscribe({
         next: (data: any) => {
-          console.log('Register success', data);
+          // console.log('Register success', data);
           this.router.navigate(['/login']);
         },
 

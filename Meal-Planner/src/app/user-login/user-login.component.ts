@@ -51,6 +51,7 @@ export class UserLoginComponent implements OnInit{
         }
       })
     }
+    this.loginForm.reset();
   }
 
 }

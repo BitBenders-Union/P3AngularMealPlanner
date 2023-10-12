@@ -122,7 +122,7 @@ export interface CategoryDTO {
   export interface RecipeScheduleDTO{
     row: number;
     column: number;
-    recipeId: number;
+    recipeId?: number;
     user: UserOnlyName;
   }
 
