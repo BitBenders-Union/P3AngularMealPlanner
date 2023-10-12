@@ -33,3 +33,13 @@
   .navbar a:hover {
     color: var(--color-button-hover); /* Change text color on hover */
   }
+
+  @media screen and (max-width: 700px) {
+
+  a{
+    font-size: medium;
+    font-size: 10px;
+  }
+
+}
+    
