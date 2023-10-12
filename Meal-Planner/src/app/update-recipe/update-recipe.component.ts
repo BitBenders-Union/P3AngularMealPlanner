@@ -4,6 +4,7 @@ import { RecipeServiceService } from '../service/recipe-service.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, FormControl, AbstractControl } from '@angular/forms';
 import { LoginService } from '../service/login.service';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-update-recipe',
@@ -18,6 +19,11 @@ export class UpdateRecipeComponent implements OnInit{
 
 
   categories: string[] = [];
+  initialCategories: string[] = [];
+  allCateogries: string[] = [];
+
+  private searchInputSubject = new Subject<string>();
+
 
   get instructions(): FormArray {
     return this.updateForm.get('instructions') as FormArray;
@@ -109,17 +115,54 @@ export class UpdateRecipeComponent implements OnInit{
       }
     });
 
-    this.recipeService.getCategories().subscribe(categories => {
-      this.categories = categories.map(category => category.categoryName)
+    this.recipeService.getCategories().subscribe({
+      next: categories => {
+        this.allCateogries = categories.map(category => category.categoryName);
+      },
+      error: error => console.error('There was an error!', error),
+      complete: () => {
+        this.categories = this.GetRandomElementsFromArray(this.allCateogries, 5);
+        this.initialCategories = [...this.categories];
+
+        this.searchInputSubject
+        .pipe(debounceTime(200), distinctUntilChanged())
+        .subscribe(searchTerm => {
+          // Apply filtering when the search term changes
+          this.filterCategories(searchTerm);
+        });
+
+      }
     });
-
-
-
-
 
   }
 
+  GetRandomElementsFromArray(array: string[], numberOfElements: number): string[] {
+    const shuffledArray = [...array];
 
+    // Fisher-Yates shuffle algorithm to shuffle the array
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+    }
+
+    // Take the first 'count' elements
+    return shuffledArray.slice(0, numberOfElements);
+  }
+
+  filterCategories(searchTerm: string) {
+    if(!this.updateForm.get('category')?.value)
+    {
+      this.categories = [...this.initialCategories];
+      return;
+    }
+    this.categories = this.allCateogries.filter(cat =>
+      cat.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
+
+  onSearchInputChanged(event: Event) {
+    this.searchInputSubject.next(this.updateForm.get('category')?.value);
+  }
 
 
   addIngredient(): void {

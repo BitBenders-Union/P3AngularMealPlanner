@@ -32,10 +32,11 @@
         class="input-field"
         formControlName="category"
         [matAutocomplete]="auto"
+        (keyup)="onSearchInputChanged($event)"
+        (keyup.enter)="filterCategories(form.get('category')?.value)"
         required>
-
-
       </label>
+      
       <label>Description: <input required formControlName="description" class="input-field" /></label>
       <label>Preparation Time: <input required formControlName="prepTime" type="number" class="input-field" min="0" (input)="aboveZero($event.target!, 'prepTime')"/></label>
       <label>Cooking Time: <input required formControlName="cookTime" type="number" class="input-field" min="0" (input)="aboveZero($event.target!, 'cookTime')"/></label>

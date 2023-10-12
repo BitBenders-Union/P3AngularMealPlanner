@@ -23,6 +23,8 @@
         class="input-field"
         formControlName="category"
         [matAutocomplete]="auto"
+        (keyup)="onSearchInputChanged($event)"
+        (keyup.enter)="filterCategories(updateForm.get('category')?.value)"
         required>
 
         <label>Description: <input required formControlName="description" class="input-field" type="text"/></label>
