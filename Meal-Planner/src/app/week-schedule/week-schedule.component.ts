@@ -142,9 +142,6 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
     this.weekScheduleService.updateData(updatedData).subscribe();
   }
 
-
-
-
   // get week schedule data from user id
   // stores it in test
   getScheduleData(userID: number): void {
@@ -160,10 +157,5 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
             }
         })
   }
-
-
-
-
-
 
 }
