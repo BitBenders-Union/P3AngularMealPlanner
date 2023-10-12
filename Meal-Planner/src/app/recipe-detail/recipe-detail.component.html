@@ -4,12 +4,12 @@
 
       <h2>{{ recipe.title }}</h2>
 
-      <!-- <div class="rating">
-        <ng-container *ngFor="let star of starService.getRatingStars(recipe.rating)">
+      <div class="rating">
+        <ng-container *ngFor="let star of starService.getRatingStars(recipe.ratings[0]!.score)">
           <i class="fas fa-star" *ngIf="star === true"></i>
           <i class="fas fa-star-half-alt" *ngIf="star === 'half'"></i>
         </ng-container>
-      </div> -->
+      </div>
       
       <div class="description">
         <p><i>{{ recipe.description }}</i></p>

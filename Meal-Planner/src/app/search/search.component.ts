@@ -4,6 +4,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { RecipeServiceService } from '../service/recipe-service.service'; // Import the service for fetching recipes
 import { Recipe } from '../Interfaces'; // Import the Recipe interface
+import { StarService } from '../service/star.service';
 
 @Component({
   selector: 'app-search',
@@ -37,7 +38,10 @@ export class SearchComponent implements OnInit {
 
 
   // Inject the Router and RecipeServiceService
-  constructor(private router: Router, private recipeService: RecipeServiceService) {
+  constructor(private router: Router,
+              private recipeService: RecipeServiceService,
+              public starService: StarService
+              ) {
     
   }
 
