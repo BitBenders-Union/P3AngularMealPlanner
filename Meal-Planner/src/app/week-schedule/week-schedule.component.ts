@@ -35,7 +35,7 @@ export class WeekScheduleComponent implements OnInit {
 
   constructor(private weekScheduleService: WeekScheduleService,
     private recipeService: RecipeServiceService,
-    private starService: StarService,
+    public starService: StarService,
     private userStore: UserStoreService, 
     private auth: LoginService ) {}
 

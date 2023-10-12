@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, FormControl, ReactiveFormsModule  } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl, ReactiveFormsModule, AbstractControl  } from '@angular/forms';
 import { Recipe, RecipeDTO } from '../Interfaces';
 import { RecipeServiceService } from '../service/recipe-service.service';
 import { LoginService } from '../service/login.service';
@@ -32,13 +32,13 @@ export class CreateRecipeComponent implements OnInit {
     private router: Router
     ) {
     this.form = this.formBuilder.group({
-      title: '',
-      category: '',
-      description: '',
-      prepTime: 0,
-      cookTime: 0,
-      servings: 0,
-      rating: 0,
+      title: null,
+      category: null,
+      description: null,
+      prepTime: null,
+      cookTime: null,
+      servings: null,
+      rating: null,
       ingredients: this.formBuilder.array([]),
       instructions: this.formBuilder.array([]),
     });
@@ -56,8 +56,15 @@ export class CreateRecipeComponent implements OnInit {
       },
       error: error => console.error('There was an error!', error),
       complete: () => {
-        this.categories = this.GetRandomElementsFromArray(this.allCateogries, 5);
-        this.initialCategories = [...this.categories];
+        
+        if(this.allCateogries.length >= 5){
+          this.categories = this.GetRandomElementsFromArray(this.allCateogries, 5);
+          this.initialCategories = [...this.categories];
+        }
+        else{
+          this.categories = [...this.allCateogries];
+          this.initialCategories = [...this.categories];
+        }
 
         this.searchInputSubject
         .pipe(debounceTime(200), distinctUntilChanged())
@@ -214,11 +221,36 @@ export class CreateRecipeComponent implements OnInit {
     } else {
       console.log('Form is invalid');
     }
-    this.loading = false
 
+    this.loading = false
+    this.markAllAsTouched(this.form)
+    this.markFormArrayControlsAsTouched(this.form.get('ingredients') as FormArray);
+    this.markFormArrayControlsAsTouched(this.form.get('instructions') as FormArray);
 
   }
   
+  markAllAsTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach(control => {
+      if (control instanceof FormGroup) {
+        this.markAllAsTouched(control);
+      } else {
+        control.markAsTouched();
+      }
+    });
+  }
+
+  markFormArrayControlsAsTouched(formArray: FormArray) {
+    formArray.controls.forEach((control: AbstractControl) => {
+      if (control instanceof FormGroup) {
+        Object.values(control.controls).forEach(ctrl => {
+          ctrl.markAsTouched();
+        });
+      }
+    });
+  }
+  
+  
+
   // this is to reset the form
   // since the button with type reset, deletes all inputs but doesn't take into account the number of arrays
   // we also need to reset the arrays to 1

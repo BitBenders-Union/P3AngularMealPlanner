@@ -47,7 +47,7 @@
 }
 
 .rating i {
-  color: gold;
+  color: var(--color-button-hover);
   margin-right: 2px;
 }
 
