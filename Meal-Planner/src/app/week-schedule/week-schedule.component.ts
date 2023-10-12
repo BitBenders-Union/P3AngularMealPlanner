@@ -70,11 +70,9 @@ export class WeekScheduleComponent implements OnInit {
       // Emit ingredients to update shopping list
       this.shoppingListUpdated.emit(newRecipe.ingredients);
 
-      console.log("ROW:" + rowIndex + " COL:" + colIndex)
 
       // Save the updated cellContents to db
       this.saveCellContents(rowIndex, colIndex, newRecipe.id);
-      console.log(this.cellContents[colIndex][rowIndex]);
     }
   }
   
@@ -90,11 +88,9 @@ export class WeekScheduleComponent implements OnInit {
       // Check if recipeId is not null
       if (entry.recipeId !== null) {
         let newRecipe: Recipe;
-        // console.log(entry.recipeId  + " a " + entry.Row + " b " + entry.Column)
         this.recipeService.getRecipeById(entry.recipeId!).subscribe({
           next: (data) => {
             newRecipe = data;
-            // console.log(this.cellContents[entry.Row][entry.Column]);
             this.cellContents[entry.row][entry.column] = newRecipe;
             this.shoppingListUpdated.emit(newRecipe.ingredients);
           },

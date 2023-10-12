@@ -46,6 +46,11 @@
 width: 20%; /* Adjust the width as needed */
 }
 
+.login-button{
+    width: 20%; /* Adjust the width as needed */
+    margin-left: 20%;
+}
+
 .confirm-button {
     margin-left: 10px;
 }

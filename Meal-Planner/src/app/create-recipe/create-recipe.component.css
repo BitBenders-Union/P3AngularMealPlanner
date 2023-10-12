@@ -150,3 +150,37 @@ margin-left: 10px;
 .input-field.ng-invalid {
   border: 1px solid red;
 }
+
+ @media screen and (max-width: 1200px) {
+  .ingredient-group{
+    flex-direction: column;
+    
+  }
+ }
+
+@media screen and (max-width: 800px) {
+  .recipe-form {
+    width: 80vw;
+    margin-top: 10vh;
+  }
+
+
+
+}
+
+@media screen and (max-width: 600px){
+
+  .recipe-form {
+    width: 80vw;
+    margin-top: 20vh;
+  }
+
+
+  .cancel-button, .confirm-button {
+    font-size: 0.8em;
+    text-align: center;
+    width: 80px; /* Adjust the width as needed */
+    height: 40px; /* Adjust the height as needed */
+  }
+  
+}
