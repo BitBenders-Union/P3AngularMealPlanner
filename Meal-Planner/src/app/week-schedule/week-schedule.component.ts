@@ -73,7 +73,7 @@ export class WeekScheduleComponent implements OnInit {
       console.log("ROW:" + rowIndex + " COL:" + colIndex)
 
       // Save the updated cellContents to db
-      this.saveCellContents(rowIndex, colIndex);
+      this.saveCellContents(rowIndex, colIndex, newRecipe.id);
       console.log(this.cellContents[colIndex][rowIndex]);
     }
   }
@@ -91,11 +91,12 @@ export class WeekScheduleComponent implements OnInit {
       if (entry.recipeId !== null) {
         let newRecipe: Recipe;
         // console.log(entry.recipeId  + " a " + entry.Row + " b " + entry.Column)
-        this.recipeService.getRecipeById(entry.recipeId).subscribe({
+        this.recipeService.getRecipeById(entry.recipeId!).subscribe({
           next: (data) => {
             newRecipe = data;
             // console.log(this.cellContents[entry.Row][entry.Column]);
             this.cellContents[entry.row][entry.column] = newRecipe;
+            this.shoppingListUpdated.emit(newRecipe.ingredients);
           },
           error: (err) => console.log(err),
         });
@@ -122,20 +123,21 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
       ]);
     });
 
-
+    // Delete the recipe from the cellContents
+    this.cellContents[colIndex][rowIndex] = null as unknown as Recipe; // wtf is this
 
     // Save the updated cellContents to the server
-    this.saveCellContents(rowIndex, colIndex);
+    this.saveCellContents(rowIndex, colIndex, undefined);
   }
 }
 
 
  // Saves the cellContents to the server
- private saveCellContents(rowIndex: number, colIndex: number): void {
+ private saveCellContents(rowIndex: number, colIndex: number, myRecipeId?: number): void {
     const updatedData: RecipeScheduleDTO = {
       row: colIndex,
       column: rowIndex,
-      recipeId: this.cellContents[colIndex][rowIndex].id,
+      recipeId: myRecipeId,
       user: {
         Id: this.auth.getIdFromToken(),
         Username: this.auth.getUsernameFromToken()
