@@ -79,8 +79,12 @@
 }
 
 .delete-button.hidden {
-  opacity: 0;
   pointer-events: none;
+}
+
+.delete-button:hover {
+  opacity: 0.5;
+  background-color: var(--color-button-hover);
 }
 
 .recipe-card-drag-preview {
