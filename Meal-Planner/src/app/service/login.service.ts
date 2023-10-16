@@ -10,7 +10,8 @@ import { TokenModel } from '../models/token.model';
 })
 export class LoginService {
 
-  private apiUrl = 'https://localhost:7268/';
+  // private apiUrl = 'https://localhost:7268/';
+  private apiUrl = 'https://localhost:5000/';
   private userPayload: any;
   constructor(private http:HttpClient, private router: Router) { 
     this.userPayload = this.decodeToken();
