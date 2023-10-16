@@ -14,7 +14,8 @@ export class RecipeServiceService{
   }
 
 
-  url: string = 'https://localhost:7268/api';
+  // url: string = 'https://localhost:7268/api';
+  url: string = 'https://localhost:5000/api';
   // url = '../assets/Recipes.json';
 
 

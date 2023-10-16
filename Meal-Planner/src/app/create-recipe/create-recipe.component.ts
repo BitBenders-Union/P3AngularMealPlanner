@@ -4,6 +4,7 @@ import { Recipe, RecipeDTO } from '../Interfaces';
 import { RecipeServiceService } from '../service/recipe-service.service';
 import { LoginService } from '../service/login.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 
 
 @Component({
@@ -13,7 +14,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class CreateRecipeComponent implements OnInit {
   form: FormGroup; // the form binding to the html, this is what we use to get the values from the form
-  categories: string[] = []; // string array to store fetched categories
+
+  categories: string[] = [];
+  initialCategories: string[] = [];
+  allCateogries: string[] = [];
+
+  private searchInputSubject = new Subject<string>();
 
   loading: boolean = false; // conrol the spinner
 
@@ -46,15 +52,51 @@ export class CreateRecipeComponent implements OnInit {
   ngOnInit(): void {
     this.recipeService.getCategories().subscribe({
       next: categories => {
-        this.categories = categories.map(category => category.categoryName);
+        this.allCateogries = categories.map(category => category.categoryName);
       },
-      error: error => console.error('There was an error!', error)
+      error: error => console.error('There was an error!', error),
+      complete: () => {
+        this.categories = this.GetRandomElementsFromArray(this.allCateogries, 5);
+        this.initialCategories = [...this.categories];
+
+        this.searchInputSubject
+        .pipe(debounceTime(200), distinctUntilChanged())
+        .subscribe(searchTerm => {
+          // Apply filtering when the search term changes
+          this.filterCategories(searchTerm);
+        });
+
+      }
     });
 
+  }
 
-    // this.userId = this.tokenService.getIdFromToken();
-    // this.username = this.tokenService.getUsernameFromToken();
+  filterCategories(searchTerm: string) {
+    if(!this.form.get('category')?.value)
+    {
+      this.categories = [...this.initialCategories];
+      return;
+    }
+    this.categories = this.allCateogries.filter(cat =>
+      cat.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
 
+  onSearchInputChanged(event: Event) {
+    this.searchInputSubject.next(this.form.get('category')?.value);
+  }
+
+  GetRandomElementsFromArray(array: string[], numberOfElements: number): string[] {
+    const shuffledArray = [...array];
+
+    // Fisher-Yates shuffle algorithm to shuffle the array
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+    }
+
+    // Take the first 'count' elements
+    return shuffledArray.slice(0, numberOfElements);
   }
 
   // this is to get the ingredients and instructions from the form

@@ -6,7 +6,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CreateRecipeService {
-  private apiUrl = 'https://localhost:7268'
+  // private apiUrl = 'https://localhost:7268'
+  private apiUrl = 'https://localhost:5000'
 
   constructor(private http: HttpClient) {}
 
