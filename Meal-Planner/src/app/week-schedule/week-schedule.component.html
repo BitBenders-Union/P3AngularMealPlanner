@@ -25,15 +25,15 @@
         (cdkDragStarted)="isDragging = true"
         (cdkDragEnded)="isDragging = false"
         >
-          <h3>{{ cellContents[colIndex][rowIndex].title }}</h3>
+          <h3>{{ cellContents[colIndex][rowIndex]!.title }}</h3>
           <div class="rating">
-            <!-- <ng-container *ngFor="let star of starService.getRatingStars(cellContents[colIndex][rowIndex]?.rating || 0)">
+            <ng-container *ngFor="let star of starService.getRatingStars(cellContents[colIndex][rowIndex]!.ratings[0].score)">
               <i class="fas fa-star" *ngIf="star === true"></i>
               <i class="fas fa-star-half-alt" *ngIf="star === 'half'"></i>
-            </ng-container> -->
+            </ng-container>
           </div>
           
-          <!-- <button class="delete-button" (click)="deleteRecipe(rowIndex, colIndex)" [class.hidden]="cellContents[colIndex][rowIndex].deleted">Remove</button> -->
+          <button class="delete-button" (click)="deleteRecipe(rowIndex, colIndex)">Remove</button>
         </div>
       </ng-container>
       <ng-template #emptyCell>

@@ -2,8 +2,9 @@
 {
     public interface IRecipeScheduleRepository
     {
-        RecipeSchedule GetRecipeScheduleForUser(int userId);
+        List<RecipeSchedule> GetRecipeScheduleForUser(int userId);
         RecipeSchedule GetRecipeSchedule(int recipeScheduleId);
+        RecipeSchedule GetRecipeSchedule(int userId, int row, int col);
         ICollection<RecipeSchedule> GetRecipeSchedules();
         bool RecipeScheduleExists(int userId);
         bool CreateRecipeSchedule(RecipeSchedule recipeSchedule);

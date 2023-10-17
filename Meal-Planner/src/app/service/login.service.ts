@@ -10,7 +10,8 @@ import { TokenModel } from '../models/token.model';
 })
 export class LoginService {
 
-  private apiUrl = 'https://localhost:7268/';
+  // private apiUrl = 'https://localhost:7268/';
+  private apiUrl = 'https://localhost:5000/';
   private userPayload: any;
   constructor(private http:HttpClient, private router: Router) { 
     this.userPayload = this.decodeToken();
@@ -55,7 +56,8 @@ export class LoginService {
 
   signOut(){
     localStorage.removeItem('accessToken');
-    this.router.navigate(['login']);
+    localStorage.removeItem('refreshToken');
+    this.router.navigate(['/login']);
   }
 
   decodeToken(){
@@ -78,10 +80,8 @@ export class LoginService {
   }
 
   renewToken(token: TokenModel): Observable<any>{
-
     return this.http.post<any>(`${this.apiUrl}api/User/refresh`, token, {responseType: 'json'});
   }
-
 
   //just to test if the api is working with the token
   testApi(): Observable<any>{

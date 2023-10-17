@@ -12,8 +12,13 @@
 <!-- renders recipes based on searchbar -->
   <div class="recipes">
     <div *ngFor="let recipe of filteredRecipes" class="recipe-card" (click)="goToRecipeDetail(recipe)">
-     <h3>{{ recipe.title }}</h3>
-      <!-- Render other recipe details here -->
+     <h2>{{ recipe.title }}</h2>
+     <div class="rating">
+      <ng-container *ngFor="let star of starService.getRatingStars(recipe.ratings[0].score)">
+        <i class="fas fa-star" *ngIf="star === true"></i>
+        <i class="fas fa-star-half-alt" *ngIf="star === 'half'"></i>
+      </ng-container>
+    </div>
     </div>
   </div>
 </div>

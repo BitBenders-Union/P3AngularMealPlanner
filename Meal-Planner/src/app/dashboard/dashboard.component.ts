@@ -31,11 +31,11 @@ export class DashboardComponent implements OnInit{
   ngOnInit(){
     
       this.userStore.getUserFromStore()
-      .subscribe(val =>{
+      .subscribe(val =>{ 
         let userNameFromToken = this.auth.getUsernameFromToken();
         this.userName = val || userNameFromToken;
         // console.log(this.userName);
-      })      
+      })
 
       // this.auth.testApi().subscribe((data: any) =>{
       //   this.testthing = data;

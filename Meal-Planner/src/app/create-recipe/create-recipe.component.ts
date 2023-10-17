@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, FormControl, ReactiveFormsModule  } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl, ReactiveFormsModule, AbstractControl  } from '@angular/forms';
 import { Recipe, RecipeDTO } from '../Interfaces';
 import { RecipeServiceService } from '../service/recipe-service.service';
 import { LoginService } from '../service/login.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 
 
 @Component({
@@ -12,7 +14,12 @@ import { LoginService } from '../service/login.service';
 })
 export class CreateRecipeComponent implements OnInit {
   form: FormGroup; // the form binding to the html, this is what we use to get the values from the form
-  categories: string[] = []; // string array to store fetched categories
+
+  categories: string[] = [];
+  initialCategories: string[] = [];
+  allCateogries: string[] = [];
+
+  private searchInputSubject = new Subject<string>();
 
   loading: boolean = false; // conrol the spinner
 
@@ -21,16 +28,17 @@ export class CreateRecipeComponent implements OnInit {
   // we also inject the createRecipeService so we can fetch from our API
   constructor(private formBuilder: FormBuilder,
     private recipeService: RecipeServiceService,
-    private tokenService: LoginService
+    private tokenService: LoginService,
+    private router: Router
     ) {
     this.form = this.formBuilder.group({
-      title: 'test',
-      category: 'test',
-      description: 'test',
-      prepTime: 123,
-      cookTime: 123,
-      servings: 123,
-      rating: 1.5,
+      title: null,
+      category: null,
+      description: null,
+      prepTime: null,
+      cookTime: null,
+      servings: null,
+      rating: null,
       ingredients: this.formBuilder.array([]),
       instructions: this.formBuilder.array([]),
     });
@@ -44,15 +52,58 @@ export class CreateRecipeComponent implements OnInit {
   ngOnInit(): void {
     this.recipeService.getCategories().subscribe({
       next: categories => {
-        this.categories = categories.map(category => category.categoryName);
+        this.allCateogries = categories.map(category => category.categoryName);
       },
-      error: error => console.error('There was an error!', error)
+      error: error => console.error('There was an error!', error),
+      complete: () => {
+        
+        if(this.allCateogries.length >= 5){
+          this.categories = this.GetRandomElementsFromArray(this.allCateogries, 5);
+          this.initialCategories = [...this.categories];
+        }
+        else{
+          this.categories = [...this.allCateogries];
+          this.initialCategories = [...this.categories];
+        }
+
+        this.searchInputSubject
+        .pipe(debounceTime(200), distinctUntilChanged())
+        .subscribe(searchTerm => {
+          // Apply filtering when the search term changes
+          this.filterCategories(searchTerm);
+        });
+
+      }
     });
 
+  }
 
-    // this.userId = this.tokenService.getIdFromToken();
-    // this.username = this.tokenService.getUsernameFromToken();
+  filterCategories(searchTerm: string) {
+    if(!this.form.get('category')?.value)
+    {
+      this.categories = [...this.initialCategories];
+      return;
+    }
+    this.categories = this.allCateogries.filter(cat =>
+      cat.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
 
+  onSearchInputChanged(event: Event) {
+    this.searchInputSubject.next(this.form.get('category')?.value);
+  }
+
+  GetRandomElementsFromArray(array: string[], numberOfElements: number): string[] {
+    const shuffledArray = [...array];
+
+    // Fisher-Yates shuffle algorithm to shuffle the array
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+    }
+
+    // Take the first 'count' elements
+    return shuffledArray.slice(0, numberOfElements);
   }
 
   // this is to get the ingredients and instructions from the form
@@ -158,26 +209,48 @@ export class CreateRecipeComponent implements OnInit {
       };
 
 
-      console.log(formattedRecipe);
+      // console.log(formattedRecipe);
       this.recipeService.createRecipe(formattedRecipe).subscribe({
         next: response => {
-          console.log('Recipe created successfully', response);
+          // console.log('Recipe created successfully', response);
           this.form.reset();
+          this.router.navigate([`/recipe-detail/${response}`])
         },
-        error: error => console.error('There was an error!', error),
-        complete: () => {
-          console.log('Completed');
-          this.onReset();
-          }
+        error: error => console.error('There was an error!', error)
         });
     } else {
       console.log('Form is invalid');
     }
-    this.loading = false
 
+    this.loading = false
+    this.markAllAsTouched(this.form)
+    this.markFormArrayControlsAsTouched(this.form.get('ingredients') as FormArray);
+    this.markFormArrayControlsAsTouched(this.form.get('instructions') as FormArray);
 
   }
   
+  markAllAsTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach(control => {
+      if (control instanceof FormGroup) {
+        this.markAllAsTouched(control);
+      } else {
+        control.markAsTouched();
+      }
+    });
+  }
+
+  markFormArrayControlsAsTouched(formArray: FormArray) {
+    formArray.controls.forEach((control: AbstractControl) => {
+      if (control instanceof FormGroup) {
+        Object.values(control.controls).forEach(ctrl => {
+          ctrl.markAsTouched();
+        });
+      }
+    });
+  }
+  
+  
+
   // this is to reset the form
   // since the button with type reset, deletes all inputs but doesn't take into account the number of arrays
   // we also need to reset the arrays to 1

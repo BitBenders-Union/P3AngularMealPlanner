@@ -8,6 +8,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
     
   }
+  
 
   .navbar ul {
     list-style-type: none;
@@ -30,5 +31,15 @@
   }
   
   .navbar a:hover {
-    color: var(--color-primary); /* Change text color on hover */
+    color: var(--color-button-hover); /* Change text color on hover */
   }
+
+  @media screen and (max-width: 700px) {
+
+  a{
+    font-size: medium;
+    font-size: 10px;
+  }
+
+}
+    

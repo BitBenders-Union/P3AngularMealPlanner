@@ -1,42 +1,45 @@
 <app-navbar></app-navbar>
-
 <div class="recipe-detail-container">
     <div *ngIf="recipe" class="recipe-card">
 
       <h2>{{ recipe.title }}</h2>
 
-      <!-- <div class="rating">
-        <ng-container *ngFor="let star of starService.getRatingStars(recipe.rating)">
+      <div class="rating">
+        <ng-container *ngFor="let star of starService.getRatingStars(recipe.ratings[0]!.score)">
           <i class="fas fa-star" *ngIf="star === true"></i>
           <i class="fas fa-star-half-alt" *ngIf="star === 'half'"></i>
         </ng-container>
-      </div> -->
+      </div>
       
       <div class="description">
-        <p>{{ recipe.description }}</p>
+        <p><i>{{ recipe.description }}</i></p>
       </div>
 
       <div class="list">
-        <h3>Ingredients:</h3>
+        <h2 class="time">Cooking Time: {{recipe.cookingTimes.minutes}} - Preparation time: {{recipe.preparationTimes.minutes}}</h2>
+        <h2 class="servings">Servings: {{recipe.servings.quantity}}</h2>
+      </div>
+
+
+      <div class="list">
+        <h2>Ingredients</h2>
         <ul>
           <li *ngFor="let ingredient of recipe.ingredients">{{ ingredient.name }} - {{ ingredient.amount.quantity }} {{ ingredient.unit.measurement }}</li>
         </ul>
       </div>
 
       <div class="list">
-        <h3>Instructions</h3>
-        <h6 class="time">Cooking Time: {{recipe.cookingTime}} - Preparation time: {{recipe.preparationTime}}</h6>
-        <h6 class="servings">Servings: {{recipe.servings}}</h6>
+        
+        <h2>Instructions</h2>
         <ul>
           <li *ngFor="let instruction of recipe.instructions">{{ instruction.text }}</li>
         </ul>
-        <div class="actions">
-          <button (click)="updateRecipe()" class="btn-update">Update Recipe</button>
-          <button (click)="deleteRecipe()" class="btn-delete">Delete Recipe</button>
-        </div>
       </div>
 
-
+      <div class="actions">
+        <button (click)="updateRecipe()" class="btn-update">Update Recipe</button>
+        <button (click)="deleteRecipe()" class="btn-delete">Delete Recipe</button>
+      </div>
 
     </div>
     <div *ngIf="!recipe" class="empty-message">

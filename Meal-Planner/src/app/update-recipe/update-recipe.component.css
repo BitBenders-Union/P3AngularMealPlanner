@@ -1,103 +1,153 @@
+/* Form container */
+.recipe-form {
+  background-color: var(--color-secondary);
+  padding: 20px;
+  border-radius: 10px;
+  width: 50vw;
+  margin: 0 auto;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
 
-  /* Style the form container */
-  .form-container {
-    background-color: var(--color-secondary); /* Updated background color */
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 60vw; /* Set form width */
-    margin: 0 auto; /* Center the form */
-  }
-  
-  /* Style the form section */
-  .form-section {
-    margin-bottom: 20px;
-  }
-  
-  /* Style labels and input fields */
-  .label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
-  
-  .input-field {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    margin-bottom: 10px;
-  }
-  
-  /* Style select dropdown */
-  .input-field select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    margin-bottom: 10px;
-    background-color: white;
-  }
-  
-  /* Style buttons */
-  .btn-group {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  
-  .btn-group button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    color: white;
-    cursor: pointer;
-    background-color: var(--color-primary);
-    /* transition: background-color 0.3s, color 0.3s; */
-  }
-  
-  
-  .btn-group button:hover {
-    background-color: var(--color-text);
-    color: white;
-  }
-  
-  /* Style ingredient labels */
-  .ingredient-label-section {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .ingredient-inputs {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 10px;
-  }
-  
-  /* Style instruction labels */
-  .instruction-label {
-    font-weight: bold;
-  }
-  
-  /* Style form buttons */
-  .btn-submit-group {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-  }
-  
-  /* Center the form and adjust width */
-  .recipe-form {
-    margin: 0 auto;
-    max-width: 600px;
-  }
-  
-  .input-field.ng-invalid {
-    border: 1px solid red;
-  }
+/* Form section */
+.form-section {
+  margin-bottom: 20px;
+}
 
-  
+/* Form fields */
+.input-field {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid var(--color-text);
+  border-radius: 5px;
+}
+
+/* Container for dynamically added rows */
+.form-array-container {
+  margin-top: 20px;
+  border-top: 1px solid var(--color-text);
+  padding-top: 20px;
+}
+
+/* Ingredient and Instruction Rows */
+.ingredient-row,
+.instruction-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* Ingredient and Instruction Groups */
+.ingredient-group,
+.instruction-group {
+  display: flex;
+  flex-direction: row; /* Change to row to align inputs horizontally */
+  width: 100%; /* Use 100% width to fill the available space */
+}
+
+/* Ingredient and Instruction Labels */
+.ingredient-label,
+.instruction-label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+/* Ingredient and Instruction Inputs */
+.ingredient-input,
+.instruction-input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid var(--color-text);
+  border-radius: 5px;
+  margin-right: 5px;
+}
+
+.ingredient-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+/* Align labels with inputs */
+.ingredient-label {
+  flex: 1;
+  text-align: center;
+  font-weight: bold;
+}
+
+.instruction-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+/* Align instruction label */
+.instruction-label {
+  flex: 1;
+  text-align: center;
+  font-weight: bold;
+}
+
+
+
+
+/* Button styles */
+.buttons,
+.buttons-exit {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.buttons-exit {
+  justify-content: space-between;
+  margin-top: 5%;
+}
+
+button {
+  background-color: var(--color-button);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="button"] {
+  margin-right: 5px; /* Add a small gap on the left and right */
+}
+
+button:hover {
+  background-color: var(--color-button-hover);
+}
+
+
+.confirm-button,
+.cancel-button {
+width: 20%; /* Adjust the width as needed */
+}
+
+/* Apply specific styles to Confirm button */
+.confirm-button {
+margin-left: 10px;
+}
+
+/* Apply specific styles to Cancel button */
+.cancel-button {
+  margin-right: 10px;
+}
+
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  /* Add other styling properties for your loading spinner */
+}
+
+
+.input-field.ng-invalid {
+  border: 1px solid red;
+}

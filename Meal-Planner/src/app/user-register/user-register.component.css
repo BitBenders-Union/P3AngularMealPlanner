@@ -20,7 +20,7 @@
   }
 
   button {
-    background-color: var(--color-primary);
+    background-color: var(--color-button);
     color: white;
     padding: 10px 20px;
     border: none;
@@ -39,15 +39,19 @@
   }
   
   button:hover {
-    background-color: var(--color-text);
+    background-color: var(--color-button-hover);
   }
   
   .confirm-button {
 width: 20%; /* Adjust the width as needed */
 }
 
+.login-button{
+    width: 20%; /* Adjust the width as needed */
+    margin-left: 20%;
+}
+
 .confirm-button {
-    background-color: var(--color-primary);
     margin-left: 10px;
 }
 

@@ -59,15 +59,16 @@
 
         public float GetRecipeRating(int recipeId)
         {
-            var recipe = _context.Recipes.Include(rr => rr.RecipeRating).FirstOrDefault(r => r.Id == recipeId); // finds the recipe from id
+            var recipe = _context.Recipes
+                .Include(rr => rr.RecipeRating)
+                .ThenInclude(r => r.Rating)
+                .FirstOrDefault(r => r.Id == recipeId); // finds the recipe from id
 
-            if (recipe != null)
-            {
-                // get average rating
-                float avgRating = recipe.RecipeRating.Average(rr => rr.Rating.Score);
-                return avgRating;
-            }
-            else return 0.0f; // if recipe doesn't exist return 0.0f as rating
+            var ratings = recipe.RecipeRating.ToList(); // gets the ratings for the recipe
+
+            return ratings.FirstOrDefault().Rating.Score; // returns the first rating value
+
+
         }
 
         public ICollection<Recipe> GetRecipes()
@@ -173,5 +174,11 @@
             _context.Remove(recipe);
             return Save();
         }
+
+        public int GetRecipeId(string name)
+        {
+            return _context.Recipes.FirstOrDefault(r => r.Title == name).Id;
+        }
+
     }
 }

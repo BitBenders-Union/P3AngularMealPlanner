@@ -9,11 +9,16 @@
 }
 
 :root{
-    --color-primary: rgb(57, 94, 102);
-    --color-secondary: rgb(146, 182, 177);
-    --color-text: rgb(74, 5, 28);
+    /* --color-primary: rgb(9, 31, 28);
+    --color-secondary: rgb(28, 35, 39);
+    --color-text: rgb(255, 255, 255);
+    --color-button:rgb(115, 156, 128); */
 
-    
+    --color-primary: rgb(223, 223, 223);  /* background */
+    --color-secondary: rgb(152, 219, 241); /* boxes */
+    --color-text: rgb(3, 18, 22);
+    --color-button:rgb(48, 156, 192);
+    --color-button-hover:rgb(48, 192, 156);
 
 }
 
@@ -27,7 +32,7 @@ body{
 
   
   .button {
-    background-color: var(--color-secondary);
+    background-color: var(--color-button);
     border: none;
     padding: 10px 20px;
   }
@@ -59,7 +64,7 @@ body{
   }
 
 
-Apply custom scrollbar styling
+/* Apply custom scrollbar styling */
 .scrollable-content {
   overflow: scroll; /* Always show scrollbar, even when content fits */
   max-height: 100vh; /* Set a maximum height for the scrollable element */

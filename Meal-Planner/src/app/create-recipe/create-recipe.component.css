@@ -35,7 +35,7 @@
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-} 
+}
 
 /* Ingredient and Instruction Groups */
 .ingredient-group,
@@ -105,8 +105,7 @@
 }
 
 button {
-  background-color: var(--color-primary);
-  color: white;
+  background-color: var(--color-button);
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -119,7 +118,7 @@ button[type="button"] {
 }
 
 button:hover {
-  background-color: var(--color-text);
+  background-color: var(--color-button-hover);
 }
 
 
@@ -130,13 +129,11 @@ width: 20%; /* Adjust the width as needed */
 
 /* Apply specific styles to Confirm button */
 .confirm-button {
-background-color: var(--color-primary);
 margin-left: 10px;
 }
 
 /* Apply specific styles to Cancel button */
 .cancel-button {
-  background-color: var(--color-primary);
   margin-right: 10px;
 }
 
@@ -149,7 +146,42 @@ margin-left: 10px;
   /* Add other styling properties for your loading spinner */
 }
 
-
-.input-field.ng-invalid {
+.ingredient-input.ng-invalid.ng-touched,
+.instruction-input.ng-invalid.ng-touched,
+.input-field.ng-invalid.ng-touched {
   border: 1px solid red;
+}
+
+ @media screen and (max-width: 1200px) {
+  .ingredient-group{
+    flex-direction: column;
+    
+  }
+ }
+
+@media screen and (max-width: 800px) {
+  .recipe-form {
+    width: 80vw;
+    margin-top: 10vh;
+  }
+
+
+
+}
+
+@media screen and (max-width: 600px){
+
+  .recipe-form {
+    width: 80vw;
+    margin-top: 20vh;
+  }
+
+
+  .cancel-button, .confirm-button {
+    font-size: 0.8em;
+    text-align: center;
+    width: 80px; /* Adjust the width as needed */
+    height: 40px; /* Adjust the height as needed */
+  }
+  
 }

@@ -1,3 +1,5 @@
+<app-navbar></app-navbar>
+
 <div class="form-container" *ngIf="recipe">
   
   <form [formGroup]="updateForm" (ngSubmit)="updateRecipe()" class="recipe-form">
@@ -6,62 +8,83 @@
         <label>Title: <input required formControlName="title" class="input-field" /></label>
         <label>
           Category:
-          <select formControlName="category" class="input-field">
-            <option value="" disabled selected>Choose a category</option>
-            <option *ngFor="let cat of categories" [value]="cat" required>{{ cat }}</option>
-          </select>
         </label>
+
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let option of categories" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+  
+        <input type="text"
+        placeholder="Category"
+        aria-label="Number"
+        matInput
+        class="input-field"
+        formControlName="category"
+        [matAutocomplete]="auto"
+        (keyup)="onSearchInputChanged($event)"
+        (keyup.enter)="filterCategories(updateForm.get('category')?.value)"
+        required>
+
         <label>Description: <input required formControlName="description" class="input-field" type="text"/></label>
-        <label>Preparation Time: <input required formControlName="preparationTime" type="number" class="input-field" min="0"/></label>
-        <label>Cooking Time: <input required formControlName="cookingTime" type="number" class="input-field" min="0"/></label>
+        <label>Preparation Time: <input required formControlName="prepTime" type="number" class="input-field" min="0"/></label>
+        <label>Cooking Time: <input required formControlName="cookTime" type="number" class="input-field" min="0"/></label>
         <label>Servings: <input required formControlName="servings" type="number" class="input-field" min="0"/></label>
         <label>Rating: <input required formControlName="rating" type="number" class="input-field" min="0" max="5" (keyup)="validateRating()"/></label>
       </div>
   
       <!-- Ingredients Section -->
-      <div class="form-section">
+      <div class="form-section form-array-container">
         <h2>Ingredients</h2>
 
-        <div class="ingredient-label-section">
+        <div class="ingredient-labels">
           <label for="" class="ingredient-label">Name</label>
           <label for="" class="ingredient-label">Amount</label>
           <label for="" class="ingredient-label">Unit</label>
         </div>
-          <div *ngIf="recipe?.ingredients">
-            <div formArrayName="ingredients">
-              <div *ngFor="let ingredientGroup of ingredients.controls; let i = index" [formGroupName]="i" class="ingredient-inputs">
-                <input formControlName="name" placeholder="Ingredient Name" class="input-field" required>
-                <input formControlName="value" placeholder="Amount Value" class="input-field" required type="number">
-                <input formControlName="unit" placeholder="Amount Unit" class="input-field" required>
+
+              <div *ngFor="let ingredientGroup of ingredients.controls; let i = index" class="ingredient-row" formArrayName="ingredients">
+                <div class="ingredient-group" [formGroupName]="i" >
+                  <input formControlName="name" placeholder="Ingredient Name" class="ingredient-input" required>
+                  <input formControlName="value" placeholder="Amount Value" class="ingredient-input" required type="number">
+                  <input formControlName="unit" placeholder="Amount Unit" class="ingredient-input" required>
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="btn-group">
+          
+          <div class="buttons">
             <button type="button" class="fas fa-plus" (click)="addIngredient()"></button>
             <button type="button" class="fas fa-minus" (click)="removeIngredient()"></button>
           </div>
+
       </div>
   
 
-      <div class="form-section">
+      <div class="form-section form-array-container" >
         <h2>Instructions</h2>
 
-        <label class="instruction-label">Instructions:</label>
+        <div class="instruction-labels">
+          <label class="instruction-label">Instructions:</label>
+        </div>
+
         <div *ngIf="recipe?.instructions">
           <div formArrayName="instructions">
-            <div *ngFor="let instructionControl of instructions.controls; let i = index" [formGroupName]="i" >
-              <input formControlName="text" placeholder="Instruction {{ i + 1 }}" class="input-field" required>
+            <div *ngFor="let instructionControl of instructions.controls; let i = index"  class="instruction-row">
+              <div [formGroupName]="i" class="instruction-group">
+                <input formControlName="text" placeholder="Instruction {{ i + 1 }}" class="input-field" required>
+
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="btn-group">
+        <div class="buttons">
           <button type="button" class="fas fa-plus" (click)="addInstruction()"></button>
           <button type="button" class="fas fa-minus" (click)="removeInstruction()"></button>
         </div>
       </div>
   
-      <div class="btn-group btn-submit-group">
+      <div class="buttons-exit">
         <button type="reset" (click)="goBack()">Cancel</button>
         <button type="submit">Update</button>
       </div>

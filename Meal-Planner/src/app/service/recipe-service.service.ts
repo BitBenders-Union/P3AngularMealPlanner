@@ -14,21 +14,27 @@ export class RecipeServiceService{
   }
 
 
-  url: string = 'https://localhost:7268/api';
+  // url: string = 'https://localhost:7268/api';
+  url: string = 'https://localhost:5000/api';
   // url = '../assets/Recipes.json';
 
 
 
   getRecipes(): Observable<Recipe[]> {
     
-    const headers = new HttpHeaders().set('content-type', 'application/json')
+    // const headers = new HttpHeaders().set('content-type', 'application/json')
 
-    return this.http.get<Recipe[]>(`${this.url}/Recipe`, { headers }).pipe(
+    return this.http.get<Recipe[]>(`${this.url}/Recipe`).pipe(
       catchError(error => {
-        console.error('Error getting recipes:', error);
+        if(error.status === 404){
+          console.log("404 error ", error);
+        }
+        // console.error('Error getting recipes:', error);
         throw error;
       }));
   }
+
+
 
   getRecipeById(id: number): Observable<Recipe> {
 
@@ -49,16 +55,6 @@ export class RecipeServiceService{
       }));
   }
 
-  // // temporary method that gets data from json file instead of api
-  // getRecipeFromJson(id: number): Observable<Recipe | undefined> {
-  //   return this.http.get<Recipe[]>(this.url).pipe(
-  //     map((data) => {
-  //       const recipe = data.find((x) => x.id === id);
-  //       return recipe;
-  //     })
-  //   );
-  // }
-
 
   createRecipe(recipeData: RecipeDTO): Observable<any> {
     const headers = new HttpHeaders({
@@ -75,24 +71,12 @@ export class RecipeServiceService{
   }
 
   deleteRecipe(recipeId: number): Observable<any> {
-    return this.http.delete(`${this.url}/Recipe/delete/${recipeId}`).pipe(
-      catchError(error => {
-        console.error('Error deleting recipe:', error);
-        throw error;
-      })
-    );
+    return this.http.delete(`${this.url}/Recipe/delete/${recipeId}`);
   }
 
+  //------------------- changing -------------------------------
   updateRecipe( recipeData: RecipeDTO, recipeId: number): Observable<any> {
     // Send a PUT request to the API
-    return this.http.put(`${this.url}/Recipe/update/${recipeId}`, recipeData).pipe(
-      catchError(error => {
-        console.error('Error updating recipe:', error);
-        throw error;
-      })
-    );
+    return this.http.put(`${this.url}/Recipe/update/${recipeId}`, recipeData);
   }
-
-  
-
 }

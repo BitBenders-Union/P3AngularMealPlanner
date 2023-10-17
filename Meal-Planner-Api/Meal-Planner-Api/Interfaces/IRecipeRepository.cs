@@ -7,6 +7,7 @@
         ICollection<Recipe> GetUserRecipes(int userId);
         Recipe GetRecipe(int id);
         Recipe GetRecipe(string name);
+        int GetRecipeId(string name);
         float GetRecipeRating(int recipeId);
         bool RecipeExists(int recipeId);
         bool CreateRecipe(Recipe recipe, List<int> ratingIds, List<int> ingredientIds);

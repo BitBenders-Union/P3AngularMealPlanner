@@ -32,6 +32,10 @@
   
 }
 
+.recipe-card:hover {
+  border: 1px solid var(--color-button-hover);
+}
+
 .recipe-card h3 {
   margin: 0;
 }
@@ -43,7 +47,7 @@
 }
 
 .rating i {
-  color: gold;
+  color: var(--color-button-hover);
   margin-right: 2px;
 }
 
