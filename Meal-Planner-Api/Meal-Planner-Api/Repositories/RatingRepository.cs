@@ -75,7 +75,7 @@
         {
             // get the rating a user made on a recipe
 
-            var userRatings = GetRatingsForUser(userID);
+            //var userRatings = GetRatingsForUser(userID);
 
             // find the recipe inside the userRatings
 
@@ -109,7 +109,7 @@
         public bool Save()
         {
             var saved = _context.SaveChanges();
-            return saved > 0 ? true : false;
+            return saved > 0;
         }
 
         public bool UpdateRating(Rating rating)

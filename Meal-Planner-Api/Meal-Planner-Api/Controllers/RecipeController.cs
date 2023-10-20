@@ -4,19 +4,19 @@
     [ApiController]
     public class RecipeController : ControllerBase
     {
-        private IRecipeRepository _recipeRepository;
-        private ICategoryRepository _categoryRepository;
-        private IPreparationTimeRepository _preparationTimeRepository;
-        private ICookingTimeRepository _cookingTimeRepository;
-        private IServingsRepository _servingsRepository;
-        private IRatingRepository _ratingRepository;
-        private IIngredientRepository _ingredientRepository;
-        private IInstructionRepository _instructionRepository;
-        private IUserRepository _userRepository;
-        private IAmountRepository _amountRepository;
-        private IUnitRepository _unitRepository;
-        private DataContext _context;
-        private IMapper _mapper;
+        private readonly IRecipeRepository _recipeRepository;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly IPreparationTimeRepository _preparationTimeRepository;
+        private readonly ICookingTimeRepository _cookingTimeRepository;
+        private readonly IServingsRepository _servingsRepository;
+        private readonly IRatingRepository _ratingRepository;
+        private readonly IIngredientRepository _ingredientRepository;
+        private readonly IInstructionRepository _instructionRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IAmountRepository _amountRepository;
+        private readonly IUnitRepository _unitRepository;
+        private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
         public RecipeController
             (IMapper mapper,
@@ -54,7 +54,7 @@
         {
             var recipes = _recipeRepository.GetRecipes();
 
-            if (recipes == null || recipes.Count() == 0)
+            if (recipes == null || recipes.Count == 0)
                 return NotFound();
 
             var recipesDTO = new List<RecipeDTO>();
@@ -277,11 +277,11 @@
             // validate Ingredients
             // since there can be multiple ingredients we need to loop through each
             // Create a list to store the ingredient IDs
-            List<int> ingredientIds = new List<int>();
+            List<int> ingredientIds = new();
 
             // Dictionaries to prevent duplicate entries.
-            Dictionary<float, Amount> createdAmounts = new Dictionary<float, Amount>();
-            Dictionary<string, Unit> createdUnits = new Dictionary<string, Unit>();
+            Dictionary<float, Amount> createdAmounts = new();
+            Dictionary<string, Unit> createdUnits = new();
 
             foreach (var ingredient in recipeData.Ingredients)
             {
@@ -495,9 +495,9 @@
             // ingredient handling
 
             // Dictionaries to prevent duplicate entries.
-            Dictionary<float, Amount> createdAmounts = new Dictionary<float, Amount>();
-            Dictionary<string, Unit> createdUnits = new Dictionary<string, Unit>();
-            List<int> ingredientIds = new List<int>();
+            Dictionary<float, Amount> createdAmounts = new();
+            Dictionary<string, Unit> createdUnits = new();
+            List<int> ingredientIds = new();
 
 
             foreach (var ingredient in recipeData.Ingredients)
@@ -750,11 +750,11 @@
 
 
             // when deleting a recipe all the relationships should be deleted as well
-            // Only the relationships eg. junctiontable data is deleted the rest is maintained.
+            // Only the relationships eg. junction table data is deleted the rest is maintained.
             // but since instructions is unique to the recipe (one recipe to many instructions), the instructions are deleted.
 
             // in turn if we deleted a user, all the recipes that user created would be deleted using cascade delete,
-            // to prevent that we can define the relationship to not delete in the datacontext
+            // to prevent that we can define the relationship to not delete in the data context
 
             var recipe = _recipeRepository.GetRecipe(recipeId);
 
