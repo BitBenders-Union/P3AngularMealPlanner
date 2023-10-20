@@ -209,10 +209,10 @@ export class CreateRecipeComponent implements OnInit {
       };
 
 
-      console.log(formattedRecipe);
+      // console.log(formattedRecipe);
       this.recipeService.createRecipe(formattedRecipe).subscribe({
         next: response => {
-          console.log('Recipe created successfully', response);
+          // console.log('Recipe created successfully', response);
           this.form.reset();
           this.router.navigate([`/recipe-detail/${response}`])
         },
