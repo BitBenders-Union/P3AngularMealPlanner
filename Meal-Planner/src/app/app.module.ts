@@ -28,6 +28,7 @@ import { UserRegisterComponent } from './user-register/user-register.component';
 import { AuthGuard } from './guards/auth.guard';
 import { StartpageComponent } from './startpage/startpage.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
+import { TestComponent } from './test/test.component';
 
 
 @NgModule({
@@ -49,6 +50,7 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
     UserLoginComponent,
     UserRegisterComponent,
     StartpageComponent,
+    TestComponent,
     
     
   ],
