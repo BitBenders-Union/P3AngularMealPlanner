@@ -91,7 +91,7 @@ namespace Meal_Planner_Api.Controllers
             }
 
             // after all checks passed return Ok
-            return Ok("Success");
+            return Ok();
 
         }
 

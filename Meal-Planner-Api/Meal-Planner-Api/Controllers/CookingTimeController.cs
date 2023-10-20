@@ -21,7 +21,7 @@ namespace Meal_Planner_Api.Controllers
             var cookingTime = _mapper.Map<List<CookingTimeDTO>>(_cookingTimeRepository.GetCookingTimes());
 
             if (cookingTime == null || cookingTime.Count == 0)
-                return NotFound("Not Found");
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -34,7 +34,7 @@ namespace Meal_Planner_Api.Controllers
         public IActionResult Get(int id)
         {
             if (!_cookingTimeRepository.CookingTimeExists(id))
-                return NotFound("Not Found");
+                return NotFound();
 
             var cookingTime = _mapper.Map<CookingTimeDTO>(_cookingTimeRepository.GetCookingTime(id));
 
@@ -51,7 +51,7 @@ namespace Meal_Planner_Api.Controllers
             var cookingTime = _mapper.Map<CookingTimeDTO>(_cookingTimeRepository.GetCookingTimeForRecipe(recipeId));
 
             if (cookingTime == null)
-                return NotFound("Not Found");
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -91,7 +91,7 @@ namespace Meal_Planner_Api.Controllers
             }
 
 
-            return Ok("Success");
+            return Ok();
         }
 
 

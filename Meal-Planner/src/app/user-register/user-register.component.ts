@@ -27,17 +27,18 @@ export class UserRegisterComponent {
 
   onSubmit(): void{
     if(this.registerForm.valid){
-      const username = this.registerForm.value.username;
-      const password = this.registerForm.value.password;
 
       const userData = {
-        username: username,
-        password: password
+        username: this.registerForm.value.username,
+        password: this.registerForm.value.password
       };
 
       this.loginService.createLogin(userData).subscribe({
         next: (data: any) => {
-          // console.log('Register success', data);
+          console.log('Register success', data);
+
+          
+
           this.router.navigate(['/login']);
         },
 
