@@ -21,7 +21,7 @@ namespace Meal_Planner_Api.Controllers
             var ratings = _mapper.Map<List<RatingDTO>>(_ratingRepository.GetRatings());
 
             if (ratings == null || ratings.Count() == 0)
-                return NotFound("Not Found");
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest();
@@ -34,7 +34,7 @@ namespace Meal_Planner_Api.Controllers
         public IActionResult Get(int id)
         {
             if (!_ratingRepository.ratingExists(id))
-                return NotFound("Not Found");
+                return NotFound();
 
             var ratings = _mapper.Map<RatingDTO>(_ratingRepository.GetRating(id));
 
@@ -50,7 +50,7 @@ namespace Meal_Planner_Api.Controllers
         public IActionResult GetByRecipeId(int recipeId)
         {
             if (!_ratingRepository.recipeRatingsExists(recipeId))
-                return NotFound("Not Found");
+                return NotFound();
 
             var ratings = _mapper.Map<List<RatingDTO>>(_ratingRepository.GetRatingsForRecipe(recipeId));
 
@@ -67,7 +67,7 @@ namespace Meal_Planner_Api.Controllers
             var ratings = _mapper.Map<List<RatingDTO>>(_ratingRepository.GetRatingsForUser(userId));
 
             if (ratings == null)
-                return NotFound("Not Found");
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -82,7 +82,7 @@ namespace Meal_Planner_Api.Controllers
             var ratings = _mapper.Map<List<RatingDTO>>(_ratingRepository.GetRecipeUserRating(userId, recipeId));
 
             if (ratings == null)
-                return NotFound("Not Found");
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -121,7 +121,7 @@ namespace Meal_Planner_Api.Controllers
             }
 
 
-            return Ok("Success");
+            return Ok();
         }
 
 

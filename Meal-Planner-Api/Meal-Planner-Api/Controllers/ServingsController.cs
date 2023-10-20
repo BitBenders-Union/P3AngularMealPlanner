@@ -21,7 +21,7 @@ namespace Meal_Planner_Api.Controllers
             var serving = _mapper.Map<List<ServingsDTO>>(_servingsRepository.GetServings());
 
             if (serving == null || serving.Count() == 0)
-                return NotFound("Not Found");
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -34,7 +34,7 @@ namespace Meal_Planner_Api.Controllers
         public IActionResult Get(int id)
         {
             if (!_servingsRepository.servingExist(id))
-                return NotFound("Not Found");
+                return NotFound();
 
             var serving = _mapper.Map<ServingsDTO>(_servingsRepository.GetServing(id));
 
@@ -51,7 +51,7 @@ namespace Meal_Planner_Api.Controllers
             var serving = _mapper.Map<ServingsDTO>(_servingsRepository.GetServingForRecipe(recipeId));
 
             if (serving == null)
-                return NotFound("Not Found");
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -93,7 +93,7 @@ namespace Meal_Planner_Api.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok("Success");
+            return Ok();
         }
 
 
