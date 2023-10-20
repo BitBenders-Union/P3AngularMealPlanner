@@ -1,20 +1,4 @@
-﻿using AutoMapper;
-
-using Meal_Planner_Api.Dto;
-using Meal_Planner_Api.Interfaces;
-using Meal_Planner_Api.Models;
-using Meal_Planner_Api.Repositories;
-using Meal_Planner_Api.Services;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Mvc.Cors;
-using System.Web.Http.Description;
-
-
-namespace Meal_Planner_Api.Controllers
+﻿namespace Meal_Planner_Api.Controllers
 {
 
     [Route("api/[controller]")]
@@ -49,7 +33,7 @@ namespace Meal_Planner_Api.Controllers
             var users = _mapper.Map<List<UserOnlyNameDTO>>(_userRepository.GetUsers());
 
             if (users == null || users.Count == 0)
-                return NotFound("Not Found");
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -64,7 +48,7 @@ namespace Meal_Planner_Api.Controllers
         public IActionResult Get(int id)
         {
             if (!_userRepository.UserExists(id))
-                return NotFound("Not Found");
+                return NotFound();
 
             var user = _mapper.Map<UserOnlyNameDTO>(_userRepository.GetUser(id));
 
@@ -81,7 +65,7 @@ namespace Meal_Planner_Api.Controllers
         public IActionResult Get(string username)
         {
             if (!_userRepository.UserExists(username))
-                return NotFound("Not Found");
+                return NotFound();
 
             var user = _mapper.Map<UserOnlyNameDTO>(_userRepository.GetUser(username));
 
@@ -108,7 +92,7 @@ namespace Meal_Planner_Api.Controllers
 
             // check if username exist
             if (!_userRepository.UserExists(user.Username))
-                return NotFound("User Not Found");
+                return NotFound();
 
             // get user & user.passwordSalt
             var userGet = _userRepository.GetUser(user.Username);
@@ -198,7 +182,7 @@ namespace Meal_Planner_Api.Controllers
             }
 
 
-            return Ok("Success");
+            return Ok();
         }
 
         [HttpPost("refresh")]
@@ -209,14 +193,14 @@ namespace Meal_Planner_Api.Controllers
             // Check if the token is valid if not send a new one
             if(tokenDTO is null)
 
-                return BadRequest("Invalid client request");
+                return BadRequest();
             string accessToken = tokenDTO.AccessToken;
             string refreshToken = tokenDTO.RefreshToken;
             var principal = _jwtTokenService.GetPrincipalFromExpiredToken(accessToken);
             var username = principal.Identity.Name;
             var user = _userRepository.GetUser(username);
             if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
-                return BadRequest("Invalid client request");
+                return BadRequest();
             var newAccessToken = _jwtTokenService.CreateJwtToken(user);
             var newRefreshToken = _jwtTokenService.CreateRefreshToken();
             user.RefreshToken = newRefreshToken;
@@ -240,7 +224,7 @@ namespace Meal_Planner_Api.Controllers
 
             // validate user exist
             if (!_userRepository.UserExists(userId))
-                return NotFound("User Not Found");
+                return NotFound();
 
             // validate user
             if (!ModelState.IsValid)
@@ -269,7 +253,7 @@ namespace Meal_Planner_Api.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok("Success");
+            return Ok();
         }
 
 
@@ -284,7 +268,7 @@ namespace Meal_Planner_Api.Controllers
 
             // validate user exist
             if (!_userRepository.UserExists(userId))
-                return NotFound("User Not Found");
+                return NotFound();
 
             // validate user
             if (!ModelState.IsValid)
@@ -307,7 +291,7 @@ namespace Meal_Planner_Api.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok("User Deleted");
+            return Ok();
         }
 
 

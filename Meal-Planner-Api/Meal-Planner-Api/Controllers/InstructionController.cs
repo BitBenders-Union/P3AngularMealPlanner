@@ -21,7 +21,7 @@ namespace Meal_Planner_Api.Controllers
             var instructions = _mapper.Map<List<InstructionDTO>>(_instructionRepository.GetInstructions());
 
             if (instructions == null || instructions.Count() == 0)
-                return NotFound("Not Found");
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -36,7 +36,7 @@ namespace Meal_Planner_Api.Controllers
             var instructions = _mapper.Map<List<InstructionDTO>>(_instructionRepository.GetInstructionsByRecipeID(recipeId));
 
             if (instructions == null)
-                return NotFound("Not Found");
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -50,7 +50,7 @@ namespace Meal_Planner_Api.Controllers
         public IActionResult Get(int id)
         {
             if (!_instructionRepository.InstructionExists(id))
-                return NotFound("Not Found");
+                return NotFound();
 
             var instruction = _mapper.Map<InstructionDTO>(_instructionRepository.GetInstruction(id));
 
@@ -88,7 +88,7 @@ namespace Meal_Planner_Api.Controllers
             }
 
             // after all checks passed return Ok
-            return Ok("Success");
+            return Ok();
 
         }
 

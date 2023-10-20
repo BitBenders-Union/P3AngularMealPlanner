@@ -25,12 +25,12 @@ export class LoginService {
       password: password
     };
     
-    return this.http.post(`${this.apiUrl}validate`, body,{responseType: 'json'});
+    return this.http.post(`${this.apiUrl}validate`, body, {responseType: 'json'});
   }
 
   createLogin(data: any): Observable<any>{
 
-    return this.http.post(`${this.apiUrl}api/User`, data,{responseType: 'json'});
+    return this.http.post(`${this.apiUrl}api/User`, data, {responseType: 'json'});
   }
 
   //set usertoken to storage
