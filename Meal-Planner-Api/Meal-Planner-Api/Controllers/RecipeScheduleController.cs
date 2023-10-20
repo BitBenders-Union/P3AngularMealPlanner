@@ -58,7 +58,7 @@ namespace Meal_Planner_Api.Controllers
             var schedule = _recipeScheduleRepository.GetRecipeScheduleForUser(userId);
 
             if (schedule == null)
-                return NotFound("Not Found");
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

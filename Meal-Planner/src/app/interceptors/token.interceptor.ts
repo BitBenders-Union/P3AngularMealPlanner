@@ -23,8 +23,8 @@ export class TokenInterceptor implements HttpInterceptor {
     if(myToken){
       request = request.clone({
         setHeaders: {
+          'Content-Type': 'application/json',
           'Authorization':`Bearer ${myToken}`,
-        'Content-Type': 'application/json',
         },
       });
     }
@@ -43,6 +43,7 @@ export class TokenInterceptor implements HttpInterceptor {
             console.log("404 Error");
           }
         }
+        console.log(err)
         return throwError(() => new Error("Something went wrong new error",));
       })
     );

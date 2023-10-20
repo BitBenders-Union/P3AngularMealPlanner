@@ -55,7 +55,7 @@
             var recipes = _recipeRepository.GetRecipes();
 
             if (recipes == null || recipes.Count() == 0)
-                return NotFound("Not Found");
+                return NotFound();
 
             var recipesDTO = new List<RecipeDTO>();
 
@@ -91,7 +91,7 @@
             var recipe = _recipeRepository.GetRecipe(recipeId);
 
             if (recipe == null)
-                return NotFound("Not Found");
+                return NotFound();
 
             var recipeDTO = new RecipeDTO
             {
@@ -120,7 +120,7 @@
             var recipe = _recipeRepository.GetRecipe(recipeName);
 
             if (recipe == null)
-                return NotFound("Not Found");
+                return NotFound();
 
             var recipeDTO = new RecipeDTO
             {
@@ -184,7 +184,7 @@
             // Get a full recipe from body.
 
             if (recipeData == null)
-                return NotFound("input is null");
+                return NotFound();
 
             if(!ModelState.IsValid)
                 return BadRequest();
@@ -410,7 +410,7 @@
                 return BadRequest();
 
             if (!_recipeRepository.RecipeExists(recipeId))
-                return NotFound("Recipe with given id, does not exist");
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
