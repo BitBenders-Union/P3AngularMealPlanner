@@ -209,7 +209,7 @@ export class CreateRecipeComponent implements OnInit {
       };
 
 
-      // console.log(formattedRecipe);
+      console.log(formattedRecipe);
       this.recipeService.createRecipe(formattedRecipe).subscribe({
         next: response => {
           // console.log('Recipe created successfully', response);
@@ -218,7 +218,8 @@ export class CreateRecipeComponent implements OnInit {
         },
         error: error => console.error('There was an error!', error)
         });
-    } else {
+    } 
+    else {
       console.log('Form is invalid');
     }
 

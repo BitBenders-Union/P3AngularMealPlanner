@@ -386,17 +386,6 @@
 
 
 
-            // validate instructions
-            // needs to be after creating the recipe, because of one to many rules
-
-            foreach (var instruction in recipeData.Instructions)
-            {
-                var instructionMap = _mapper.Map<Instruction>(instruction);
-                instructionMap.Recipe = recipeMap;
-                _instructionRepository.CreateInstruction(instructionMap);
-
-            }
-
             var recipeId = _recipeRepository.GetRecipeId(recipeData.Title);
 
             return Ok(recipeId);
