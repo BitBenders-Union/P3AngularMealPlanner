@@ -1,18 +1,7 @@
-<!-- 
-  Form for creating a recipe.
-  see interfaces for required data
-  includes validation on numbers
-
-  TODO:
-  - re-route from here to recipe page on submission
-
- -->
 <app-navbar></app-navbar>
 
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="recipe-form">
-
-  <!-- using formGroup to bind the data to form variable -->
 
     <h2>Create Recipe</h2>
     <div class="form-section">
@@ -44,7 +33,7 @@
       <label>Rating: <input required formControlName="rating" type="number" class="input-field" min="0" max="5" (input)="validateRating()"/></label>
     </div>
     
-    <div formArrayName="ingredients" class="form-array-container ingredient-container">
+    <div formArrayName="ingredients" class="form-section form-array-container ingredient-container">
 
       <label class="ingredient-label-header">Ingredients</label>
 
@@ -102,11 +91,7 @@
 
         </div>
 
-
-
       </div>
-
-
 
     </div>
 
