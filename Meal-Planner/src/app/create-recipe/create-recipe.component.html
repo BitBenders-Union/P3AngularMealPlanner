@@ -44,9 +44,9 @@
       <label>Rating: <input required formControlName="rating" type="number" class="input-field" min="0" max="5" (input)="validateRating()"/></label>
     </div>
     
-    <div formArrayName="ingredients" class="form-array-container">
+    <div formArrayName="ingredients" class="form-array-container ingredient-container">
 
-      <h4>Ingredients</h4>
+      <label class="ingredient-label-header">Ingredients</label>
 
         <div class="ingredient-labels">
           <label class="ingredient-label">Name:</label>
@@ -54,20 +54,26 @@
           <label class="ingredient-label">Unit:</label>
         </div>
 
-        <div *ngFor="let ingredient of ingredients.controls; let i = index" class="ingredient-row">
-          
-          <div [formGroupName]="i" class="ingredient-group">
-            <input required formControlName="name" class="ingredient-input" />
-            <input required formControlName="amounts" type="number" class="ingredient-input" min="0" (input)="aboveZeroIngredient()"/>
-            <input required formControlName="unit" class="ingredient-input" />
-          
+        <div cdkDropList class="my-list" (cdkDropListDropped)="drop($event)">
+          <div *ngFor="let ingredient of ingredients.controls; let i = index" class="ingredient-row" cdkDrag>
+            <i class="fas fa-grip-vertical grip"></i>
+            <div [formGroupName]="i" class="ingredient-group">
+              <input required formControlName="name" class="ingredient-input" />
+              <input required formControlName="amounts" type="number" class="ingredient-input" min="0" (input)="aboveZeroIngredient()"/>
+              <input required formControlName="unit" class="ingredient-input" />
+
+
+
+                  <div class="buttons">
+                    <button type="button" (click)="addIngredients(i)" class="fas fa-plus"></button>
+                    <button type="button" (click)="removeIngredient(i)" class="fas fa-minus"></button>
+                  </div>
+
+            </div>
           </div>
         </div>
 
-        <div class="buttons">
-          <button type="button" (click)="addIngredients()" class="fas fa-plus"></button>
-          <button type="button" (click)="removeIngredients()" class="fas fa-minus"></button>
-        </div>
+
         
       </div>
       
@@ -75,19 +81,32 @@
     <div formArrayName="instructions" class="form-array-container">
 
       <div class="instruction-labels">
-        <label class="instruction-label">Instructions:</label>
+        <label class="instruction-label">Instructions</label>
       </div>
 
-        <div *ngFor="let instruction of instructions.controls; let i = index" class="instruction-row">
+      <div cdkDropList class="my-list" (cdkDropListDropped)="dropInstruction($event)">
+        <div *ngFor="let instruction of instructions.controls; let i = index" class="instruction-row" cdkDrag>
+
+          <i class="fas fa-grip-vertical grip"></i>
+
           <div [formGroupName]="i" class="instruction-group">
+
             <input required formControlName="text" class="instruction-input"/>
+
           </div>
+
+          <div class="buttons">
+            <button type="button" (click)="addInstruction(i)" class="fas fa-plus"></button>
+            <button type="button" (click)="removeInstruction(i)" class="fas fa-minus"></button>
+          </div>
+
         </div>
 
-      <div class="buttons">
-        <button type="button" (click)="addInstruction()" class="fas fa-plus"></button>
-        <button type="button" (click)="removeLastInstruction()" class="fas fa-minus"></button>
+
+
       </div>
+
+
 
     </div>
 
