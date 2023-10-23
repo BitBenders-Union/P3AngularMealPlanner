@@ -27,6 +27,7 @@
   margin-top: 20px;
   border-top: 1px solid var(--color-text);
   padding-top: 20px;
+  width: 100%;
 }
 
 /* Ingredient and Instruction Rows */
@@ -35,8 +36,12 @@
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  width: 100%;
 }
 
+.my-list{
+  width: 100%;
+}
 /* Ingredient and Instruction Groups */
 .ingredient-group,
 .instruction-group {
@@ -45,34 +50,54 @@
   width: 100%; /* Use 100% width to fill the available space */
 }
 
+.ingredient-label-header{
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
 /* Ingredient and Instruction Labels */
 .ingredient-label,
 .instruction-label {
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   font-weight: bold;
 }
 
 /* Ingredient and Instruction Inputs */
 .ingredient-input,
 .instruction-input {
-  flex: 1;
   padding: 8px;
   border: 1px solid var(--color-text);
   border-radius: 5px;
   margin-right: 5px;
 }
 
-.ingredient-labels {
+.instruction-input {
+  width: 100%;
+}
+
+.ingredient-input{
+  width: 35%;
+}
+
+.ingredient-container{
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
   margin-bottom: 10px;
+}
+
+.ingredient-labels {
+  width: 100%;
 }
 
 /* Align labels with inputs */
 .ingredient-label {
-  flex: 1;
   text-align: center;
   font-weight: bold;
+  margin-left: 1vw;
+  padding-right: 10vw;
+}
+.ingredient-label:nth-child(2){
+  padding-right: 9vw;
 }
 
 .instruction-labels {
@@ -83,7 +108,6 @@
 
 /* Align instruction label */
 .instruction-label {
-  flex: 1;
   text-align: center;
   font-weight: bold;
 }
@@ -96,7 +120,8 @@
 .buttons-exit {
   display: flex;
   align-items: center;
-  margin-top: 10px;
+  height: 100%;
+  padding-left: 2.5%;
 }
 
 .buttons-exit {
@@ -152,6 +177,17 @@ margin-left: 10px;
   border: 1px solid red;
 }
 
+
+.grip{
+  font-size: 1.5em;
+  margin-right: 5px;
+  color: var(--color-button-hover);
+
+}
+
+
+
+
  @media screen and (max-width: 1200px) {
   .ingredient-group{
     flex-direction: column;
@@ -183,5 +219,8 @@ margin-left: 10px;
     width: 80px; /* Adjust the width as needed */
     height: 40px; /* Adjust the height as needed */
   }
-  
+ 
+
+
+
 }

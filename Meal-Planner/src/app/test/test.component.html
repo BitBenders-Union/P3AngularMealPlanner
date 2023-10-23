@@ -12,3 +12,14 @@
   </div>
   <button (click)="addIngredient()">Add Ingredient</button>
   
+
+
+  <div cdkDropList class="my-list" (cdkDropListDropped)="drop($event)">
+    <div class="my-box" *ngFor="let ingredient of ingredients; let i = index" cdkDrag> 
+      <input [(ngModel)]="ingredient.name" placeholder="Ingredient" />
+      <input [(ngModel)]="ingredient.amount" placeholder="Amount" />
+      <input [(ngModel)]="ingredient.units" placeholder="Units" />
+  </div>
+
+
+  </div>
