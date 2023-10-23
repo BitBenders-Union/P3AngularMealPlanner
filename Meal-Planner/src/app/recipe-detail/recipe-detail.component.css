@@ -93,3 +93,20 @@
 }
 
 /* ... Other existing CSS ... */
+
+/* CSS classes for stars */
+.fas {
+  color: #d1d1d1; /* Default star color (empty) */
+  font-size: 24px;
+  transition: color 0.2s;
+}
+
+.fas.fa-star-half-alt {
+  position: relative;
+  left: -12px; /* Adjust position for half stars */
+}
+
+/* Change star color on hover */
+.fas:hover {
+  color: #f7c653; /* Hovered star color */
+}

@@ -1,3 +1,4 @@
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
 
 interface Ingredient {
@@ -37,6 +38,10 @@ export class TestComponent {
       this.ingredients[index] = this.ingredients[index + 1];
       this.ingredients[index + 1] = temp;
     }
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.ingredients, event.previousIndex, event.currentIndex);
   }
 
 }

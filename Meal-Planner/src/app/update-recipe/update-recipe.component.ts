@@ -251,8 +251,6 @@ export class UpdateRecipeComponent implements OnInit{
       })
     }
   }
-// test 1234
-// co-author test
   
   // controls what the user can input for rating
   validateRating() {

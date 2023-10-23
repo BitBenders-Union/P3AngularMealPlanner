@@ -5,12 +5,11 @@
 }
 
 .arrow {
-  width: 40px;
+  width: 120px;
   height: 40px;
   background-color: var(--color-secondary);
-  color: white;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   cursor: pointer;
   position: fixed;
