@@ -93,6 +93,7 @@ export class CreateRecipeComponent implements OnInit {
     this.searchInputSubject.next(this.form.get('category')?.value);
   }
 
+  //Finds 5 random categories from the array and displays them in dropdown list
   GetRandomElementsFromArray(array: string[], numberOfElements: number): string[] {
     const shuffledArray = [...array];
 

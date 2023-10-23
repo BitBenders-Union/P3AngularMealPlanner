@@ -8,6 +8,7 @@ import { CreateRecipeComponent } from './create-recipe/create-recipe.component';
 import { UpdateRecipeComponent } from './update-recipe/update-recipe.component';
 import { UserLoginComponent } from './user-login/user-login.component';
 import { UserRegisterComponent } from './user-register/user-register.component';
+import { TestComponent } from './test/test.component';
 import { AuthGuard } from './guards/auth.guard';
 
 
@@ -25,6 +26,7 @@ const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full', data: {animation: 'fader'}},
   {path: 'login', component: UserLoginComponent, data: {animation: 'fader'}},
   {path: 'register', component: UserRegisterComponent, data: {animation: 'fader'}},
+  {path: 'test', component: TestComponent, data: {animation: 'fader'}}
 ];
 
 @NgModule({
