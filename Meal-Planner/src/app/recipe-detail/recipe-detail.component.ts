@@ -9,13 +9,14 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-recipe-detail',
   templateUrl: './recipe-detail.component.html',
-  styleUrls: ['./recipe-detail.component.css']
+  styleUrls: ['./recipe-detail.component.css'],
 })
 export class RecipeDetailComponent implements OnInit {
 
   // recipe can either hold a recipe or null
   // initially it is set to null
   recipe: Recipe | undefined = undefined;
+  stars: (boolean | string)[] = new Array(5).fill('empty'); // Initialize with empty stars
 
   // Inject services and routes
   constructor(private route: ActivatedRoute, private recipeService: RecipeServiceService, public starService: StarService, private router: Router) {}
@@ -73,18 +74,20 @@ export class RecipeDetailComponent implements OnInit {
       }
     }
   }
-  // deleteRecipe() {
-  //   if (this.recipe) {
-  //     if (confirm('Are you sure you want to delete this recipe?')) {
-  //       this.recipeService.deleteRecipe(this.recipe.id).subscribe(() => {
-  //         // Handle successful deletion (e.g., navigate back to the recipe list)
-  //         this.router.navigate(['/search']);
-  //       });
-  //     }
-  //   }
-  // }
 
+  hoverStar(index: number) {
+    this.stars = this.starService.getRatingStars(index + 1);
+  }
 
+  resetStars() {
+    // Reset the stars when mouse leaves the container
+    this.stars = new Array(5).fill('empty');
+  }
+
+  rateRecipe(rating: number) {
+    // Implement your logic to save the rating, e.g., call an API
+    console.log(`User rated the recipe with ${rating + 1} stars.`);
+  }
 
   
 }
