@@ -199,7 +199,7 @@ export class CreateRecipeComponent implements OnInit {
       };
 
 
-      // console.log(formattedRecipe);
+      console.log(formattedRecipe);
       this.recipeService.createRecipe(formattedRecipe).subscribe({
         next: response => {
           this.form.reset();

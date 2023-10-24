@@ -41,9 +41,9 @@ export class SearchComponent implements OnInit {
   constructor(private router: Router,
               private recipeService: RecipeServiceService,
               public starService: StarService
-              ) {
+              ){
     
-  }
+    }
 
   // Fetch recipes from the service
   getRecipes(): void {
