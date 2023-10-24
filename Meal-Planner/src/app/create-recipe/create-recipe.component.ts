@@ -290,21 +290,6 @@ export class CreateRecipeComponent implements OnInit {
     }
   }
 
-  moveUp(index: number) {
-    if (index > 0) {
-      const temp = this.ingredients.controls[index];
-      this.ingredients.controls[index] = this.ingredients.controls[index - 1];
-      this.ingredients.controls[index - 1] = temp;
-    }
-  }
-
-  moveDown(index: number) {
-    if (index < this.ingredients.length - 1) {
-      const temp = this.ingredients.controls[index];
-      this.ingredients.controls[index] = this.ingredients.controls[index + 1];
-      this.ingredients.controls[index + 1] = temp;
-    }
-  }
   
   // this is to add ingredients to the form
   // it pushes the data to the last index of the array

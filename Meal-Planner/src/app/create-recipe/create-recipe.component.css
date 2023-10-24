@@ -82,6 +82,7 @@
 .ingredient-container{
   display: flex;
   flex-wrap: wrap;
+  flex-direction: row;
   margin-bottom: 10px;
 }
 
@@ -131,6 +132,7 @@
 
 button {
   background-color: var(--color-button);
+  color: white;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
