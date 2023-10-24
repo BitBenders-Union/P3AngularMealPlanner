@@ -12,6 +12,7 @@ export class LoginService {
 
   // private apiUrl = 'https://localhost:7268/';
   private apiUrl = 'http://192.168.21.22:5555/';
+  
   // private apiUrl = 'http://localhost:5000/';
   private userPayload: any;
   constructor(private http:HttpClient, private router: Router) { 
@@ -25,12 +26,12 @@ export class LoginService {
       password: password
     };
     
-    return this.http.post(`${this.apiUrl}validate`, body,{responseType: 'json'});
+    return this.http.post(`${this.apiUrl}validate`, body, {responseType: 'json'});
   }
 
   createLogin(data: any): Observable<any>{
 
-    return this.http.post(`${this.apiUrl}api/User`, data,{responseType: 'json'});
+    return this.http.post(`${this.apiUrl}api/User`, data, {responseType: 'json'});
   }
 
   //set usertoken to storage

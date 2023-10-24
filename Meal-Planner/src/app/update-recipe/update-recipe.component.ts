@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, FormControl, AbstractControl } from '@angular/forms';
 import { LoginService } from '../service/login.service';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-update-recipe',
@@ -165,25 +166,6 @@ export class UpdateRecipeComponent implements OnInit{
   }
 
 
-  addIngredient(): void {
-    this.ingredients.push(this.createIngredientGroup('', '', ''));
-  }
-
-  addInstruction(): void {
-    this.instructions.push(this.createInstructionGroup(''));
-  }
-
-  removeIngredient(): void {
-    if (this.ingredients.length > 0) {
-      this.ingredients.removeAt(this.ingredients.length - 1);
-    }
-  }
-
-  removeInstruction(): void {
-    if (this.instructions.length > 0) {
-      this.instructions.removeAt(this.instructions.length - 1);
-    }
-  }
 
   private createIngredientGroup(name: string, value: string, unit: string): FormGroup {
     return this.formBuilder.group({
@@ -251,8 +233,6 @@ export class UpdateRecipeComponent implements OnInit{
       })
     }
   }
-// test 1234
-// co-author test
   
   // controls what the user can input for rating
   validateRating() {
@@ -268,5 +248,52 @@ export class UpdateRecipeComponent implements OnInit{
   goBack(){
     this.router.navigate(['/recipe-detail/' + this.recipeId]);
   }
+
+
+
+  createIngredientFormGroup() {
+    return new FormGroup({
+      name: new FormControl(''),
+      amounts: new FormControl(''),
+      unit: new FormControl('')
+    });
+  }
+
+  createInstructionFormGroup() {
+    return new FormGroup({
+      text: new FormControl('')
+    });
+  }
+
+  addIngredients(index: number) {
+    this.ingredients.controls.splice(index + 1, 0, this.createIngredientFormGroup());
+  }
+
+  addInstructions(index: number) {
+    this.instructions.controls.splice(index + 1, 0, this.createInstructionFormGroup())
+  }
+  
+  removeIngredients(index: number) {
+    if(this.ingredients.length > 1){
+      this.ingredients.controls.splice(index, 1);
+    }
+  }
+
+  removeInstructions(index: number) {
+    if (this.instructions.length > 1) {
+      this.instructions.controls.splice(index, 1);
+    }
+  }
+
+
+
+  dropIngredient(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.ingredients.controls, event.previousIndex, event.currentIndex);
+  }
+
+  dropInstruction(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.instructions.controls, event.previousIndex, event.currentIndex);
+  }
+
 
 }

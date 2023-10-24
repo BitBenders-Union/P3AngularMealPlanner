@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, ReactiveFormsModule, AbstractControl  } from '@angular/forms';
 import { Recipe, RecipeDTO } from '../Interfaces';
 import { RecipeServiceService } from '../service/recipe-service.service';
 import { LoginService } from '../service/login.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 
 @Component({
   selector: 'app-create-recipe',
   templateUrl: './create-recipe.component.html',
-  styleUrls: ['./create-recipe.component.css']
+  styleUrls: ['./create-recipe.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CreateRecipeComponent implements OnInit {
   form: FormGroup; // the form binding to the html, this is what we use to get the values from the form
@@ -46,8 +48,8 @@ export class CreateRecipeComponent implements OnInit {
     // this is to initialize the form with one ingredient and one instruction
     // since before we initialize the form with empty arrays, we need to add one ingredient and one instruction
     // for it to render the form properly
-    this.addIngredients();
-    this.addInstruction();
+    this.addIngredients(0);
+    this.addInstruction(0);
   }
   ngOnInit(): void {
     this.recipeService.getCategories().subscribe({
@@ -93,6 +95,7 @@ export class CreateRecipeComponent implements OnInit {
     this.searchInputSubject.next(this.form.get('category')?.value);
   }
 
+  //Finds 5 random categories from the array and displays them in dropdown list
   GetRandomElementsFromArray(array: string[], numberOfElements: number): string[] {
     const shuffledArray = [...array];
 
@@ -113,20 +116,7 @@ export class CreateRecipeComponent implements OnInit {
     return this.form.get('ingredients') as FormArray;
   }
 
-  // this is to add ingredients to the form
-  // it pushes the data to the last index of the array
-  addIngredients() {
-    this.ingredients.push(this.createIngredientFormGroup());
-  }
 
-  // this is to remove the last ingredient from the form
-  // we need to check if the length is greater than 1, because we don't want to have 0 ingredients
-  // this also ensures the form renders properly
-  removeIngredients() {
-    if (this.ingredients.length > 1) {
-      this.ingredients.removeAt(this.ingredients.length - 1);
-    }
-  }
 
   // this is to create the form group for the ingredients
   // we need to create a form group for each ingredient, because each ingredient is an array
@@ -145,13 +135,13 @@ export class CreateRecipeComponent implements OnInit {
     return this.form.get('instructions') as FormArray;
   }
 
-  addInstruction() {
-    this.instructions.push(this.createInstructionFormGroup());
+  addInstruction(index: number) {
+    this.instructions.controls.splice(index + 1, 0, this.createInstructionFormGroup())
   }
 
-  removeLastInstruction() {
+  removeInstruction(index: number) {
     if (this.instructions.length > 1) {
-      this.instructions.removeAt(this.instructions.length - 1);
+      this.instructions.controls.splice(index, 1);
     }
   }
 
@@ -212,13 +202,13 @@ export class CreateRecipeComponent implements OnInit {
       // console.log(formattedRecipe);
       this.recipeService.createRecipe(formattedRecipe).subscribe({
         next: response => {
-          // console.log('Recipe created successfully', response);
           this.form.reset();
           this.router.navigate([`/recipe-detail/${response}`])
         },
         error: error => console.error('There was an error!', error)
         });
-    } else {
+    } 
+    else {
       console.log('Form is invalid');
     }
 
@@ -256,11 +246,11 @@ export class CreateRecipeComponent implements OnInit {
   // we also need to reset the arrays to 1
   onReset(){
     for (let i = this.ingredients.length; i >= 1; i--) {
-      this.removeIngredients();
+      this.removeIngredient(i);
     }
 
     for (let i = this.instructions.length; i >= 1; i--) {
-      this.removeLastInstruction();
+      this.removeInstruction(i);
     }
 
   }
@@ -294,6 +284,25 @@ export class CreateRecipeComponent implements OnInit {
 
   }
 
-  
+  removeIngredient(index: number) {
+    if(this.ingredients.length > 1){
+      this.ingredients.controls.splice(index, 1);
+    }
+  }
 
+  
+  // this is to add ingredients to the form
+  // it pushes the data to the last index of the array
+  addIngredients(index: number) {
+    this.ingredients.controls.splice(index + 1, 0, this.createIngredientFormGroup())
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.ingredients.controls, event.previousIndex, event.currentIndex);
+  }
+
+
+  dropInstruction(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.instructions.controls, event.previousIndex, event.currentIndex);
+  }
 }

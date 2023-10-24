@@ -1,0 +1,25 @@
+<p>test works!</p>
+<!-- your.component.html -->
+<div *ngFor="let ingredient of ingredients; let i = index">
+    <div class="row">
+      <input [(ngModel)]="ingredient.name" placeholder="Ingredient" />
+      <input [(ngModel)]="ingredient.amount" placeholder="Amount" />
+      <input [(ngModel)]="ingredient.units" placeholder="Units" />
+      <button (click)="moveUp(i)" [disabled]="i === 0">Move Up</button>
+      <button (click)="moveDown(i)" [disabled]="i === ingredients.length - 1">Move Down</button>
+      <button (click)="removeIngredient(i)">Remove</button>
+    </div>
+  </div>
+  <button (click)="addIngredient()">Add Ingredient</button>
+  
+
+
+  <div cdkDropList class="my-list" (cdkDropListDropped)="drop($event)">
+    <div class="my-box" *ngFor="let ingredient of ingredients; let i = index" cdkDrag> 
+      <input [(ngModel)]="ingredient.name" placeholder="Ingredient" />
+      <input [(ngModel)]="ingredient.amount" placeholder="Amount" />
+      <input [(ngModel)]="ingredient.units" placeholder="Units" />
+  </div>
+
+
+  </div>

@@ -8,9 +8,10 @@ import { Recipe, Ingredient, RecipeScheduleDTO, RecipeDTO } from '../Interfaces'
 })
 export class WeekScheduleService {
 
-  private dataUrl = 'http://192.168.21.22:5555/api'; // Adjust the path if needed
-  // private dataUrl = 'http://localhost:5000/api'; // Adjust the path if needed
   // private dataUrl = 'https://localhost:7268/api'; // Adjust the path if needed
+  private dataUrl = 'http://192.168.21.22:5555/api'; // Adjust the path if needed
+  
+  // private dataUrl = 'http://localhost:5000/api'; // Adjust the path if needed
 
   constructor(private http: HttpClient) { }
 

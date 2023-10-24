@@ -25,7 +25,7 @@ namespace Meal_Planner_Api.Controllers
             var ingredients = _mapper.Map<List<IngredientDTO>>(_ingredientRepository.GetIngredients());
 
             if (ingredients == null || ingredients.Count() == 0)
-                return NotFound("Not Found");
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -38,7 +38,7 @@ namespace Meal_Planner_Api.Controllers
         public IActionResult Get(int id)
         {
             if (!_ingredientRepository.IngredientExists(id))
-                return NotFound("Not Found");
+                return NotFound();
 
             var ingredient = _mapper.Map<IngredientDTO>(_ingredientRepository.GetIngredient(id));
 
@@ -54,7 +54,7 @@ namespace Meal_Planner_Api.Controllers
         public IActionResult Get(string name)
         {
             if (!_ingredientRepository.IngredientExists(name))
-                return NotFound("Not Found");
+                return NotFound();
 
             var ingredient = _mapper.Map<IngredientDTO>(_ingredientRepository.GetIngredient(name));
 
@@ -72,7 +72,7 @@ namespace Meal_Planner_Api.Controllers
             var ingredient = _mapper.Map<IngredientDTO>(_ingredientRepository.GetIngredientsFromRecipe(recipeId));
 
             if (ingredient == null)
-                return NotFound("Not Found");
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -112,7 +112,7 @@ namespace Meal_Planner_Api.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok("Success");
+            return Ok();
         }
 
 

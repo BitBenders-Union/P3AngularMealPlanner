@@ -21,7 +21,7 @@ namespace Meal_Planner_Api.Controllers
             var units = _mapper.Map<List<UnitDTO>>(_unitRepository.GetUnits());
 
             if (units == null || units.Count() == 0)
-                return NotFound("Not Found");
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -34,7 +34,7 @@ namespace Meal_Planner_Api.Controllers
         public IActionResult Get(int id)
         {
             if (!_unitRepository.UnitExists(id))
-                return NotFound("Not Found");
+                return NotFound();
 
             var units = _mapper.Map<UnitDTO>(_unitRepository.GetUnitById(id));
 
@@ -51,7 +51,7 @@ namespace Meal_Planner_Api.Controllers
             var unit = _mapper.Map<UnitDTO>(_unitRepository.GetUnitForRecipe(recipeId));
 
             if (unit == null)
-                return NotFound("Not Found");
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -65,7 +65,7 @@ namespace Meal_Planner_Api.Controllers
         public IActionResult GetById(string name)
         {
             if (!_unitRepository.UnitExists(name))
-                return NotFound("Not Found");
+                return NotFound();
 
             var unit = _mapper.Map<UnitDTO>(_unitRepository.GetUnitByName(name));
 
@@ -82,7 +82,7 @@ namespace Meal_Planner_Api.Controllers
             var unit = _mapper.Map<UnitDTO>(_unitRepository.GetUnitFromIngredient(ingredientId));
 
             if (unit == null)
-                return NotFound("Not Found");
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -126,7 +126,7 @@ namespace Meal_Planner_Api.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok("Success");
+            return Ok();
         }
 
 

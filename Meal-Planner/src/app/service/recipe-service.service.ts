@@ -16,6 +16,7 @@ export class RecipeServiceService{
 
   // url: string = 'https://localhost:7268/api';
   url: string = 'http://192.168.21.22:5555/api';
+
   // url: string = 'http://localhost:5000/api';
   // url = '../assets/Recipes.json';
 
@@ -58,26 +59,20 @@ export class RecipeServiceService{
 
 
   createRecipe(recipeData: RecipeDTO): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
 
     // Send a POST request to the API
-    return this.http.post(`${this.url}/Recipe/create`, recipeData, {headers}).pipe(
-      catchError(error => {
-        console.error('Error creating recipe:', error);
-        throw error;
-      })
-    );
+    return this.http.post(`${this.url}/Recipe/create`, recipeData);
   }
 
   deleteRecipe(recipeId: number): Observable<any> {
     return this.http.delete(`${this.url}/Recipe/delete/${recipeId}`);
   }
 
-  //------------------- changing -------------------------------
+
   updateRecipe( recipeData: RecipeDTO, recipeId: number): Observable<any> {
     // Send a PUT request to the API
     return this.http.put(`${this.url}/Recipe/update/${recipeId}`, recipeData);
   }
+
+  
 }
