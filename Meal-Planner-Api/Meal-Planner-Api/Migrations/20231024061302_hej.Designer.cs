@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Meal_Planner_Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230914124858_update")]
-    partial class update
+    [Migration("20231024061302_hej")]
+    partial class hej
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.11")
+                .HasAnnotation("ProductVersion", "7.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -50,7 +50,6 @@ namespace Meal_Planner_Api.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CategoryName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -82,23 +81,42 @@ namespace Meal_Planner_Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AmountId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UnitId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AmountId");
-
-                    b.HasIndex("UnitId");
-
                     b.ToTable("Ingredients");
+                });
+
+            modelBuilder.Entity("Meal_Planner_Api.Models.IngredientAmount", b =>
+                {
+                    b.Property<int>("ingredientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("amountId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ingredientId", "amountId");
+
+                    b.HasIndex("amountId");
+
+                    b.ToTable("IngredientAmounts");
+                });
+
+            modelBuilder.Entity("Meal_Planner_Api.Models.IngredientUnit", b =>
+                {
+                    b.Property<int>("ingredientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("unitId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ingredientId", "unitId");
+
+                    b.HasIndex("unitId");
+
+                    b.ToTable("IngredientUnits");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.Instruction", b =>
@@ -109,11 +127,10 @@ namespace Meal_Planner_Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("RecipeId")
+                    b.Property<int?>("RecipeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -163,45 +180,38 @@ namespace Meal_Planner_Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CookingTimeId")
+                    b.Property<int?>("CookingTimeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PreparationTimeId")
+                    b.Property<int?>("PreparationTimeId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RecipeScheduleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ServingsId")
+                    b.Property<int?>("ServingsId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("categoryId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
 
                     b.HasIndex("CookingTimeId");
 
                     b.HasIndex("PreparationTimeId");
 
-                    b.HasIndex("RecipeScheduleId");
-
                     b.HasIndex("ServingsId");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("categoryId");
 
                     b.ToTable("Recipes");
                 });
@@ -214,19 +224,9 @@ namespace Meal_Planner_Api.Migrations
                     b.Property<int>("IngredientId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AmountId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UnitId")
-                        .HasColumnType("int");
-
                     b.HasKey("RecipeId", "IngredientId");
 
-                    b.HasIndex("AmountId");
-
                     b.HasIndex("IngredientId");
-
-                    b.HasIndex("UnitId");
 
                     b.ToTable("RecipeIngredients");
                 });
@@ -257,10 +257,13 @@ namespace Meal_Planner_Api.Migrations
                     b.Property<int>("Column")
                         .HasColumnType("int");
 
+                    b.Property<int?>("RecipeId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Row")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -295,7 +298,6 @@ namespace Meal_Planner_Api.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Measurement")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -312,15 +314,21 @@ namespace Meal_Planner_Api.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<byte[]>("PasswordHash")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("PasswordSalt")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Username")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -343,73 +351,74 @@ namespace Meal_Planner_Api.Migrations
                     b.ToTable("UserRating");
                 });
 
-            modelBuilder.Entity("Meal_Planner_Api.Models.Ingredient", b =>
+            modelBuilder.Entity("Meal_Planner_Api.Models.IngredientAmount", b =>
                 {
-                    b.HasOne("Meal_Planner_Api.Models.Amount", "Amount")
-                        .WithMany()
-                        .HasForeignKey("AmountId")
+                    b.HasOne("Meal_Planner_Api.Models.Amount", "amount")
+                        .WithMany("ingredientAmount")
+                        .HasForeignKey("amountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Meal_Planner_Api.Models.Unit", "Unit")
-                        .WithMany()
-                        .HasForeignKey("UnitId")
+                    b.HasOne("Meal_Planner_Api.Models.Ingredient", "ingredient")
+                        .WithMany("IngredientAmount")
+                        .HasForeignKey("ingredientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Amount");
+                    b.Navigation("amount");
 
-                    b.Navigation("Unit");
+                    b.Navigation("ingredient");
+                });
+
+            modelBuilder.Entity("Meal_Planner_Api.Models.IngredientUnit", b =>
+                {
+                    b.HasOne("Meal_Planner_Api.Models.Ingredient", "ingredient")
+                        .WithMany("IngredientUnit")
+                        .HasForeignKey("ingredientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Meal_Planner_Api.Models.Unit", "unit")
+                        .WithMany("ingredientUnit")
+                        .HasForeignKey("unitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ingredient");
+
+                    b.Navigation("unit");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.Instruction", b =>
                 {
                     b.HasOne("Meal_Planner_Api.Models.Recipe", "Recipe")
                         .WithMany("Instructions")
-                        .HasForeignKey("RecipeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RecipeId");
 
                     b.Navigation("Recipe");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.Recipe", b =>
                 {
-                    b.HasOne("Meal_Planner_Api.Models.Category", "Category")
-                        .WithMany("Recipes")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Meal_Planner_Api.Models.CookingTime", "CookingTime")
                         .WithMany("Recipe")
-                        .HasForeignKey("CookingTimeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CookingTimeId");
 
                     b.HasOne("Meal_Planner_Api.Models.PreparationTime", "PreparationTime")
                         .WithMany("Recipe")
-                        .HasForeignKey("PreparationTimeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Meal_Planner_Api.Models.RecipeSchedule", null)
-                        .WithMany("Recipes")
-                        .HasForeignKey("RecipeScheduleId");
+                        .HasForeignKey("PreparationTimeId");
 
                     b.HasOne("Meal_Planner_Api.Models.Servings", "Servings")
                         .WithMany("Recipe")
-                        .HasForeignKey("ServingsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ServingsId");
 
                     b.HasOne("Meal_Planner_Api.Models.User", "User")
                         .WithMany("Recipes")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
-                    b.Navigation("Category");
+                    b.HasOne("Meal_Planner_Api.Models.Category", "category")
+                        .WithMany("Recipes")
+                        .HasForeignKey("categoryId");
 
                     b.Navigation("CookingTime");
 
@@ -418,16 +427,12 @@ namespace Meal_Planner_Api.Migrations
                     b.Navigation("Servings");
 
                     b.Navigation("User");
+
+                    b.Navigation("category");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.RecipeIngredient", b =>
                 {
-                    b.HasOne("Meal_Planner_Api.Models.Amount", "Amount")
-                        .WithMany("Ingredients")
-                        .HasForeignKey("AmountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Meal_Planner_Api.Models.Ingredient", "Ingredient")
                         .WithMany("RecipeIngredients")
                         .HasForeignKey("IngredientId")
@@ -440,19 +445,9 @@ namespace Meal_Planner_Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Meal_Planner_Api.Models.Unit", "Unit")
-                        .WithMany("Ingredients")
-                        .HasForeignKey("UnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Amount");
-
                     b.Navigation("Ingredient");
 
                     b.Navigation("Recipe");
-
-                    b.Navigation("Unit");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.RecipeRating", b =>
@@ -478,9 +473,7 @@ namespace Meal_Planner_Api.Migrations
                 {
                     b.HasOne("Meal_Planner_Api.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -506,7 +499,7 @@ namespace Meal_Planner_Api.Migrations
 
             modelBuilder.Entity("Meal_Planner_Api.Models.Amount", b =>
                 {
-                    b.Navigation("Ingredients");
+                    b.Navigation("ingredientAmount");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.Category", b =>
@@ -521,6 +514,10 @@ namespace Meal_Planner_Api.Migrations
 
             modelBuilder.Entity("Meal_Planner_Api.Models.Ingredient", b =>
                 {
+                    b.Navigation("IngredientAmount");
+
+                    b.Navigation("IngredientUnit");
+
                     b.Navigation("RecipeIngredients");
                 });
 
@@ -545,11 +542,6 @@ namespace Meal_Planner_Api.Migrations
                     b.Navigation("RecipeRating");
                 });
 
-            modelBuilder.Entity("Meal_Planner_Api.Models.RecipeSchedule", b =>
-                {
-                    b.Navigation("Recipes");
-                });
-
             modelBuilder.Entity("Meal_Planner_Api.Models.Servings", b =>
                 {
                     b.Navigation("Recipe");
@@ -557,7 +549,7 @@ namespace Meal_Planner_Api.Migrations
 
             modelBuilder.Entity("Meal_Planner_Api.Models.Unit", b =>
                 {
-                    b.Navigation("Ingredients");
+                    b.Navigation("ingredientUnit");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.User", b =>
