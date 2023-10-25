@@ -1,57 +1,57 @@
 export interface Recipe {
-    id: number
-    title: string
-    description: string
-    category: Category
-    preparationTimes: PreparationTime
-    cookingTimes: CookingTime
-    servings: Servings
-    ratings: Rating[]
-    ingredients: Ingredient[]
-    instructions: Instruction[]
-    user: User
+    Id: number
+    Title: string
+    Description: string
+    Category: Category
+    PreparationTime: PreparationTime
+    CookingTime: CookingTime
+    Servings: Servings
+    Ratings: Rating[]
+    Ingredients: Ingredient[]
+    Instructions: Instruction[]
+    User: User
   }
 
 export interface Category {
-    id: number,
-    categoryName: string
+    Id: number,
+    CategoryName: string
   }
 
   export interface PreparationTime {
-    id: number,
-    minutes: number
+    Id: number,
+    Minutes: number
   }
 
   export interface CookingTime {
-    id: number,
-    minutes: number
+    Id: number,
+    Minutes: number
   }
 
   export interface Servings {
-    id: number,
-    quantity: number
+    Id: number,
+    Quantity: number
   }
 
   export interface Rating {
-    id: number,
-    score: number
+    Id: number,
+    Score: number
   }
 
   export interface Ingredient {
-    id: number,
-    name: string,
-    amount: Amount,
-    unit: Unit
+    Id: number,
+    Name: string,
+    Amount: Amount,
+    Unit: Unit
   }
 
   export interface Amount {
-    id: number,
-    quantity: number
+    Id: number,
+    Quantity: number
   }
 
   export interface Unit {
-    id: number,
-    measurement: string
+    Id: number,
+    Measurement: string
   }
 
   export interface Instruction {
@@ -69,10 +69,9 @@ export interface Category {
     Title: string
     Description: string
     Category: CategoryDTO
-    PreparationTimes: PreparationTimeDTO
-    CookingTimes: CookingTimeDTO
+    PreparationTime: PreparationTimeDTO
+    CookingTime: CookingTimeDTO
     Servings: ServingsDTO
-    Ratings: RatingDTO[]
     Ingredients: IngredientDTO[]
     Instructions: InstructionDTO[]
     User: User

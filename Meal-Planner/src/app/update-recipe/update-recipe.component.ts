@@ -72,8 +72,8 @@ export class UpdateRecipeComponent implements OnInit{
             title: this.recipe!.title,
             description: this.recipe!.description,
             category: this.recipe!.category.categoryName,
-            prepTime: this.recipe!.preparationTimes.minutes,
-            cookTime: this.recipe!.cookingTimes.minutes,
+            prepTime: this.recipe!.preparationTime.minutes,
+            cookTime: this.recipe!.cookingTime.minutes,
             servings: this.recipe!.servings.quantity,
             rating: this.recipe!.ratings[0].score,
             ingredients: this.recipe!.ingredients,
@@ -191,18 +191,15 @@ export class UpdateRecipeComponent implements OnInit{
         Category: {
           CategoryName: this.updateForm.get('category')!.value
         },
-        PreparationTimes: {
+        PreparationTime: {
           Minutes: this.updateForm.get('prepTime')!.value
         },
-        CookingTimes:{
+        CookingTime:{
           Minutes: this.updateForm.get('cookTime')!.value        
         },          
         Servings:{ 
           Quantity: this.updateForm.get('servings')!.value
         },
-        Ratings: [{
-          Score: this.updateForm.get('rating')!.value
-        }],
         Ingredients: this.ingredients.controls.map(control => ({
           Name: control.get('name')?.value,
           Amount: {
@@ -234,16 +231,7 @@ export class UpdateRecipeComponent implements OnInit{
     }
   }
   
-  // controls what the user can input for rating
-  validateRating() {
-    const ratingControl = this.updateForm.get('rating');
 
-    if (ratingControl!.value < 0) {
-      ratingControl!.setValue(0);
-    } else if (ratingControl!.value > 5) {
-      ratingControl!.setValue(5);
-    }
-  }
 
   goBack(){
     this.router.navigate(['/recipe-detail/' + this.recipeId]);

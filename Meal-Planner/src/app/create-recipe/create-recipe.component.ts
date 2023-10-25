@@ -40,7 +40,6 @@ export class CreateRecipeComponent implements OnInit {
       prepTime: null,
       cookTime: null,
       servings: null,
-      rating: null,
       ingredients: this.formBuilder.array([]),
       instructions: this.formBuilder.array([]),
     });
@@ -168,18 +167,15 @@ export class CreateRecipeComponent implements OnInit {
         Category: {
           CategoryName: this.form.get('category')?.value
         },
-        PreparationTimes: { 
+        PreparationTime: { 
           Minutes: this.form.get('prepTime')?.value
         },
-        CookingTimes: { 
+        CookingTime: { 
           Minutes: this.form.get('cookTime')?.value
          },
         Servings: { 
           Quantity: this.form.get('servings')?.value
         },
-        Ratings: [{
-          Score: this.form.get('rating')?.value
-        }],
         Ingredients: this.ingredients.controls.map(control => ({
           Name: control.get('name')?.value,
           Amount: {
@@ -255,18 +251,6 @@ export class CreateRecipeComponent implements OnInit {
 
   }
 
-  // this is to restrict the rating to be between 0 and 5
-  // if you try to type a number that is less than 0, it will automatically set it to 0
-  // if you try to type a number that is greater than 5, it will automatically set it to 5
-  validateRating() {
-    const ratingControl = this.form.get('rating');
-
-    if (ratingControl!.value < 0) {
-      ratingControl!.setValue(0);
-    } else if (ratingControl!.value > 5) {
-      ratingControl!.setValue(5);
-    }
-  }
 
   // this is to restrict a given controller to be greater than 0
   aboveZero(inputElement: EventTarget, controlName: string){
