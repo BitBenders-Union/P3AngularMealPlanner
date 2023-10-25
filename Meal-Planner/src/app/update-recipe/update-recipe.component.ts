@@ -221,7 +221,7 @@ export class UpdateRecipeComponent implements OnInit{
         }
       };
 
-      // console.log(recipeDTO);
+      console.log(recipeDTO);
       this.recipeService.updateRecipe(recipeDTO, this.recipeId!).subscribe({
         next:(data: any) => {
           // console.log("Success", data);

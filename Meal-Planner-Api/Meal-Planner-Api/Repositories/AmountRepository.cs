@@ -20,23 +20,16 @@
 
         public ICollection<Amount> GetAmountsFromRecipe(int recipeId)
         {
-
-            return _context.Recipes.Where(r => r.Id == recipeId)
-                .SelectMany(r => r.RecipeIngredients)
-                .Select(i => i.Ingredient)
-                .SelectMany(i => i.IngredientAmount)
-                .Select(ia => ia.amount)
-                .ToList();
+            
+            // not implemented throw error
+            throw new NotImplementedException();
 
         }
 
         public Amount GetAmountForIngredient(int ingredientId)
         {
-            return _context.Ingredients
-                .Where(i => i.Id == ingredientId)
-                .SelectMany(i => i.IngredientAmount)
-                .Select(ia => ia.amount)
-                .FirstOrDefault();
+            // not implemented throw error
+            throw new NotImplementedException();
 
         }
 

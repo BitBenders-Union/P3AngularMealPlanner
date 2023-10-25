@@ -43,11 +43,10 @@
 
         public ICollection<Rating> GetRatingsForRecipe(int recipeId)
         {
-            var recipe = _context.Recipes.Include(x => x.RecipeRating)
-                .ThenInclude(x => x.Rating)
-                .FirstOrDefault(x => x.Id == recipeId);
 
-            var rating = recipe.RecipeRating.Select(x => x.Rating).Where(x => x != null).ToList();
+            var rating = _context.Ratings.Include(x => x.RecipeRating)
+                .Where(x => x.RecipeRating.Any(x => x.RecipeID == recipeId)).ToList();
+                
 
             return rating;
 
@@ -58,14 +57,14 @@
         {
             // returns all the ratings the user have given
 
-            var user = _context.Users.Include(x => x.UserRating)
+            var user = _context.Users.Include(x => x.RecipeRatings)
                 .ThenInclude(x => x.Rating)
                 .FirstOrDefault(x => x.Id == userId);
 
             if (user == null)
                 return null;
 
-            var rating = user.UserRating.Select(x => x.Rating)
+            var rating = user.RecipeRatings.Select(x => x.Rating)
                 .Where(x => x != null).ToList();
 
             return rating;
@@ -99,11 +98,7 @@
 
         public bool recipeRatingsExists(int recipeId)
         {
-            var recipe = _context.Recipes.Include(x => x.RecipeRating)
-                .ThenInclude(x => x.Rating)
-                .FirstOrDefault(x => x.Id == recipeId);
-
-            return recipe.RecipeRating.Any();
+            return _context.RecipeRatings.Any(x => x.RecipeID == recipeId);
         }
 
         public bool Save()
