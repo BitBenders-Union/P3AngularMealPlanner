@@ -16,10 +16,10 @@
         public Ingredient GetIngredient(string name)
         {
             return _context.Ingredients
-                .Include(x => x.IngredientAmount)
-                    .ThenInclude(x => x.amount)
-                .Include(x => x.IngredientUnit)
-                    .ThenInclude(x => x.unit)
+                .Include(x => x.RecipeIngredients)
+                    .ThenInclude(x => x.Amount)
+                .Include(x => x.RecipeIngredients)
+                    .ThenInclude(x => x.Unit)
                 .FirstOrDefault(x => x.Name == name);
         }
 

@@ -9,6 +9,7 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+
 //fixed
 builder.Services.AddCors(options =>
 {

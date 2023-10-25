@@ -53,28 +53,35 @@ namespace Meal_Planner_Api.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
 
-            modelBuilder.Entity<RecipeRating>()
-                .HasKey(rr => new { rr.RecipeID, rr.RatingID });
-            modelBuilder.Entity<RecipeRating>()
-                .HasOne(r => r.Recipe)
-                .WithMany(rr => rr.RecipeRating)
-                .HasForeignKey(r => r.RecipeID);
-            modelBuilder.Entity<RecipeRating>()
-                .HasOne(r => r.Rating)
-                .WithMany(rr => rr.RecipeRating)
-                .HasForeignKey(r => r.RatingID);
+            modelBuilder.Entity<RecipeIngredient>()
+                .HasOne(ri => ri.Amount)
+                .WithMany(a => a.RecipeIngredients)
+                .HasForeignKey(ri => ri.AmountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<RecipeIngredient>()
+                .HasOne(ri => ri.Unit)
+                .WithMany(u => u.RecipeIngredients)
+                .HasForeignKey(ri => ri.UnitId)
+                .OnDelete(DeleteBehavior.Restrict);
 
 
-            modelBuilder.Entity<UserRating>()
-                .HasKey(ur => new { ur.UserId, ur.RatingId });
-            modelBuilder.Entity<UserRating>()
-                .HasOne(u => u.User)
-                .WithMany(ur => ur.UserRating)
-                .HasForeignKey(u => u.UserId);
-            modelBuilder.Entity<UserRating>()
-                .HasOne(r => r.Rating)
-                .WithMany(ur => ur.UserRating)
-                .HasForeignKey(r => r.RatingId);
+
+            modelBuilder.Entity<RecipeRating>()
+                .HasOne(rr => rr.Recipe)
+                .WithMany()
+                .HasForeignKey(rr => rr.RecipeID);
+
+            modelBuilder.Entity<RecipeRating>()
+                .HasOne(rr => rr.Rating)
+                .WithMany(r => r.RecipeRating)
+                .HasForeignKey(rr => rr.RatingID);
+
+            modelBuilder.Entity<RecipeRating>()
+                .HasOne(rr => rr.User)
+                .WithMany(u => u.RecipeRatings)
+                .HasForeignKey(rr => rr.UserID);
+
 
 
             modelBuilder.Entity<IngredientAmount>()
@@ -89,6 +96,8 @@ namespace Meal_Planner_Api.Data
             //    .WithOne(r => r.User)
             //    .HasForeignKey(r => r.User.Id)
             //    .OnDelete(DeleteBehavior.Restrict);
+
+
 
 
 

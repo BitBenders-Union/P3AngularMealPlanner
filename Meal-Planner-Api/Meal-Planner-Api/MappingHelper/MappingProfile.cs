@@ -10,10 +10,6 @@
             CreateMap<Category, CategoryDTO>();
             CreateMap<CategoryDTO, Category>();
 
-            CreateMap<Ingredient, IngredientDTO>()
-                .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => src.IngredientAmount.FirstOrDefault().amount))
-                .ForMember(dest => dest.Unit, opt => opt.MapFrom(src => src.IngredientUnit.FirstOrDefault().unit));
-
             CreateMap<IngredientDTO, Ingredient>();
 
             CreateMap<Instruction, InstructionDTO>();
