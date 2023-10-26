@@ -127,6 +127,7 @@ export interface Category {
   export interface Ingredient {
     id: number,
     name: string,
+    order: number,
     amount: Amount,
     unit: Unit
   }
@@ -186,6 +187,7 @@ export interface CategoryDTO {
 
   export interface IngredientDTO {
     Name: string,
+    Order: number,
     Amount: AmountDTO,
     Unit: UnitDTO
   }

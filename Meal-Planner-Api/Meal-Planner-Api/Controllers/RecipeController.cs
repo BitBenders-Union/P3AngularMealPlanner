@@ -371,6 +371,9 @@ namespace Meal_Planner_Api.Controllers
             }
 
 
+            // create an order for the ingredients
+
+
             // Update the ingredients
             var uniqueIngredients = new HashSet<string>(); // To store unique ingredient names
 
@@ -392,6 +395,11 @@ namespace Meal_Planner_Api.Controllers
                     existingIngredient = _mapper.Map<Ingredient>(ingredientDTO);
                     _ingredientRepository.CreateIngredient(existingIngredient);
                     existingIngredient = _ingredientRepository.GetIngredient(ingredientDTO.Name);
+                }
+                else
+                {
+                    existingIngredient.Order = ingredientDTO.Order;
+
                 }
 
                 var existingAmount = _amountRepository.GetAmountByQuantity(ingredientDTO.Amount.Quantity);
@@ -497,6 +505,7 @@ namespace Meal_Planner_Api.Controllers
                 {
                     Id = recipeIngredient.Ingredient.Id,
                     Name = recipeIngredient.Ingredient.Name,
+                    Order = recipeIngredient.Ingredient.Order,
                     Amount = new()
                     {
                         Id = recipeIngredient.Amount.Id,

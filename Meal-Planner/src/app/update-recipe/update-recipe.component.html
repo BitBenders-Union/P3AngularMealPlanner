@@ -40,9 +40,9 @@
         </div>
 
         <div class="ingredient-labels">
-          <label for="" class="ingredient-label">Name</label>
-          <label for="" class="ingredient-label">Amount</label>
-          <label for="" class="ingredient-label">Unit</label>
+          <label class="ingredient-label">Name</label>
+          <label class="ingredient-label">Amount</label>
+          <label class="ingredient-label">Unit</label>
         </div>
 
 
@@ -55,9 +55,9 @@
                 <div class="ingredient-group" [formGroupName]="i" >
                   
                   <input formControlName="name" placeholder="Ingredient Name" class="ingredient-input" required>
-                  <input formControlName="value" placeholder="Amount Value" class="ingredient-input" required type="number">
-                  
+                  <input required formControlName="amounts" type="number" class="ingredient-input" min="0"/>
                   <input formControlName="unit" placeholder="Amount Unit" class="ingredient-input" required>
+                  
                 </div>
 
                 

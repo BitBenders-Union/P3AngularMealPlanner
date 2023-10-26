@@ -68,6 +68,7 @@ export class DashboardComponent implements OnInit{
         const shoppingListIngredient: Ingredient = {
           id: newIngredient.id,
           name: newIngredient.name,
+          order: newIngredient.order,
           amount: { ...newIngredient.amount, quantity: newIngredient.amount.quantity, },
           unit: { ...newIngredient.unit, measurement: newIngredient.unit.measurement },
         };
