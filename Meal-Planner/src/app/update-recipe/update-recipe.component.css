@@ -22,11 +22,14 @@
   border-radius: 5px;
 }
 
+
+
 /* Container for dynamically added rows */
 .form-array-container {
   margin-top: 20px;
   border-top: 1px solid var(--color-text);
   padding-top: 20px;
+  width: 100%;
 }
 
 /* Ingredient and Instruction Rows */
@@ -45,9 +48,16 @@
   width: 100%; /* Use 100% width to fill the available space */
 }
 
+.test{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+}
 
 .ingredient-label-header{
   font-weight: bold;
+  height: 4vh;
 }
 
 
@@ -81,6 +91,7 @@
 .ingredient-label:nth-child(2){
   padding-right: 9.2vw;
 }
+
 
 
 
