@@ -68,6 +68,7 @@ export class UpdateRecipeComponent implements OnInit{
         this.recipeService.getRecipeById(this.recipeId).subscribe(recipe => {
           
           this.recipe = recipe;
+          console.log(this.recipe);
           this.updateForm.patchValue({
             title: this.recipe!.title,
             description: this.recipe!.description,
@@ -83,12 +84,13 @@ export class UpdateRecipeComponent implements OnInit{
           if (this.recipe!.ingredients && this.recipe!.ingredients.length > 0) {
             this.recipe!.ingredients.forEach((ingredient) => {
               const nameControl = new FormControl(ingredient.name);
-              const valueControl = new FormControl(ingredient.amount.quantity);
+              const amountsControl = new FormControl(ingredient.amount.quantity);
               const unitControl = new FormControl(ingredient.unit.measurement);
         
               const ingredientGroup = this.formBuilder.group({
                 name: nameControl,
-                value: valueControl,
+                order: ingredient.order,
+                amounts: amountsControl,
                 unit: unitControl
 
               });
@@ -166,13 +168,13 @@ export class UpdateRecipeComponent implements OnInit{
 
 
 
-  private createIngredientGroup(name: string, value: string, unit: string): FormGroup {
-    return this.formBuilder.group({
-      name: new FormControl(name),
-      value: new FormControl(value),
-      unit: new FormControl(unit)
-    });
-  }
+  // public createIngredientGroup(name: string, value: string, unit: string): FormGroup {
+  //   return this.formBuilder.group({
+  //     name: new FormControl(name),
+  //     value: new FormControl(value),
+  //     unit: new FormControl(unit)
+  //   });
+  // }
 
   private createInstructionGroup(text: string): FormGroup {
     return this.formBuilder.group({
@@ -201,8 +203,9 @@ export class UpdateRecipeComponent implements OnInit{
         },
         Ingredients: this.ingredients.controls.map(control => ({
           Name: control.get('name')?.value,
+          Order: control.get('order')?.value,
           Amount: {
-            Quantity: control.get('value')?.value
+            Quantity: control.get('amounts')?.value
           },
           Unit: {
             Measurement: control.get('unit')?.value
@@ -238,11 +241,12 @@ export class UpdateRecipeComponent implements OnInit{
 
 
 
-  createIngredientFormGroup() {
+  createIngredientFormGroup(index: number) {
     return new FormGroup({
       name: new FormControl(''),
       amounts: new FormControl(''),
-      unit: new FormControl('')
+      unit: new FormControl(''),
+      order: new FormControl(index)
     });
   }
 
@@ -253,7 +257,7 @@ export class UpdateRecipeComponent implements OnInit{
   }
 
   addIngredients(index: number) {
-    this.ingredients.controls.splice(index + 1, 0, this.createIngredientFormGroup());
+    this.ingredients.controls.splice(index + 1, 0, this.createIngredientFormGroup(index));
   }
 
   addInstructions(index: number) {
@@ -276,6 +280,9 @@ export class UpdateRecipeComponent implements OnInit{
 
   dropIngredient(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.ingredients.controls, event.previousIndex, event.currentIndex);
+    for (let i = 0; i < this.ingredients.controls.length; i++) {
+      this.ingredients.controls[i].get('order')!.setValue(i);
+  }
   }
 
   dropInstruction(event: CdkDragDrop<string[]>) {

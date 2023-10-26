@@ -120,12 +120,14 @@ export class CreateRecipeComponent implements OnInit {
   // this is to create the form group for the ingredients
   // we need to create a form group for each ingredient, because each ingredient is an array
   // this is all to reflect our interface and make it easier to post to the backend
-  createIngredientFormGroup() {
+  createIngredientFormGroup(index: number) {
     return new FormGroup({
       name: new FormControl(''),
       amounts: new FormControl(''),
-      unit: new FormControl('')
+      unit: new FormControl(''),
+      order: new FormControl(index)
     });
+    
   }
 
   // this is to get the instructions from the form
@@ -178,6 +180,7 @@ export class CreateRecipeComponent implements OnInit {
         },
         Ingredients: this.ingredients.controls.map(control => ({
           Name: control.get('name')?.value,
+          Order: control.get('order')?.value,
           Amount: {
             Quantity: control.get('amounts')?.value,
           },
@@ -195,14 +198,14 @@ export class CreateRecipeComponent implements OnInit {
       };
 
 
-      // console.log(formattedRecipe);
-      this.recipeService.createRecipe(formattedRecipe).subscribe({
-        next: response => {
-          this.form.reset();
-          this.router.navigate([`/recipe-detail/${response}`])
-        },
-        error: error => console.error('There was an error!', error)
-        });
+      console.log(formattedRecipe);
+      // this.recipeService.createRecipe(formattedRecipe).subscribe({
+      //   next: response => {
+      //     this.form.reset();
+      //     this.router.navigate([`/recipe-detail/${response}`])
+      //   },
+      //   error: error => console.error('There was an error!', error)
+      //   });
     } 
     else {
       console.log('Form is invalid');
@@ -278,11 +281,17 @@ export class CreateRecipeComponent implements OnInit {
   // this is to add ingredients to the form
   // it pushes the data to the last index of the array
   addIngredients(index: number) {
-    this.ingredients.controls.splice(index + 1, 0, this.createIngredientFormGroup())
+    this.ingredients.controls.splice(index, 0, this.createIngredientFormGroup(index))
+    console.log(index)
+
   }
 
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.ingredients.controls, event.previousIndex, event.currentIndex);
+    for (let i = 0; i < this.ingredients.controls.length; i++) {
+      this.ingredients.controls[i].get('order')!.setValue(i);
+    }
+    
   }
 
 

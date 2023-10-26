@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Meal_Planner_Api.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class ingredientOrder : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -56,7 +56,8 @@ namespace Meal_Planner_Api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Order = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -131,54 +132,6 @@ namespace Meal_Planner_Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "IngredientAmounts",
-                columns: table => new
-                {
-                    ingredientId = table.Column<int>(type: "int", nullable: false),
-                    amountId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IngredientAmounts", x => new { x.ingredientId, x.amountId });
-                    table.ForeignKey(
-                        name: "FK_IngredientAmounts_Amounts_amountId",
-                        column: x => x.amountId,
-                        principalTable: "Amounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_IngredientAmounts_Ingredients_ingredientId",
-                        column: x => x.ingredientId,
-                        principalTable: "Ingredients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "IngredientUnits",
-                columns: table => new
-                {
-                    ingredientId = table.Column<int>(type: "int", nullable: false),
-                    unitId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IngredientUnits", x => new { x.ingredientId, x.unitId });
-                    table.ForeignKey(
-                        name: "FK_IngredientUnits_Ingredients_ingredientId",
-                        column: x => x.ingredientId,
-                        principalTable: "Ingredients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_IngredientUnits_Units_unitId",
-                        column: x => x.unitId,
-                        principalTable: "Units",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -338,16 +291,6 @@ namespace Meal_Planner_Api.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_IngredientAmounts_amountId",
-                table: "IngredientAmounts",
-                column: "amountId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_IngredientUnits_unitId",
-                table: "IngredientUnits",
-                column: "unitId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Instructions_RecipeId",
                 table: "Instructions",
                 column: "RecipeId");
@@ -416,12 +359,6 @@ namespace Meal_Planner_Api.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "IngredientAmounts");
-
-            migrationBuilder.DropTable(
-                name: "IngredientUnits");
-
             migrationBuilder.DropTable(
                 name: "Instructions");
 
