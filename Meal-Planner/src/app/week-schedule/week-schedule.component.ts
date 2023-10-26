@@ -86,12 +86,12 @@ export class WeekScheduleComponent implements OnInit {
     // Loop through schedule
     this.schedule.forEach((entry) => {
       // Check if recipeId is not null
-      if (entry.RecipeId !== null) {
+      if (entry.recipeId !== null) {
         let newRecipe: Recipe;
-        this.recipeService.getRecipeById(entry.RecipeId!).subscribe({
+        this.recipeService.getRecipeById(entry.recipeId!).subscribe({
           next: (data) => {
             newRecipe = data;
-            this.cellContents[entry.Row][entry.Column] = newRecipe;
+            this.cellContents[entry.row][entry.column] = newRecipe;
             this.shoppingListUpdated.emit(newRecipe.ingredients);
           },
           error: (err) => console.log(err),
@@ -131,12 +131,12 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
  // Saves the cellContents to the server
  private saveCellContents(rowIndex: number, colIndex: number, myRecipeId?: number): void {
     const updatedData: RecipeScheduleDTO = {
-      Row: colIndex,
-      Column: rowIndex,
-      RecipeId: myRecipeId,
-      User: {
-        Id: this.auth.getIdFromToken(),
-        Username: this.auth.getUsernameFromToken()
+      row: colIndex,
+      column: rowIndex,
+      recipeId: myRecipeId,
+      user: {
+        id: this.auth.getIdFromToken(),
+        username: this.auth.getUsernameFromToken()
       }
     };
     this.weekScheduleService.updateData(updatedData).subscribe();

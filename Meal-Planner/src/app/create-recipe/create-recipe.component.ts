@@ -189,8 +189,8 @@ export class CreateRecipeComponent implements OnInit {
           Text: control.get('text')?.value
         })),
         User: {
-          Id: this.tokenService.getIdFromToken(),
-          Username: this.tokenService.getUsernameFromToken()
+          id: this.tokenService.getIdFromToken(),
+          username: this.tokenService.getUsernameFromToken()
         }
       };
 
