@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Meal_Planner_Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231025084339_init")]
-    partial class init
+    [Migration("20231026075358_ingredientOrder")]
+    partial class ingredientOrder
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -84,39 +84,12 @@ namespace Meal_Planner_Api.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Ingredients");
-                });
-
-            modelBuilder.Entity("Meal_Planner_Api.Models.IngredientAmount", b =>
-                {
-                    b.Property<int>("ingredientId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("amountId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ingredientId", "amountId");
-
-                    b.HasIndex("amountId");
-
-                    b.ToTable("IngredientAmounts");
-                });
-
-            modelBuilder.Entity("Meal_Planner_Api.Models.IngredientUnit", b =>
-                {
-                    b.Property<int>("ingredientId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("unitId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ingredientId", "unitId");
-
-                    b.HasIndex("unitId");
-
-                    b.ToTable("IngredientUnits");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.Instruction", b =>
@@ -360,44 +333,6 @@ namespace Meal_Planner_Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Meal_Planner_Api.Models.IngredientAmount", b =>
-                {
-                    b.HasOne("Meal_Planner_Api.Models.Amount", "amount")
-                        .WithMany()
-                        .HasForeignKey("amountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Meal_Planner_Api.Models.Ingredient", "ingredient")
-                        .WithMany()
-                        .HasForeignKey("ingredientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("amount");
-
-                    b.Navigation("ingredient");
-                });
-
-            modelBuilder.Entity("Meal_Planner_Api.Models.IngredientUnit", b =>
-                {
-                    b.HasOne("Meal_Planner_Api.Models.Ingredient", "ingredient")
-                        .WithMany()
-                        .HasForeignKey("ingredientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Meal_Planner_Api.Models.Unit", "unit")
-                        .WithMany()
-                        .HasForeignKey("unitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ingredient");
-
-                    b.Navigation("unit");
                 });
 
             modelBuilder.Entity("Meal_Planner_Api.Models.Instruction", b =>
