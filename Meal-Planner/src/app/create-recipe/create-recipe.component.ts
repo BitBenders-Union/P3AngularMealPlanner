@@ -195,14 +195,14 @@ export class CreateRecipeComponent implements OnInit {
       };
 
 
-      console.log(formattedRecipe);
-      // this.recipeService.createRecipe(formattedRecipe).subscribe({
-      //   next: response => {
-      //     this.form.reset();
-      //     this.router.navigate([`/recipe-detail/${response}`])
-      //   },
-      //   error: error => console.error('There was an error!', error)
-      //   });
+      // console.log(formattedRecipe);
+      this.recipeService.createRecipe(formattedRecipe).subscribe({
+        next: response => {
+          this.form.reset();
+          this.router.navigate([`/recipe-detail/${response}`])
+        },
+        error: error => console.error('There was an error!', error)
+        });
     } 
     else {
       console.log('Form is invalid');

@@ -75,7 +75,6 @@ export class UpdateRecipeComponent implements OnInit{
             prepTime: this.recipe!.preparationTime.minutes,
             cookTime: this.recipe!.cookingTime.minutes,
             servings: this.recipe!.servings.quantity,
-            rating: this.recipe!.ratings[0].score,
             ingredients: this.recipe!.ingredients,
             instructions: this.recipe!.instructions,
           });
@@ -219,15 +218,15 @@ export class UpdateRecipeComponent implements OnInit{
       };
 
       console.log(recipeDTO);
-      this.recipeService.updateRecipe(recipeDTO, this.recipeId!).subscribe({
-        next:(data: any) => {
-          // console.log("Success", data);
-          this.router.navigate(['/recipe-detail/' + this.recipeId]);
-        },
-        error:(error) => {
-          console.error("Update recipe error: ", error);
-        }
-      })
+      // this.recipeService.updateRecipe(recipeDTO, this.recipeId!).subscribe({
+      //   next:(data: any) => {
+      //     // console.log("Success", data);
+      //     this.router.navigate(['/recipe-detail/' + this.recipeId]);
+      //   },
+      //   error:(error) => {
+      //     console.error("Update recipe error: ", error);
+      //   }
+      // })
     }
   }
   

@@ -1,57 +1,57 @@
 export interface Recipe {
-    Id: number
-    Title: string
-    Description: string
-    Category: Category
-    PreparationTime: PreparationTime
-    CookingTime: CookingTime
-    Servings: Servings
-    Ratings: Rating[]
-    Ingredients: Ingredient[]
-    Instructions: Instruction[]
-    User: User
+    id: number
+    title: string
+    description: string
+    category: Category
+    preparationTime: PreparationTime
+    cookingTime: CookingTime
+    servings: Servings
+    ratings: Rating[]
+    ingredients: Ingredient[]
+    instructions: Instruction[]
+    user: User
   }
 
 export interface Category {
-    Id: number,
-    CategoryName: string
+    id: number,
+    categoryName: string
   }
 
   export interface PreparationTime {
-    Id: number,
-    Minutes: number
+    id: number,
+    minutes: number
   }
 
   export interface CookingTime {
-    Id: number,
-    Minutes: number
+    id: number,
+    minutes: number
   }
 
   export interface Servings {
-    Id: number,
-    Quantity: number
+    id: number,
+    quantity: number
   }
 
   export interface Rating {
-    Id: number,
-    Score: number
+    id: number,
+    score: number
   }
 
   export interface Ingredient {
-    Id: number,
-    Name: string,
-    Amount: Amount,
-    Unit: Unit
+    id: number,
+    name: string,
+    amount: Amount,
+    unit: Unit
   }
 
   export interface Amount {
-    Id: number,
-    Quantity: number
+    id: number,
+    quantity: number
   }
 
   export interface Unit {
-    Id: number,
-    Measurement: string
+    id: number,
+    measurement: string
   }
 
   export interface Instruction {
@@ -119,10 +119,10 @@ export interface CategoryDTO {
 
 
   export interface RecipeScheduleDTO{
-    row: number;
-    column: number;
-    recipeId?: number;
-    user: UserOnlyName;
+    Row: number;
+    Column: number;
+    RecipeId?: number;
+    User: UserOnlyName;
   }
 
   export interface UserOnlyName{
