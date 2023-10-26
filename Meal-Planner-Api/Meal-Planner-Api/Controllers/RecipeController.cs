@@ -370,14 +370,6 @@ namespace Meal_Planner_Api.Controllers
                 existingRecipe.Servings = _servingsRepository.GetServingsFromQuantity(recipeData.Servings.Quantity);
             }
 
-            // validate and update instructions
-
-            // delete all instructions
-            _context.Instructions.RemoveRange(existingRecipe.Instructions);
-            foreach (var step in recipeData.Instructions)
-            {
-                existingRecipe.Instructions.Add(_mapper.Map<Instruction>(step));
-            }
 
             // Update the ingredients
             var uniqueIngredients = new HashSet<string>(); // To store unique ingredient names
@@ -430,6 +422,18 @@ namespace Meal_Planner_Api.Controllers
 
                 existingRecipe.RecipeIngredients.Add(recipeIngredient);
             }
+
+            // validate and update instructions
+
+            // delete all instructions
+            _context.Instructions.RemoveRange(existingRecipe.Instructions);
+
+            // add them again
+            foreach (var step in recipeData.Instructions)
+            {
+                existingRecipe.Instructions.Add(_mapper.Map<Instruction>(step));
+            }
+
 
             if (!_recipeRepository.UpdateRecipe(existingRecipe))
             {
