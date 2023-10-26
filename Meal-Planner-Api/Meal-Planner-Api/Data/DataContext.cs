@@ -23,8 +23,6 @@ namespace Meal_Planner_Api.Data
         public DbSet<Servings> Servings { get; set; }
 
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
-        public DbSet<IngredientAmount> IngredientAmounts { get; set; }
-        public DbSet<IngredientUnit> IngredientUnits { get; set; }
         public DbSet<RecipeRating> RecipeRatings { get; set; }
 
 
@@ -81,24 +79,6 @@ namespace Meal_Planner_Api.Data
                 .HasOne(rr => rr.User)
                 .WithMany(u => u.RecipeRatings)
                 .HasForeignKey(rr => rr.UserID);
-
-
-
-            modelBuilder.Entity<IngredientAmount>()
-                .HasKey(ia => new { ia.ingredientId, ia.amountId });
-
-            modelBuilder.Entity<IngredientUnit>()
-                .HasKey(iu => new { iu.ingredientId, iu.unitId });
-
-
-            //modelBuilder.Entity<User>()
-            //    .HasMany(u => u.Recipes)
-            //    .WithOne(r => r.User)
-            //    .HasForeignKey(r => r.User.Id)
-            //    .OnDelete(DeleteBehavior.Restrict);
-
-
-
 
 
             base.OnModelCreating(modelBuilder);

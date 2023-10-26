@@ -11,7 +11,7 @@
         </ng-container>
       </div> -->
       
-      <div class="rating">
+      <!-- <div class="rating">
         <ng-container *ngFor="let star of stars; let i = index">
           <i
             class="fas"
@@ -22,7 +22,7 @@
             (click)="rateRecipe(i)"
           ></i>
         </ng-container>
-      </div>
+      </div> -->
       
 
       <div class="description">
@@ -30,7 +30,7 @@
       </div>
 
       <div class="list">
-        <h2 class="time">Cooking Time: {{recipe.cookingTimes.minutes}} - Preparation time: {{recipe.preparationTimes.minutes}}</h2>
+        <h2 class="time">Cooking Time: {{recipe.cookingTime.minutes}} - Preparation time: {{recipe.preparationTime.minutes}}</h2>
         <h2 class="servings">Servings: {{recipe.servings.quantity}}</h2>
       </div>
 
