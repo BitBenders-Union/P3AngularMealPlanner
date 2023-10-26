@@ -6,11 +6,98 @@ export interface Recipe {
     preparationTime: PreparationTime
     cookingTime: CookingTime
     servings: Servings
-    ratings: Rating[]
     ingredients: Ingredient[]
     instructions: Instruction[]
     user: User
   }
+
+  [
+    {
+      "id": 4,
+      "title": "Test",
+      "description": "test",
+      "category": {
+        "id": 4,
+        "categoryName": "test"
+      },
+      "preparationTime": {
+        "id": 3,
+        "minutes": 1
+      },
+      "cookingTime": {
+        "id": 4,
+        "minutes": 2
+      },
+      "servings": {
+        "id": 3,
+        "quantity": 3
+      },
+      "ingredients": [
+        {
+          "id": 6,
+          "name": "test",
+          "amount": {
+            "id": 5,
+            "quantity": 4
+          },
+          "unit": {
+            "id": 6,
+            "measurement": "5"
+          }
+        },
+        {
+          "id": 7,
+          "name": "test2",
+          "amount": {
+            "id": 6,
+            "quantity": 5
+          },
+          "unit": {
+            "id": 7,
+            "measurement": "7"
+          }
+        },
+        {
+          "id": 8,
+          "name": "wow",
+          "amount": {
+            "id": 4,
+            "quantity": 0
+          },
+          "unit": {
+            "id": 8,
+            "measurement": "g"
+          }
+        },
+        {
+          "id": 9,
+          "name": "myingr",
+          "amount": {
+            "id": 4,
+            "quantity": 0
+          },
+          "unit": {
+            "id": 9,
+            "measurement": "luck"
+          }
+        }
+      ],
+      "instructions": [
+        {
+          "id": 13,
+          "text": "wow"
+        },
+        {
+          "id": 14,
+          "text": "test"
+        }
+      ],
+      "user": {
+        "id": 1,
+        "username": "test"
+      }
+    }
+  ]
 
 export interface Category {
     id: number,
@@ -60,8 +147,8 @@ export interface Category {
   }
 
   export interface User {
-    Id: number,
-    Username: string
+    id: number,
+    username: string
   }
 
 
@@ -119,13 +206,13 @@ export interface CategoryDTO {
 
 
   export interface RecipeScheduleDTO{
-    Row: number;
-    Column: number;
-    RecipeId?: number;
-    User: UserOnlyName;
+    row: number;
+    column: number;
+    recipeId?: number;
+    user: UserOnlyName;
   }
 
   export interface UserOnlyName{
-    Id: number; 
-    Username: string;
+    id: number; 
+    username: string;
   }
