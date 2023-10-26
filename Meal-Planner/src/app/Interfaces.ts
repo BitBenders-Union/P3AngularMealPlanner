@@ -3,8 +3,8 @@ export interface Recipe {
     title: string
     description: string
     category: Category
-    preparationTimes: PreparationTime
-    cookingTimes: CookingTime
+    preparationTime: PreparationTime
+    cookingTime: CookingTime
     servings: Servings
     ratings: Rating[]
     ingredients: Ingredient[]
@@ -69,10 +69,9 @@ export interface Category {
     Title: string
     Description: string
     Category: CategoryDTO
-    PreparationTimes: PreparationTimeDTO
-    CookingTimes: CookingTimeDTO
+    PreparationTime: PreparationTimeDTO
+    CookingTime: CookingTimeDTO
     Servings: ServingsDTO
-    Ratings: RatingDTO[]
     Ingredients: IngredientDTO[]
     Instructions: InstructionDTO[]
     User: User
@@ -120,10 +119,10 @@ export interface CategoryDTO {
 
 
   export interface RecipeScheduleDTO{
-    row: number;
-    column: number;
-    recipeId?: number;
-    user: UserOnlyName;
+    Row: number;
+    Column: number;
+    RecipeId?: number;
+    User: UserOnlyName;
   }
 
   export interface UserOnlyName{
