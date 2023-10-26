@@ -212,21 +212,21 @@ export class UpdateRecipeComponent implements OnInit{
           Text: control.get('text')?.value
         })),
         User: {
-          Id: this.tokenService.getIdFromToken(),
-          Username: this.tokenService.getUsernameFromToken()
+          id: this.tokenService.getIdFromToken(),
+          username: this.tokenService.getUsernameFromToken()
         }
       };
 
       console.log(recipeDTO);
-      // this.recipeService.updateRecipe(recipeDTO, this.recipeId!).subscribe({
-      //   next:(data: any) => {
-      //     // console.log("Success", data);
-      //     this.router.navigate(['/recipe-detail/' + this.recipeId]);
-      //   },
-      //   error:(error) => {
-      //     console.error("Update recipe error: ", error);
-      //   }
-      // })
+      this.recipeService.updateRecipe(recipeDTO, this.recipeId!).subscribe({
+        next:(data: any) => {
+          // console.log("Success", data);
+          this.router.navigate(['/recipe-detail/' + this.recipeId]);
+        },
+        error:(error) => {
+          console.error("Update recipe error: ", error);
+        }
+      })
     }
   }
   
