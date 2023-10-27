@@ -25,8 +25,9 @@ export class StarService {
     if (halfStar) {
       starsArray[fullStars] = 'half'; // Set the half star
     }
-  
-    console.log(starsArray)
-    return starsArray;
+    console.log(starsArray);
+      return starsArray;
   }
+
+
 }
