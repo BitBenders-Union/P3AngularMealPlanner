@@ -10,6 +10,7 @@
 
         //get a rating from a user for a certain recipe
         Rating GetRecipeUserRating(int userID, int recipeId);
+        Rating GetRecipeRating(int recipeId);
 
         // get a rating by rating ID
         Rating GetRating(int id);
@@ -19,11 +20,12 @@
         // get all ratings
         ICollection<Rating> GetRatings();
 
-        bool recipeRatingsExists(int recipeId);
-        bool ratingExists(int id);
+        bool recipeRatingsExists(int userId, int recipeId);
+        bool ratingExists(float score);
         bool ratingExists(ICollection<RatingDTO> rating);
 
         bool CreateRating(Rating rating);
+        bool CreateRecipeRating(RecipeRating recipeRating);
         bool DeleteRating(Rating rating);
         bool UpdateRating(Rating rating);
         bool Save();

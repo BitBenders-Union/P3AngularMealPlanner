@@ -1,4 +1,6 @@
-﻿namespace Meal_Planner_Api.Repositories
+﻿using Meal_Planner_Api.Models;
+
+namespace Meal_Planner_Api.Repositories
 {
     public class RatingRepository : IRatingRepository
     {
@@ -14,6 +16,8 @@
             _context.Add(rating);
             return Save();
         }
+
+
 
         public bool DeleteRating(Rating rating)
         {
@@ -70,6 +74,20 @@
             return rating;
         }
 
+        public Rating GetRecipeRating(int recipeId)
+        {
+            // find all ratings for the recipe
+            var ratings = _context.Ratings.Include(x => x.RecipeRating)
+                .Where(x => x.RecipeRating.Any(x => x.RecipeID == recipeId)).ToList();
+
+            Rating rating = new()
+            {
+                Score = ratings.Average(x => x.Score)
+            };
+
+            return rating;
+        }
+
         public Rating GetRecipeUserRating(int userID, int recipeId)
         {
             // get the rating a user made on a recipe
@@ -85,9 +103,9 @@
 
         }
 
-        public bool ratingExists(int id)
+        public bool ratingExists(float score)
         {
-            return _context.Ratings.Any(x => x.Id == id);
+            return _context.Ratings.Any(x => x.Score == score);
         }
 
         public bool ratingExists(ICollection<RatingDTO> rating)
@@ -96,9 +114,16 @@
             return _context.Ratings.Any(x => x.Score == rating.First().Score);
         }
 
-        public bool recipeRatingsExists(int recipeId)
+        public bool recipeRatingsExists(int userId, int recipeId)
         {
-            return _context.RecipeRatings.Any(x => x.RecipeID == recipeId);
+            return _context.RecipeRatings.Any(x => x.RecipeID == recipeId && x.UserID == userId);
+        }
+
+        public bool CreateRecipeRating(RecipeRating recipeRating)
+        {
+
+            _context.Add(recipeRating);
+            return Save();
         }
 
         public bool Save()
