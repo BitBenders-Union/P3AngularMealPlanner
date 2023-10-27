@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpHeaderResponse } from '@angular/common/http';
 import { Observable, catchError } from 'rxjs';
-import { Category, Recipe, RecipeDTO, User, UserOnlyName } from '../Interfaces';
+import { Category, Rating, RatingDTO, Recipe, RecipeDTO, User, UserOnlyName } from '../Interfaces';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -75,7 +75,7 @@ export class RecipeServiceService{
   }
 
 
-  createRating(userId: number, reicpeId: number): Observable<any> {
+  createRating(rating: RatingDTO, userId: number, reicpeId: number): Observable<any> {
     return this.http.post(`${this.url}/Rating/create/${userId}/${reicpeId}`, {});
     
   }

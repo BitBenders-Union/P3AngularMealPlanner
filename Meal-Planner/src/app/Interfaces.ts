@@ -182,7 +182,7 @@ export interface CategoryDTO {
   }
 
   export interface RatingDTO {
-    Score: number
+    score: number
   }
 
   export interface IngredientDTO {
