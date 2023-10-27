@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RecipeServiceService } from '../service/recipe-service.service';
-import { Recipe } from '../Interfaces';
+import { Rating, Recipe } from '../Interfaces';
 import { StarService } from '../service/star.service';
 import { Router } from '@angular/router';
 
@@ -17,7 +17,7 @@ export class RecipeDetailComponent implements OnInit {
   // initially it is set to null
   recipe: Recipe | undefined = undefined;
   stars: (boolean | string)[] = new Array(5).fill('empty'); // Initialize with empty stars
-
+  rating: number = 0;
   // Inject services and routes
   constructor(private route: ActivatedRoute, private recipeService: RecipeServiceService, public starService: StarService, private router: Router) {}
 
@@ -42,7 +42,22 @@ export class RecipeDetailComponent implements OnInit {
             this.recipeService.getRecipeById(recipeId!).subscribe(recipe =>{
               this.recipe = recipe;
             });
-        }   
+        }
+
+        this.recipeService.GetRecipeRating(recipeId).subscribe({
+          next: (rating: Rating) => {
+            this.rating = rating.score;
+            console.log(this.rating);
+          },
+          error: (error) => {
+            console.error("Recipe rating Error: ",error);
+          },
+          complete: () => {
+            this.stars = this.starService.getRatingStars(this.rating);
+            console.log(this.stars);
+          }
+        });
+        
     });
 
     
