@@ -168,22 +168,6 @@ export class UpdateRecipeComponent implements OnInit{
 
 
 
-  // public createIngredientGroup(name: string, value: string, unit: string): FormGroup {
-  //   return this.formBuilder.group({
-  //     name: new FormControl(name),
-  //     value: new FormControl(value),
-  //     unit: new FormControl(unit)
-  //   });
-  // }
-
-  private createInstructionGroup(text: string): FormGroup {
-    return this.formBuilder.group({
-      text: new FormControl(text)
-    });
-  }
-
-
-
   updateRecipe(): void {
     if (this.updateForm.valid) {
       const recipeDTO: RecipeDTO = {
