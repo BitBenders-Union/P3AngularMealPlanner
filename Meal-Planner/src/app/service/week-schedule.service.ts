@@ -21,7 +21,8 @@ export class WeekScheduleService {
 
   updateData(updatedData: RecipeScheduleDTO): Observable<any> {
     console.log("updating database")
-    return this.http.patch(`${this.dataUrl}/RecipeSchedule/update`, updatedData);
+    let result = this.http.patch(`${this.dataUrl}/RecipeSchedule/update`, updatedData);
+    return result;
   }
 
 

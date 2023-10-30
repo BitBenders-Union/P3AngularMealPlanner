@@ -20,7 +20,7 @@ const routes: Routes = [
   {path: 'about', component: AboutComponent, data: {animation: 'fader'}},
   {path: 'recipe-detail/:id', component: RecipeDetailComponent, data: {animation: 'fader'} },
   {path: 'create-recipe', component: CreateRecipeComponent, data: {animation: 'fader'}},
-  {path: 'update/:id', component: UpdateRecipeComponent, data: {animation: 'fader'}},
+  {path: 'update/:id', component: UpdateRecipeComponent, canActivate: [AuthGuard], data: {animation: 'fader'}},
   {path: 'recipe', redirectTo: '/search', pathMatch: 'full', data: {animation: 'fader'}},
   // more routes goes here
   {path: '', redirectTo: '/login', pathMatch: 'full', data: {animation: 'fader'}},

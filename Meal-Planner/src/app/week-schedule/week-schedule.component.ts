@@ -27,6 +27,10 @@ export class WeekScheduleComponent implements OnInit {
     Array(this.days.length).fill(null)
   );
 
+  ratingCellContents: number[][] = Array.from({ length: this.timeSlots.length }, () =>
+  Array(this.days.length).fill(null)
+);
+
 
   schedule: RecipeScheduleDTO[] = [];
   savedRecipes: Recipe[] = [];
@@ -87,24 +91,35 @@ export class WeekScheduleComponent implements OnInit {
     this.schedule.forEach((entry) => {
       // Check if recipeId is not null
       if (entry.recipeId !== null) {
+        
         let newRecipe: Recipe;
+
+        this.recipeService.GetRecipeRating(entry.recipeId!).subscribe({
+          next: (data) => {
+            this.ratingCellContents[entry.row][entry.column] = data.score;
+
+          },
+          error: (err) => console.log(err),
+          complete: () => {
+            console.log(this.ratingCellContents[entry.row][entry.column])
+          }
+        });
+        
         this.recipeService.getRecipeById(entry.recipeId!).subscribe({
           next: (data) => {
             newRecipe = data;
             this.cellContents[entry.row][entry.column] = newRecipe;
-            console.log(this.cellContents[entry.row][entry.column] = newRecipe)
+            console.log(this.cellContents[entry.row][entry.column])
             this.shoppingListUpdated.emit(newRecipe.ingredients);
           },
-          error: (err) => console.log(err),
-          complete: () => {
-            
-          }
+          error: (err) => console.log(err)
         });
+
       }
     });
 
   }
-  
+
 
 
 // Handles the removal of a recipe from the schedule
@@ -144,7 +159,7 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
         username: this.auth.getUsernameFromToken()
       }
     };
-    this.weekScheduleService.updateData(updatedData).subscribe();
+    this.weekScheduleService.updateData(updatedData);
   }
 
   // get week schedule data from user id
