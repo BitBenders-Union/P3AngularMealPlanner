@@ -1,4 +1,6 @@
-﻿namespace Meal_Planner_Api.Repositories
+﻿using Meal_Planner_Api.Models;
+
+namespace Meal_Planner_Api.Repositories
 {
     public class RecipeRepository : IRecipeRepository
     {
@@ -12,90 +14,108 @@
 
         public Recipe GetRecipe(int id)
         {
+            var recipe = _context.Recipes
+                    .Include(x => x.Category)
+                    .Include(x => x.PreparationTime)
+                    .Include(x => x.CookingTime)
+                    .Include(x => x.Servings)
+                    .Include(x => x.RecipeIngredients)
+                        .ThenInclude(z => z.Ingredient)
+                    .Include(x => x.RecipeIngredients)
+                        .ThenInclude(z => z.Amount)
+                    .Include(x => x.RecipeIngredients)
+                        .ThenInclude(z => z.Unit)
+                    .Include(x => x.Instructions)
+                    .Include(x => x.User)
+                    .Where(x => x.Id == id)
+                    .OrderBy(r => r.RecipeIngredients.Select(ri => ri.Ingredient.Order).Min())
+                    .FirstOrDefault();
 
-            return _context.Recipes
-                .Include(x => x.category)
-                .Include(x => x.PreparationTime)
-                .Include(x => x.CookingTime)
-                .Include(x => x.Servings)
-                .Include(x => x.RecipeRating)
-                    .ThenInclude(z => z.Rating)
-                .Include(x => x.RecipeIngredients)
-                    .ThenInclude(z => z.Ingredient)
-                        .ThenInclude(y => y.IngredientUnit)
-                            .ThenInclude(w => w.unit)
-                .Include(x => x.RecipeIngredients)
-                    .ThenInclude(z => z.Ingredient)
-                        .ThenInclude(y => y.IngredientAmount)
-                            .ThenInclude(w => w.amount)
-                .Include(x => x.Instructions)
-                .Include(x => x.User)
-                .FirstOrDefault(x => x.Id == id);
+            if (recipe != null)
+            {
+                recipe.RecipeIngredients = recipe.RecipeIngredients.OrderBy(ri => ri.Ingredient.Order).ToList();
+            }
+
+            return recipe;
 
         }
 
         public Recipe GetRecipe(string name)
         {
-            return _context.Recipes
-                .Include(x => x.category)
-                .Include(x => x.PreparationTime)
-                .Include(x => x.CookingTime)
-                .Include(x => x.Servings)
-                .Include(x => x.RecipeRating)
-                    .ThenInclude(z => z.Rating)
-                .Include(x => x.RecipeIngredients)
-                    .ThenInclude(z => z.Ingredient)
-                        .ThenInclude(y => y.IngredientUnit)
-                            .ThenInclude(w => w.unit)
-                .Include(x => x.RecipeIngredients)
-                    .ThenInclude(z => z.Ingredient)
-                        .ThenInclude(y => y.IngredientAmount)
-                            .ThenInclude(w => w.amount)
-                .Include(x => x.Instructions)
-                .Include(x => x.User)
-                .FirstOrDefault(x => x.Title == name);
+            var recipe = _context.Recipes
+                    .Include(x => x.Category)
+                    .Include(x => x.PreparationTime)
+                    .Include(x => x.CookingTime)
+                    .Include(x => x.Servings)
+                    .Include(x => x.RecipeIngredients)
+                        .ThenInclude(z => z.Ingredient)
+                    .Include(x => x.RecipeIngredients)
+                        .ThenInclude(z => z.Amount)
+                    .Include(x => x.RecipeIngredients)
+                        .ThenInclude(z => z.Unit)
+                    .Include(x => x.Instructions)
+                    .Include(x => x.User)
+                    .Where(x => x.Title == name)
+                    .OrderBy(r => r.RecipeIngredients.Select(ri => ri.Ingredient.Order).Min())
+                    .FirstOrDefault();
+
+            if (recipe != null)
+            {
+                recipe.RecipeIngredients = recipe.RecipeIngredients.OrderBy(ri => ri.Ingredient.Order).ToList();
+            }
+
+            return recipe;
 
         }
 
         public float GetRecipeRating(int recipeId)
         {
-            var recipe = _context.Recipes
-                .Include(rr => rr.RecipeRating)
-                .ThenInclude(r => r.Rating)
-                .FirstOrDefault(r => r.Id == recipeId); // finds the recipe from id
 
-            var ratings = recipe.RecipeRating.ToList(); // gets the ratings for the recipe
+            var rating = _context.Ratings.Where(r => r.RecipeRating.Any(rr => rr.RecipeID == recipeId)).ToList();
 
-            return ratings.FirstOrDefault().Rating.Score; // returns the first rating value
+            if (rating == null)
+                return 0.0f;
 
+            return rating.Average(x => x.Score);
 
         }
 
         public ICollection<Recipe> GetRecipes()
         {
-            return _context.Recipes.OrderBy(x => x.Id)
-                .Include(x => x.category)
-                .Include(x => x.PreparationTime)
-                .Include(x => x.CookingTime)
-                .Include(x => x.Servings)
-                .Include(x => x.RecipeRating)
-                    .ThenInclude(z => z.Rating)
-                .Include(x => x.RecipeIngredients)
-                    .ThenInclude(z => z.Ingredient)
-                        .ThenInclude(y => y.IngredientUnit)
-                            .ThenInclude(w => w.unit)
-                .Include(x => x.RecipeIngredients)
-                    .ThenInclude(z => z.Ingredient)
-                        .ThenInclude(y => y.IngredientAmount)
-                            .ThenInclude(w => w.amount)
-                .Include(x => x.Instructions)
-                .Include(x => x.User)
-                .ToList();
+            var recipes = _context.Recipes
+                    .Include(x => x.Category)
+                    .Include(x => x.PreparationTime)
+                    .Include(x => x.CookingTime)
+                    .Include(x => x.Servings)
+                    .Include(x => x.RecipeIngredients)
+                        .ThenInclude(z => z.Ingredient)
+                    .Include(x => x.RecipeIngredients)
+                        .ThenInclude(z => z.Unit)
+                    .Include(x => x.RecipeIngredients)
+                        .ThenInclude(z => z.Amount)
+                    .Include(x => x.Instructions)
+                    .Include(x => x.User)
+                    .ToList();
+            recipes.ForEach(r => r.RecipeIngredients = r.RecipeIngredients.OrderBy(ri => ri.Ingredient.Order).ToList());
+
+            return recipes;
         }
 
         public ICollection<Recipe> GetUserRecipes(int userId)
         {
-            return _context.Recipes.Where(r => r.User.Id == userId).ToList();
+            return _context.Recipes.Where(r => r.User.Id == userId)
+                .Include(x => x.Category)
+                .Include(x => x.PreparationTime)
+                .Include(x => x.CookingTime)
+                .Include(x => x.Servings)
+                .Include(x => x.RecipeIngredients)
+                    .ThenInclude(z => z.Ingredient)
+                .Include(x => x.RecipeIngredients)
+                    .ThenInclude(z => z.Unit)
+                .Include(x => x.RecipeIngredients)
+                    .ThenInclude(z => z.Amount)
+                .Include(x => x.Instructions)
+                .Include(x => x.User).ToList();
         }
 
         public bool RecipeExists(int recipeId)
@@ -157,10 +177,10 @@
             return _context.Recipes
                 .Where(r => r.Id == recipeId)
                 .SelectMany(r => r.RecipeIngredients.Select(ri => ri.Ingredient))
-                .Include(i => i.IngredientAmount)
-                    .ThenInclude(ia => ia.amount)
-                .Include(i => i.IngredientUnit)
-                    .ThenInclude(iu => iu.unit)
+                .Include(i => i.RecipeIngredients)
+                    .ThenInclude(ia => ia.Amount)
+                .Include(i => i.RecipeIngredients)
+                    .ThenInclude(iu => iu.Unit)
                 .ToList();
         }
 
@@ -181,5 +201,10 @@
             return _context.Recipes.FirstOrDefault(r => r.Title == name).Id;
         }
 
+        public bool CreateRecipeTest(Recipe recipe)
+        {
+            _context.Add(recipe);
+            return Save();
+        }
     }
 }

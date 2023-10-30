@@ -1,9 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RecipeServiceService } from '../service/recipe-service.service';
-import { Recipe } from '../Interfaces';
+import { Rating, RatingDTO, Recipe, UserOnlyName } from '../Interfaces';
 import { StarService } from '../service/star.service';
 import { Router } from '@angular/router';
+import { LoginService } from '../service/login.service';
 
 
 @Component({
@@ -17,10 +18,17 @@ export class RecipeDetailComponent implements OnInit {
   // initially it is set to null
   recipe: Recipe | undefined = undefined;
   stars: (boolean | string)[] = new Array(5).fill('empty'); // Initialize with empty stars
-
+  rating: number = 0;
   // Inject services and routes
-  constructor(private route: ActivatedRoute, private recipeService: RecipeServiceService, public starService: StarService, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute, 
+    private recipeService: RecipeServiceService, 
+    public starService: StarService, 
+    private router: Router,
+    private tokenService: LoginService,
+    ) {}
 
+    user: UserOnlyName | undefined = undefined;
 
   ngOnInit(): void {
     
@@ -39,12 +47,31 @@ export class RecipeDetailComponent implements OnInit {
       this.route.paramMap.subscribe(params => {
         const recipeId = Number(params.get('id'));
         if(!isNaN(recipeId)){
+
+          
             this.recipeService.getRecipeById(recipeId!).subscribe(recipe =>{
               this.recipe = recipe;
             });
-        }   
+        }
+
+        this.recipeService.GetRecipeRating(recipeId).subscribe({
+          next: (rating: Rating) => {
+            this.rating = rating.score;
+          },
+          error: (error) => {
+            console.error("Recipe rating Error: ",error);
+          },
+          complete: () => {
+            this.stars = this.starService.getRatingStars(this.rating);
+          }
+        });
+        
     });
 
+    this.user = {
+      id: this.tokenService.getIdFromToken(),
+      username: this.tokenService.getUsernameFromToken()
+    }
     
   }
 
@@ -79,14 +106,30 @@ export class RecipeDetailComponent implements OnInit {
     this.stars = this.starService.getRatingStars(index + 1);
   }
 
-  resetStars() {
-    // Reset the stars when mouse leaves the container
-    this.stars = new Array(5).fill('empty');
-  }
+  
 
   rateRecipe(rating: number) {
     // Implement your logic to save the rating, e.g., call an API
     console.log(`User rated the recipe with ${rating + 1} stars.`);
+    const Rating: Rating = {
+      id: 0,
+      score: rating + 1
+    }
+
+
+    this.recipeService.createRating(Rating, this.user!.id, this.recipe!.id,).subscribe({
+      next: (rating: Rating) => {
+        this.rating = rating.score;
+        console.log(this.rating);
+      },
+      error: (error) => {
+        console.error("Recipe rating Error: ",error);
+      },
+      complete: () => {
+        this.stars = this.starService.getRatingStars(this.rating);
+        console.log(this.stars);
+      }
+    });
   }
 
   

@@ -68,14 +68,14 @@ export class UpdateRecipeComponent implements OnInit{
         this.recipeService.getRecipeById(this.recipeId).subscribe(recipe => {
           
           this.recipe = recipe;
+          console.log(this.recipe);
           this.updateForm.patchValue({
             title: this.recipe!.title,
             description: this.recipe!.description,
             category: this.recipe!.category.categoryName,
-            prepTime: this.recipe!.preparationTimes.minutes,
-            cookTime: this.recipe!.cookingTimes.minutes,
+            prepTime: this.recipe!.preparationTime.minutes,
+            cookTime: this.recipe!.cookingTime.minutes,
             servings: this.recipe!.servings.quantity,
-            rating: this.recipe!.ratings[0].score,
             ingredients: this.recipe!.ingredients,
             instructions: this.recipe!.instructions,
           });
@@ -84,12 +84,13 @@ export class UpdateRecipeComponent implements OnInit{
           if (this.recipe!.ingredients && this.recipe!.ingredients.length > 0) {
             this.recipe!.ingredients.forEach((ingredient) => {
               const nameControl = new FormControl(ingredient.name);
-              const valueControl = new FormControl(ingredient.amount.quantity);
+              const amountsControl = new FormControl(ingredient.amount.quantity);
               const unitControl = new FormControl(ingredient.unit.measurement);
         
               const ingredientGroup = this.formBuilder.group({
                 name: nameControl,
-                value: valueControl,
+                order: ingredient.order,
+                amounts: amountsControl,
                 unit: unitControl
 
               });
@@ -167,22 +168,6 @@ export class UpdateRecipeComponent implements OnInit{
 
 
 
-  private createIngredientGroup(name: string, value: string, unit: string): FormGroup {
-    return this.formBuilder.group({
-      name: new FormControl(name),
-      value: new FormControl(value),
-      unit: new FormControl(unit)
-    });
-  }
-
-  private createInstructionGroup(text: string): FormGroup {
-    return this.formBuilder.group({
-      text: new FormControl(text)
-    });
-  }
-
-
-
   updateRecipe(): void {
     if (this.updateForm.valid) {
       const recipeDTO: RecipeDTO = {
@@ -191,22 +176,20 @@ export class UpdateRecipeComponent implements OnInit{
         Category: {
           CategoryName: this.updateForm.get('category')!.value
         },
-        PreparationTimes: {
+        PreparationTime: {
           Minutes: this.updateForm.get('prepTime')!.value
         },
-        CookingTimes:{
+        CookingTime:{
           Minutes: this.updateForm.get('cookTime')!.value        
         },          
         Servings:{ 
           Quantity: this.updateForm.get('servings')!.value
         },
-        Ratings: [{
-          Score: this.updateForm.get('rating')!.value
-        }],
         Ingredients: this.ingredients.controls.map(control => ({
           Name: control.get('name')?.value,
+          Order: control.get('order')?.value,
           Amount: {
-            Quantity: control.get('value')?.value
+            Quantity: control.get('amounts')?.value
           },
           Unit: {
             Measurement: control.get('unit')?.value
@@ -216,12 +199,12 @@ export class UpdateRecipeComponent implements OnInit{
           Text: control.get('text')?.value
         })),
         User: {
-          Id: this.tokenService.getIdFromToken(),
-          Username: this.tokenService.getUsernameFromToken()
+          id: this.tokenService.getIdFromToken(),
+          username: this.tokenService.getUsernameFromToken()
         }
       };
 
-      // console.log(recipeDTO);
+      console.log(recipeDTO);
       this.recipeService.updateRecipe(recipeDTO, this.recipeId!).subscribe({
         next:(data: any) => {
           // console.log("Success", data);
@@ -234,16 +217,7 @@ export class UpdateRecipeComponent implements OnInit{
     }
   }
   
-  // controls what the user can input for rating
-  validateRating() {
-    const ratingControl = this.updateForm.get('rating');
 
-    if (ratingControl!.value < 0) {
-      ratingControl!.setValue(0);
-    } else if (ratingControl!.value > 5) {
-      ratingControl!.setValue(5);
-    }
-  }
 
   goBack(){
     this.router.navigate(['/recipe-detail/' + this.recipeId]);
@@ -251,11 +225,12 @@ export class UpdateRecipeComponent implements OnInit{
 
 
 
-  createIngredientFormGroup() {
+  createIngredientFormGroup(index: number) {
     return new FormGroup({
       name: new FormControl(''),
       amounts: new FormControl(''),
-      unit: new FormControl('')
+      unit: new FormControl(''),
+      order: new FormControl(index)
     });
   }
 
@@ -266,7 +241,7 @@ export class UpdateRecipeComponent implements OnInit{
   }
 
   addIngredients(index: number) {
-    this.ingredients.controls.splice(index + 1, 0, this.createIngredientFormGroup());
+    this.ingredients.controls.splice(index + 1, 0, this.createIngredientFormGroup(index));
   }
 
   addInstructions(index: number) {
@@ -289,6 +264,9 @@ export class UpdateRecipeComponent implements OnInit{
 
   dropIngredient(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.ingredients.controls, event.previousIndex, event.currentIndex);
+    for (let i = 0; i < this.ingredients.controls.length; i++) {
+      this.ingredients.controls[i].get('order')!.setValue(i);
+  }
   }
 
   dropInstruction(event: CdkDragDrop<string[]>) {

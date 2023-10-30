@@ -11,6 +11,7 @@
         float GetRecipeRating(int recipeId);
         bool RecipeExists(int recipeId);
         bool CreateRecipe(Recipe recipe, List<int> ratingIds, List<int> ingredientIds);
+        bool CreateRecipeTest(Recipe recipe);
         bool UpdateRecipe(Recipe recipe);
         bool DeleteRecipe(Recipe recipe);
         bool Save();

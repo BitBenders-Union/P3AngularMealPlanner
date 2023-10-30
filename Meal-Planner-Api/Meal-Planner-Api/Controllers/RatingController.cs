@@ -7,11 +7,15 @@ namespace Meal_Planner_Api.Controllers
     {
         private IMapper _mapper;
         private IRatingRepository _ratingRepository;
+        private IRecipeRepository _recipeRepository;
+        private IUserRepository _userRepository;
 
-        public RatingController(IMapper mapper, IRatingRepository ratingRepository)
+        public RatingController(IMapper mapper, IRatingRepository ratingRepository, IRecipeRepository recipeRepository, IUserRepository userRepository)
         {
             _mapper = mapper;
             _ratingRepository = ratingRepository;
+            _recipeRepository = recipeRepository;
+            _userRepository = userRepository;
         }
 
         // get all ratings
@@ -46,10 +50,10 @@ namespace Meal_Planner_Api.Controllers
 
 
         // get ratings by recipe id
-        [HttpGet("byRecipeId/{recipeId}")]
-        public IActionResult GetByRecipeId(int recipeId)
+        [HttpGet("byRecipeId/{userId}/{recipeId}")]
+        public IActionResult GetByRecipeId(int userId, int recipeId)
         {
-            if (!_ratingRepository.recipeRatingsExists(recipeId))
+            if (!_ratingRepository.recipeRatingsExists(userId, recipeId))
                 return NotFound();
 
             var ratings = _mapper.Map<List<RatingDTO>>(_ratingRepository.GetRatingsForRecipe(recipeId));
@@ -91,35 +95,53 @@ namespace Meal_Planner_Api.Controllers
         }
 
 
-
-
-
-        [HttpPost]
-        public IActionResult CreateRating([FromBody] RatingDTO ratingCreate)
+        [HttpGet("recipeRating/{recipeId}")]
+        public IActionResult GetRecipeRating(int recipeId)
         {
-            if (ratingCreate == null)
-                return BadRequest();
+            var rating = _mapper.Map<RatingDTO>(_ratingRepository.GetRecipeRating(recipeId));
 
-            var rating = _ratingRepository.GetRatings()
-                .FirstOrDefault(r => r.Score == ratingCreate.Score);
-
-            if (rating != null)
-            {
-                ModelState.AddModelError("", "Rating Already Exists");
-                return StatusCode(422, ModelState);
-            }
+            if (rating == null)
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var ratingMap = _mapper.Map<Rating>(ratingCreate);
+            return Ok(rating);
+        }
 
-            if (!_ratingRepository.CreateRating(ratingMap))
+
+
+        [HttpPost("create/{userId}/{recipeId}")]
+        public IActionResult CreateRating([FromBody] RatingDTO ratingCreate, int userId, int recipeId)
+        {
+            if (ratingCreate == null || userId == 0 || recipeId == 0)
+                return BadRequest();
+
+            if(_ratingRepository.recipeRatingsExists(userId, recipeId))
+                return BadRequest();
+
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+
+            // if rating doesn't exist, create it
+
+            if (!_ratingRepository.ratingExists(ratingCreate.Score))
             {
-                ModelState.AddModelError("", "Something went wrong while saving");
-                return StatusCode(500, ModelState);
+                _ratingRepository.CreateRating(_mapper.Map<Rating>(ratingCreate));
             }
 
+
+            // create RecipeRating
+
+            RecipeRating recipeRating = new()
+            {
+                Rating = _ratingRepository.GetRatingFromScore(ratingCreate.Score),
+                Recipe = _recipeRepository.GetRecipe(recipeId),
+                User = _userRepository.GetUser(userId)
+            };
+
+            _ratingRepository.CreateRecipeRating(recipeRating);
 
             return Ok();
         }
