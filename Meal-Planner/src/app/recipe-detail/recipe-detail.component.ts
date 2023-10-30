@@ -57,7 +57,6 @@ export class RecipeDetailComponent implements OnInit {
         this.recipeService.GetRecipeRating(recipeId).subscribe({
           next: (rating: Rating) => {
             this.rating = rating.score;
-            console.log(this.rating);
           },
           error: (error) => {
             console.error("Recipe rating Error: ",error);
@@ -73,9 +72,6 @@ export class RecipeDetailComponent implements OnInit {
       id: this.tokenService.getIdFromToken(),
       username: this.tokenService.getUsernameFromToken()
     }
-
-    console.log(this.user)
-
     
   }
 

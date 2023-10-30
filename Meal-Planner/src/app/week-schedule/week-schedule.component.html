@@ -17,7 +17,7 @@
       *ngFor="let day of days; let rowIndex = index"
     >
     <!-- && !cellContents[colIndex][rowIndex]?.deleted -->
-      <ng-container *ngIf="cellContents[colIndex] && cellContents[colIndex][rowIndex]; else emptyCell">
+      <ng-container *ngIf="cellContents[colIndex] && cellContents[colIndex][rowIndex]; else emptyCell;">
         <div 
         class="recipe-card" 
         cdkDrag 
@@ -26,12 +26,12 @@
         (cdkDragEnded)="isDragging = false"
         >
           <h3>{{ cellContents[colIndex][rowIndex]!.title }}</h3>
-          <!-- <div class="rating">
-            <ng-container *ngFor="let star of starService.getRatingStars(cellContents[colIndex][rowIndex]!.ratings[0].score)">
+          <div class="rating">
+            <ng-container *ngFor="let star of starService.getRatingStars(1.5)">
               <i class="fas fa-star" *ngIf="star === true"></i>
               <i class="fas fa-star-half-alt" *ngIf="star === 'half'"></i>
             </ng-container>
-          </div> -->
+          </div>
           
           <button class="delete-button" (click)="deleteRecipe(rowIndex, colIndex)">Remove</button>
         </div>

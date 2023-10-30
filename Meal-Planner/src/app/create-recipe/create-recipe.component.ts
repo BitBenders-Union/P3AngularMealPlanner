@@ -282,8 +282,6 @@ export class CreateRecipeComponent implements OnInit {
   // it pushes the data to the last index of the array
   addIngredients(index: number) {
     this.ingredients.controls.splice(index, 0, this.createIngredientFormGroup(index))
-    console.log(index)
-
   }
 
   drop(event: CdkDragDrop<string[]>) {

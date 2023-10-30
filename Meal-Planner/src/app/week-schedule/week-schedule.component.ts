@@ -34,7 +34,7 @@ export class WeekScheduleComponent implements OnInit {
   
 
   constructor(private weekScheduleService: WeekScheduleService,
-    private recipeService: RecipeServiceService,
+    public recipeService: RecipeServiceService,
     public starService: StarService,
     private userStore: UserStoreService, 
     private auth: LoginService ) {}
@@ -92,12 +92,17 @@ export class WeekScheduleComponent implements OnInit {
           next: (data) => {
             newRecipe = data;
             this.cellContents[entry.row][entry.column] = newRecipe;
+            console.log(this.cellContents[entry.row][entry.column] = newRecipe)
             this.shoppingListUpdated.emit(newRecipe.ingredients);
           },
           error: (err) => console.log(err),
+          complete: () => {
+            
+          }
         });
       }
     });
+
   }
   
 
