@@ -30,7 +30,7 @@
       <label>Preparation Time: <input required formControlName="prepTime" type="number" class="input-field" min="0" (input)="aboveZero($event.target!, 'prepTime')"/></label>
       <label>Cooking Time: <input required formControlName="cookTime" type="number" class="input-field" min="0" (input)="aboveZero($event.target!, 'cookTime')"/></label>
       <label>Servings: <input required formControlName="servings" type="number" class="input-field" min="0" (input)="aboveZero($event.target!, 'servings')"/></label>
-      <label>Rating: <input required formControlName="rating" type="number" class="input-field" min="0" max="5" (input)="validateRating()"/></label>
+
     </div>
     
     <div formArrayName="ingredients" class="form-section form-array-container ingredient-container">
@@ -44,7 +44,7 @@
         </div>
 
         <div cdkDropList class="my-list" (cdkDropListDropped)="drop($event)">
-          <div *ngFor="let ingredient of ingredients.controls; let i = index" class="ingredient-row" cdkDrag>
+          <div *ngFor="let ingredient of ingredients.controls; let i = index;" class="ingredient-row" cdkDrag>
             <i class="fas fa-grip-vertical grip"></i>
             <div [formGroupName]="i" class="ingredient-group">
               <input required formControlName="name" class="ingredient-input" />
@@ -54,7 +54,7 @@
 
 
                   <div class="buttons">
-                    <button type="button" (click)="addIngredients(i)" class="fas fa-plus"></button>
+                    <button type="button" (click)="addIngredients(i+1)" class="fas fa-plus"></button>
                     <button type="button" (click)="removeIngredient(i)" class="fas fa-minus"></button>
                   </div>
 

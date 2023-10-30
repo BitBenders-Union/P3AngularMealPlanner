@@ -43,9 +43,9 @@
             // include the category
             // find the recipe from the id
             // return the recipe's category.
-            var recipe = _context.Recipes.Include(c => c.category).FirstOrDefault(r => r.Id == recipeId);
+            var recipe = _context.Recipes.Include(c => c.Category).FirstOrDefault(r => r.Id == recipeId);
 
-            return recipe.category;
+            return recipe.Category;
         }
 
         public Category GetCategoryFromName(string name)

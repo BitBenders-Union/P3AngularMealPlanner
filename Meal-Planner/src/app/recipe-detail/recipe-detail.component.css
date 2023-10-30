@@ -23,12 +23,12 @@
 
 .rating {
   margin-bottom: 12px;
+  color: var(--color-button-hover);
 }
 
 .rating i {
-  color: var(--color-button-hover);
-  font-size: larger;
 
+  font-size: larger;
 }
 
 .list {
@@ -96,17 +96,24 @@
 
 /* CSS classes for stars */
 .fas {
-  color: #d1d1d1; /* Default star color (empty) */
   font-size: 24px;
   transition: color 0.2s;
 }
 
 .fas.fa-star-half-alt {
   position: relative;
-  left: -12px; /* Adjust position for half stars */
 }
 
 /* Change star color on hover */
-.fas:hover {
-  color: #f7c653; /* Hovered star color */
+
+.icon-star-empty{
+  position: relative;
+  font-size: 24px;
+  transition: color 0.2s;
+  width: 20px;
+  height: 20px;
+  z-index: 1;
+  color: var(--color-button-hover);
 }
+
+

@@ -1,4 +1,7 @@
-﻿namespace Meal_Planner_Api.Controllers
+﻿using Meal_Planner_Api.Dto;
+using Meal_Planner_Api.Models;
+
+namespace Meal_Planner_Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -61,22 +64,7 @@
 
             foreach (var recipe in recipes)
             {
-                var recipeDTO = new RecipeDTO
-                {
-                    Id = recipe.Id,
-                    Title = recipe.Title,
-                    Description = recipe.Description,
-                    Category = _mapper.Map<CategoryDTO>(recipe.category),
-                    PreparationTimes = _mapper.Map<PreparationTimeDTO>(recipe.PreparationTime),
-                    CookingTimes = _mapper.Map<CookingTimeDTO>(recipe.CookingTime),
-                    Servings = _mapper.Map<ServingsDTO>(recipe.Servings),
-                    Ratings = recipe.RecipeRating.Select(rr => _mapper.Map<RatingDTO>(rr.Rating)).ToList(),
-                    Ingredients = recipe.RecipeIngredients.Select(ri => _mapper.Map<IngredientDTO>(ri.Ingredient)).ToList(),
-                    Instructions = _mapper.Map<List<InstructionDTO>>(recipe.Instructions),
-                    User = _mapper.Map<UserOnlyNameDTO>(recipe.User)
-                };
-
-                recipesDTO.Add(recipeDTO);
+                recipesDTO.Add(RecipeToRecipeDTO(recipe));
             }
 
             if (!ModelState.IsValid)
@@ -93,20 +81,7 @@
             if (recipe == null)
                 return NotFound();
 
-            var recipeDTO = new RecipeDTO
-            {
-                Id = recipe.Id,
-                Title = recipe.Title,
-                Description = recipe.Description,
-                Category = _mapper.Map<CategoryDTO>(recipe.category),
-                PreparationTimes = _mapper.Map<PreparationTimeDTO>(recipe.PreparationTime),
-                CookingTimes = _mapper.Map<CookingTimeDTO>(recipe.CookingTime),
-                Servings = _mapper.Map<ServingsDTO>(recipe.Servings),
-                Ratings = recipe.RecipeRating.Select(rr => _mapper.Map<RatingDTO>(rr.Rating)).ToList(),
-                Ingredients = recipe.RecipeIngredients.Select(ri => _mapper.Map<IngredientDTO>(ri.Ingredient)).ToList(),
-                Instructions = _mapper.Map<List<InstructionDTO>>(recipe.Instructions),
-                User = _mapper.Map<UserOnlyNameDTO>(recipe.User)
-            };
+            var recipeDTO = RecipeToRecipeDTO(recipe);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -122,26 +97,15 @@
             if (recipe == null)
                 return NotFound();
 
-            var recipeDTO = new RecipeDTO
-            {
-                Id = recipe.Id,
-                Title = recipe.Title,
-                Description = recipe.Description,
-                Category = _mapper.Map<CategoryDTO>(recipe.category),
-                PreparationTimes = _mapper.Map<PreparationTimeDTO>(recipe.PreparationTime),
-                CookingTimes = _mapper.Map<CookingTimeDTO>(recipe.CookingTime),
-                Servings = _mapper.Map<ServingsDTO>(recipe.Servings),
-                Ratings = recipe.RecipeRating.Select(rr => _mapper.Map<RatingDTO>(rr.Rating)).ToList(),
-                Ingredients = recipe.RecipeIngredients.Select(ri => _mapper.Map<IngredientDTO>(ri.Ingredient)).ToList(),
-                Instructions = _mapper.Map<List<InstructionDTO>>(recipe.Instructions),
-                User = _mapper.Map<UserOnlyNameDTO>(recipe.User)
-            };
+            RecipeDTO recipeDTO = RecipeToRecipeDTO(recipe);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(recipeDTO);
         }
+
+       
 
         [HttpGet("{recipeId}/rating")]
         public IActionResult GetRating(int recipeId)
@@ -159,38 +123,42 @@
             return Ok(rating);
         }
 
-        // get recipe a user created
+        // get recipe by userid
         [HttpGet("byUserId/{userId}")]
         public IActionResult GetByUserId(int userId)
         {
-            var recipe = _mapper.Map<List<RecipeDTO>>(_recipeRepository.GetUserRecipes(userId));
+            var recipes = (_recipeRepository.GetUserRecipes(userId));
 
-            if (recipe == null)
+            if (recipes == null)
+                return NotFound();
+
+            var recipesDTO = new List<RecipeDTO>();
+
+            foreach (var recipe in recipes)
+            {
+                recipesDTO.Add(RecipeToRecipeDTO(recipe));
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(recipesDTO);
+        }
+
+
+        // this also checks if all the necessary data exist, creates them if it doesn't and binds them to the recipe
+
+        [HttpPost("create")]
+        public IActionResult CreateRecipe([FromBody] RecipeDTO recipeData)
+        {
+            if(recipeData == null)
                 return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(recipe);
-        }
-
-
-        // this also checks if all the necessary data exist, creates them if it doesn't and binds them to the recipe
-        
-        [HttpPost("create")]
-        public IActionResult CreateRecipe([FromBody] RecipeDTO recipeData)
-        {
-
-            // Get a full recipe from body.
-
-            if (recipeData == null)
-                return NotFound();
-
-            if(!ModelState.IsValid)
-                return BadRequest();
-
             var recipe = _recipeRepository.GetRecipes()
-                .FirstOrDefault(x => x.Title.Trim().ToUpper() == recipeData.Title.Trim().ToUpper());
+            .FirstOrDefault(x => x.Title.Trim().ToUpper() == recipeData.Title.Trim().ToUpper());
 
             if (recipe != null)
             {
@@ -198,49 +166,55 @@
                 return StatusCode(422, ModelState);
             }
 
-            var recipeMap = _mapper.Map<Recipe>(recipeData);
+            var newRecipe = new Recipe()
+            {
+                Title = recipeData.Title,
+                Description = recipeData.Description,
+                Instructions = _mapper.Map<List<Instruction>>(recipeData.Instructions),
+                User = _userRepository.GetUser(recipeData.User.Username)
+        };
 
             // validate all data
 
-            // if category doesn't exist, create it
-            var categoryExist = _categoryRepository.CategoriesExists(recipeData.Category.CategoryName);
+           // if category doesn't exist, create it
+           var categoryExist = _categoryRepository.CategoriesExists(recipeData.Category.CategoryName);
             if (!categoryExist)
             {
                 var category = _mapper.Map<Category>(recipeData.Category);
                 _categoryRepository.CreateCategory(category);
-                recipeMap.category = _categoryRepository.GetCategoryFromName(recipeData.Category.CategoryName);
+                newRecipe.Category = _categoryRepository.GetCategoryFromName(recipeData.Category.CategoryName);
             }
             else
             {
-                recipeMap.category = _categoryRepository.GetCategoryFromName(recipeData.Category.CategoryName);
+                newRecipe.Category = _categoryRepository.GetCategoryFromName(recipeData.Category.CategoryName);
             }
 
             // validate preparationTime
-            var prepTimeExist = _preparationTimeRepository.PreparationTimeExists(recipeData.PreparationTimes);
+            var prepTimeExist = _preparationTimeRepository.PreparationTimeExists(recipeData.PreparationTime);
             if (!prepTimeExist)
             {
-                var prep = _mapper.Map<PreparationTime>(recipeData.PreparationTimes);
+                var prep = _mapper.Map<PreparationTime>(recipeData.PreparationTime);
                 _preparationTimeRepository.CreatePreparationTime(prep);
-                recipeMap.PreparationTime = _preparationTimeRepository.GetPreparationTimeFromMinutes(recipeData.PreparationTimes.Minutes);
+                newRecipe.PreparationTime = _preparationTimeRepository.GetPreparationTimeFromMinutes(recipeData.PreparationTime.Minutes);
             }
             else
             {
-                recipeMap.PreparationTime = _preparationTimeRepository.GetPreparationTimeFromMinutes(recipeData.PreparationTimes.Minutes);
+                newRecipe.PreparationTime = _preparationTimeRepository.GetPreparationTimeFromMinutes(recipeData.PreparationTime.Minutes);
             }
 
 
             // validate cookingTime
 
-            var cookTimeExist = _cookingTimeRepository.CookingTimeExists(recipeData.CookingTimes);
+            var cookTimeExist = _cookingTimeRepository.CookingTimeExists(recipeData.CookingTime);
             if (!cookTimeExist)
             {
-                var cook = _mapper.Map<CookingTime>(recipeData.CookingTimes);
+                var cook = _mapper.Map<CookingTime>(recipeData.CookingTime);
                 _cookingTimeRepository.CreateCookingTime(cook);
-                recipeMap.CookingTime = _cookingTimeRepository.GetCookingTimeFromMinutes(recipeData.CookingTimes.Minutes);
+                newRecipe.CookingTime = _cookingTimeRepository.GetCookingTimeFromMinutes(recipeData.CookingTime.Minutes);
             }
             else
             {
-                recipeMap.CookingTime = _cookingTimeRepository.GetCookingTimeFromMinutes(recipeData.CookingTimes.Minutes);
+                newRecipe.CookingTime = _cookingTimeRepository.GetCookingTimeFromMinutes(recipeData.CookingTime.Minutes);
             }
 
             // validate servings
@@ -250,475 +224,228 @@
             {
                 var serv = _mapper.Map<Servings>(recipeData.Servings);
                 _servingsRepository.CreateServing(serv);
-                recipeMap.Servings = _servingsRepository.GetServingsFromQuantity(recipeData.Servings.Quantity);
+                newRecipe.Servings = _servingsRepository.GetServingsFromQuantity(recipeData.Servings.Quantity);
             }
             else
             {
-                recipeMap.Servings = _servingsRepository.GetServingsFromQuantity(recipeData.Servings.Quantity);
-            }
-
-            // validate ratings
-            // since the ratings should only be 1 rating on creation
-            // we don't loop through but takes the first item in the list
-            // and use as the rating
-            List<int> ratingIds = new();
-            if (!_ratingRepository.ratingExists(recipeData.Ratings))
-            {
-                var rating = _mapper.Map<Rating>(recipeData.Ratings.FirstOrDefault());
-                _ratingRepository.CreateRating(rating);
-                ratingIds.Add(_ratingRepository.GetRatingId(recipeData.Ratings.First().Score));
-            }
-            else
-            {
-                ratingIds.Add(_ratingRepository.GetRatingId(recipeData.Ratings.First().Score));
-            }
-
-
-            // validate Ingredients
-            // since there can be multiple ingredients we need to loop through each
-            // Create a list to store the ingredient IDs
-            List<int> ingredientIds = new();
-
-            // Dictionaries to prevent duplicate entries.
-            Dictionary<float, Amount> createdAmounts = new();
-            Dictionary<string, Unit> createdUnits = new();
-
-            foreach (var ingredient in recipeData.Ingredients)
-            {
-                var ingredientMap = new Ingredient();
-
-                // Check if the ingredient already exists in the database
-                if (_ingredientRepository.IngredientExists(ingredient.Name))
-                {
-                    // Get the existing ingredient from the database
-                    ingredientMap = _ingredientRepository.GetIngredient(ingredient.Name);
-                }
-                else
-                {
-                    // Set the name for new ingredients
-                    ingredientMap.Name = ingredient.Name;
-                }
-
-                // Create a new IngredientAmount relationship
-                var ingredientAmount = new IngredientAmount();
-
-                // Create Amount entity
-                var amountEntity = new Amount { Quantity = ingredient.Amount.Quantity };
-
-                // Check if the amount with the same quantity already exists in the database
-                if (_amountRepository.AmountExistByQuantity(amountEntity.Quantity))
-                {
-                    // Use the existing amount entity
-                    var existingAmount = _amountRepository.GetAmountByQuantity(amountEntity.Quantity);
-                    ingredientAmount.amount = existingAmount;
-                }
-                else if (createdAmounts.TryGetValue(amountEntity.Quantity, out var existingAmountEntity))
-                {
-                    // Use the existing amount entity from the dictionary
-                    ingredientAmount.amount = existingAmountEntity;
-                }
-                else
-                {
-                    // Add the amount to the dictionary
-                    createdAmounts.Add(amountEntity.Quantity, amountEntity);
-
-                    // Associate the amount with the IngredientAmount relationship
-                    ingredientAmount.amount = amountEntity;
-                }
-
-                // Add the IngredientAmount relationship to the Ingredient
-                ingredientMap.IngredientAmount = new List<IngredientAmount> { ingredientAmount };
-
-                // Create a new IngredientUnit relationship
-                var ingredientUnit = new IngredientUnit();
-
-                // Create Unit entity
-                var unitEntity = new Unit { Measurement = ingredient.Unit.Measurement };
-
-                // Check if the unit with the same measurement already exists in the database
-                if (_unitRepository.UnitExists(unitEntity.Measurement))
-                {
-                    // Use the existing unit entity
-                    var existingUnit = _unitRepository.GetUnitByName(unitEntity.Measurement);
-                    ingredientUnit.unit = existingUnit;
-                }
-                else if (createdUnits.TryGetValue(unitEntity.Measurement, out var existingUnitEntity))
-                {
-                    // Use the existing unit entity from the dictionary
-                    ingredientUnit.unit = existingUnitEntity;
-                }
-                else
-                {
-                    // Add the unit to the dictionary
-                    createdUnits.Add(unitEntity.Measurement, unitEntity);
-
-                    // Associate the unit with the IngredientUnit relationship
-                    ingredientUnit.unit = unitEntity;
-                }
-
-                // Add the IngredientUnit relationship to the Ingredient
-                ingredientMap.IngredientUnit = new List<IngredientUnit> { ingredientUnit };
-
-                // Check if the ingredient already exists in the database
-                if (!_ingredientRepository.IngredientExists(ingredient.Name))
-                {
-                    // Create the ingredient and add its ID to the list
-                    _ingredientRepository.CreateIngredient(ingredientMap);
-                }
-
-                // Add the ingredient ID to the list
-                ingredientIds.Add(ingredientMap.Id);
+                newRecipe.Servings = _servingsRepository.GetServingsFromQuantity(recipeData.Servings.Quantity);
             }
 
 
 
-
-
-            // create the recipe using the id's from the data we just created
-
-            recipeMap.User = _userRepository.GetUser(recipeData.User.Username);
-
-            if (!_recipeRepository.CreateRecipe(recipeMap, ratingIds, ingredientIds))
+            if (!_recipeRepository.CreateRecipeTest(newRecipe))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);
             }
 
+            foreach (var ingredientDTO in recipeData.Ingredients)
+            {
+
+                var existingIngredient = _ingredientRepository.GetIngredient(ingredientDTO.Name);
+
+                if (existingIngredient == null)
+                {
+                    existingIngredient = _mapper.Map<Ingredient>(ingredientDTO);
+                    _ingredientRepository.CreateIngredient(existingIngredient);
+                    existingIngredient = _ingredientRepository.GetIngredient(ingredientDTO.Name);
+                }
 
 
-            var recipeId = _recipeRepository.GetRecipeId(recipeData.Title);
+                var existingAmount = _amountRepository.GetAmountByQuantity(ingredientDTO.Amount.Quantity);
 
-            return Ok(recipeId);
+                if (existingAmount == null)
+                {
+                    existingAmount = _mapper.Map<Amount>(ingredientDTO.Amount);
+                    _amountRepository.CreateAmount(existingAmount);
+                    existingAmount = _amountRepository.GetAmountByQuantity(ingredientDTO.Amount.Quantity);
+
+                }
+
+
+                var existingUnit = _unitRepository.GetUnitByName(ingredientDTO.Unit.Measurement);
+
+                if (existingUnit == null)
+                {
+                    existingUnit = _mapper.Map<Unit>(ingredientDTO.Unit);
+                    _unitRepository.CreateUnit(existingUnit);
+                    existingUnit = _unitRepository.GetUnitByName(ingredientDTO.Unit.Measurement);
+
+                }
+
+
+                var recipeIngredient = new RecipeIngredient
+                {
+                    Recipe = _recipeRepository.GetRecipe(newRecipe.Title),
+                    Ingredient = existingIngredient,
+                    Amount = existingAmount,
+                    Unit = existingUnit,
+                };
+
+                newRecipe.RecipeIngredients.Add(recipeIngredient);
+
+            }
+
+            if (!_recipeRepository.UpdateRecipe(newRecipe))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok();
         }
 
-        // Update recipe
-        [HttpPut("update/{recipeId}")]
-        public IActionResult UpdateRecipe([FromBody] RecipeDTO recipeData, int recipeId)
+        [HttpPut("update/{id}")]
+        public IActionResult UpdateRecipe(int id, [FromBody] RecipeDTO recipeData)
         {
             if (recipeData == null)
-                return BadRequest();
-
-            if (!_recipeRepository.RecipeExists(recipeId))
                 return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            recipeData.Id = recipeId;
-            var ExistingRecipe = _recipeRepository.GetRecipe(recipeId);
-            ExistingRecipe.Title = recipeData.Title;
-            ExistingRecipe.Description = recipeData.Description;
+            var existingRecipe = _recipeRepository.GetRecipe(id);
 
-            // validate all data
-            // if data doesn't exist, create it
-            // then update recipe with the new data
+            if (existingRecipe == null)
+            {
+                ModelState.AddModelError("", "Recipe not found");
+                return NotFound(ModelState);
+            }
 
-            // category
+            // Update properties based on recipeData
+            existingRecipe.Title = recipeData.Title;
+            existingRecipe.Description = recipeData.Description;
+
+            // Update other properties as needed, e.g., Instructions, User, etc.
+
+            // Validate and update the category
             var categoryExist = _categoryRepository.CategoriesExists(recipeData.Category.CategoryName);
             if (!categoryExist)
             {
                 var category = _mapper.Map<Category>(recipeData.Category);
                 _categoryRepository.CreateCategory(category);
-                ExistingRecipe.category = _categoryRepository.GetCategoryFromName(recipeData.Category.CategoryName);
+                existingRecipe.Category = _categoryRepository.GetCategoryFromName(recipeData.Category.CategoryName);
             }
             else
             {
-                ExistingRecipe.category = _categoryRepository.GetCategoryFromName(recipeData.Category.CategoryName);
+                existingRecipe.Category = _categoryRepository.GetCategoryFromName(recipeData.Category.CategoryName);
             }
 
-            // preparationTime
-            var prepTimeExist = _preparationTimeRepository.PreparationTimeExists(recipeData.PreparationTimes);
+            // Validate and update preparationTime
+            var prepTimeExist = _preparationTimeRepository.PreparationTimeExists(recipeData.PreparationTime);
             if (!prepTimeExist)
             {
-                var prepTime = _mapper.Map<PreparationTime>(recipeData.PreparationTimes);
-                _preparationTimeRepository.CreatePreparationTime(prepTime);
-                ExistingRecipe.PreparationTime = _preparationTimeRepository.GetPreparationTimeFromMinutes(recipeData.PreparationTimes.Minutes);
+                var prep = _mapper.Map<PreparationTime>(recipeData.PreparationTime);
+                _preparationTimeRepository.CreatePreparationTime(prep);
+                existingRecipe.PreparationTime = _preparationTimeRepository.GetPreparationTimeFromMinutes(recipeData.PreparationTime.Minutes);
             }
             else
             {
-                ExistingRecipe.PreparationTime = _preparationTimeRepository.GetPreparationTimeFromMinutes(recipeData.PreparationTimes.Minutes);
+                existingRecipe.PreparationTime = _preparationTimeRepository.GetPreparationTimeFromMinutes(recipeData.PreparationTime.Minutes);
             }
 
-            // cookingTime
-
-            var cookTimeExist = _cookingTimeRepository.CookingTimeExists(recipeData.CookingTimes);
+            // Validate and update cookingTime
+            var cookTimeExist = _cookingTimeRepository.CookingTimeExists(recipeData.CookingTime);
             if (!cookTimeExist)
             {
-                var cookTime = _mapper.Map<CookingTime>(recipeData.CookingTimes);
-                _cookingTimeRepository.CreateCookingTime(cookTime);
-                ExistingRecipe.CookingTime = _cookingTimeRepository.GetCookingTimeFromMinutes(recipeData.CookingTimes.Minutes);
+                var cook = _mapper.Map<CookingTime>(recipeData.CookingTime);
+                _cookingTimeRepository.CreateCookingTime(cook);
+                existingRecipe.CookingTime = _cookingTimeRepository.GetCookingTimeFromMinutes(recipeData.CookingTime.Minutes);
             }
             else
             {
-                ExistingRecipe.CookingTime = _cookingTimeRepository.GetCookingTimeFromMinutes(recipeData.CookingTimes.Minutes);
+                existingRecipe.CookingTime = _cookingTimeRepository.GetCookingTimeFromMinutes(recipeData.CookingTime.Minutes);
             }
 
-            // servings
-            var servingsExist = _servingsRepository.servingExist(recipeData.Servings);
-            if (!servingsExist)
+            // Validate and update servings
+            var servingExist = _servingsRepository.servingExist(recipeData.Servings);
+            if (!servingExist)
             {
-                var servings = _mapper.Map<Servings>(recipeData.Servings);
-                _servingsRepository.CreateServing(servings);
-                ExistingRecipe.Servings = _servingsRepository.GetServingsFromQuantity(recipeData.Servings.Quantity);
-            }
-            else
-            {
-                ExistingRecipe.Servings = _servingsRepository.GetServingsFromQuantity(recipeData.Servings.Quantity);
-            }
-
-
-            // ratings
-            // only change first rating since we only allow one rating on creation
-
-            if (!_ratingRepository.ratingExists(recipeData.Ratings))
-            {
-                var rating = _mapper.Map<Rating>(recipeData.Ratings.FirstOrDefault());
-                _ratingRepository.CreateRating(rating);
-                ExistingRecipe.RecipeRating.First().Rating = _ratingRepository.GetRatingFromScore(recipeData.Ratings.First().Score);
+                var serv = _mapper.Map<Servings>(recipeData.Servings);
+                _servingsRepository.CreateServing(serv);
+                existingRecipe.Servings = _servingsRepository.GetServingsFromQuantity(recipeData.Servings.Quantity);
             }
             else
             {
-                ExistingRecipe.RecipeRating.First().Rating = _ratingRepository.GetRatingFromScore(recipeData.Ratings.First().Score);
+                existingRecipe.Servings = _servingsRepository.GetServingsFromQuantity(recipeData.Servings.Quantity);
             }
 
-            // ingredient handling
 
-            // Dictionaries to prevent duplicate entries.
-            Dictionary<float, Amount> createdAmounts = new();
-            Dictionary<string, Unit> createdUnits = new();
-            List<int> ingredientIds = new();
+            // create an order for the ingredients
 
 
-            foreach (var ingredient in recipeData.Ingredients)
+            // Update the ingredients
+            var uniqueIngredients = new HashSet<string>(); // To store unique ingredient names
+
+            existingRecipe.RecipeIngredients.Clear();
+            foreach (var ingredientDTO in recipeData.Ingredients)
             {
+                if (uniqueIngredients.Contains(ingredientDTO.Name))
+                {
+                    ModelState.AddModelError("", "Ingredient names must be unique");
+                    return BadRequest(ModelState);
+                }
 
-                var existingIngredient = _ingredientRepository.GetIngredient(ingredient.Name);
+                uniqueIngredients.Add(ingredientDTO.Name);
 
-                // check if ingredient 
+                var existingIngredient = _ingredientRepository.GetIngredient(ingredientDTO.Name);
 
                 if (existingIngredient == null)
                 {
-                    // Create a new ingredient since it doesn't exist
-                    existingIngredient = _mapper.Map<Ingredient>(ingredient);
+                    existingIngredient = _mapper.Map<Ingredient>(ingredientDTO);
                     _ingredientRepository.CreateIngredient(existingIngredient);
+                    existingIngredient = _ingredientRepository.GetIngredient(ingredientDTO.Name);
                 }
                 else
                 {
-                    // Update existing ingredient properties if needed
-                    if (existingIngredient.Name != ingredient.Name)
-                    {
-                        existingIngredient.Name = ingredient.Name;
+                    existingIngredient.Order = ingredientDTO.Order;
 
-                    }
                 }
 
-                // check if amount 
+                var existingAmount = _amountRepository.GetAmountByQuantity(ingredientDTO.Amount.Quantity);
 
-                var existingAmount = _amountRepository.GetAmountByQuantity(ingredient.Amount.Quantity);
-
-
-                if (createdAmounts.TryGetValue(ingredient.Amount.Quantity, out var amountEntity) && existingAmount != null)
+                if (existingAmount == null)
                 {
-                    existingAmount.Quantity = amountEntity.Quantity;
-                    existingIngredient.IngredientAmount.First().amount = existingAmount;
-                }
-                else if (existingAmount == null)
-                {
-                    // create new amount since it doesn't exist
-                    existingAmount = _mapper.Map<Amount>(ingredient.Amount);
+                    existingAmount = _mapper.Map<Amount>(ingredientDTO.Amount);
                     _amountRepository.CreateAmount(existingAmount);
-                    createdAmounts.Add(existingAmount.Quantity, existingAmount);
-                    //existingIngredient.IngredientAmount.First().amount = existingAmount;
-                }
-                else
-                {
-                    if (existingAmount.Quantity != ingredient.Amount.Quantity)
-                    {
-                        existingAmount.Quantity = ingredient.Amount.Quantity;
-                        existingIngredient.IngredientAmount.First().amount = existingAmount;
-                    }
+                    existingAmount = _amountRepository.GetAmountByQuantity(ingredientDTO.Amount.Quantity);
                 }
 
-                // check if unit
+                var existingUnit = _unitRepository.GetUnitByName(ingredientDTO.Unit.Measurement);
 
-
-                var existingUnit = _unitRepository.GetUnitByName(ingredient.Unit.Measurement);
-
-
-                if (createdUnits.TryGetValue(ingredient.Unit.Measurement, out var unitEntity) && existingUnit != null)
+                if (existingUnit == null)
                 {
-                    // take unit from dictionary
-                    existingUnit.Measurement = unitEntity.Measurement;
-                    existingIngredient.IngredientUnit.First().unit = existingUnit;
-                }
-                else if (existingUnit == null)
-                {
-                    // create new unit since it doesn't exist
-                    existingUnit = _mapper.Map<Unit>(ingredient.Unit);
+                    existingUnit = _mapper.Map<Unit>(ingredientDTO.Unit);
                     _unitRepository.CreateUnit(existingUnit);
-                    createdUnits.Add(existingUnit.Measurement, existingUnit);
-
-                    //existingIngredient.IngredientUnit.First().unit = existingUnit;
+                    existingUnit = _unitRepository.GetUnitByName(ingredientDTO.Unit.Measurement);
                 }
-                else
+
+                var recipeIngredient = new RecipeIngredient
                 {
-                    if (existingUnit.Measurement != ingredient.Unit.Measurement)
-                    {
-                        existingUnit.Measurement = ingredient.Unit.Measurement;
-                        existingIngredient.IngredientUnit.First().unit = existingUnit;
-                    }
-                }
+                    Recipe = existingRecipe,
+                    Ingredient = existingIngredient,
+                    Amount = existingAmount,
+                    Unit = existingUnit,
+                };
 
-
-
-
-                // Create or update the relationships
-
-                // IngredientAmount
-                //TODO: fix this
-
-                bool ingredientAmountExist = _context.IngredientAmounts.Any(x => x.amount == existingAmount && x.ingredient == existingIngredient);
-
-                //var ingredientAmount = existingIngredient.IngredientAmount.FirstOrDefault();
-                //var existingIngredientAmount = existingIngredient.IngredientAmount.FirstOrDefault();
-
-                if (!ingredientAmountExist)
-                {
-                    var ingredientAmount = new IngredientAmount
-                    {
-                        ingredient = existingIngredient,
-                        ingredientId = existingIngredient.Id,
-                        amount = existingAmount,
-                        amountId = existingAmount.Id
-                    };
-                    existingIngredient.IngredientAmount = existingIngredient.IngredientAmount ?? new List<IngredientAmount>();
-
-                    existingIngredient.IngredientAmount.Add(ingredientAmount);
-                }
-                else
-                {
-                    // Remove the existing IngredientAmount
-                    _context.IngredientAmounts.Remove(existingIngredient.IngredientAmount.FirstOrDefault());
-
-                    // Create a new IngredientAmount
-                    var newIngredientAmount = new IngredientAmount
-                    {
-                        ingredient = existingIngredient,
-                        ingredientId = existingIngredient.Id,
-                        amount = existingAmount,
-                        amountId = existingAmount.Id
-                    };
-
-                    // Add the new IngredientAmount to the list
-                    existingIngredient.IngredientAmount.Add(newIngredientAmount);
-                }
-
-                // IngredientUnit
-
-                bool ingredientUnitExist = _context.IngredientUnits.Any(x => x.unit == existingUnit && x.ingredient == existingIngredient);
-
-                //var ingredientUnit = existingIngredient.IngredientUnit.FirstOrDefault();
-                //var existingIngredientUnit = existingIngredient.IngredientUnit.FirstOrDefault();
-
-                if (!ingredientUnitExist)
-                {
-                    var newIngredientUnit = new IngredientUnit
-                    {
-                        ingredient = existingIngredient,
-                        ingredientId = existingIngredient.Id,
-                        unit = existingUnit,
-                        unitId = existingUnit.Id
-                    };
-
-                    existingUnit.ingredientUnit = existingUnit.ingredientUnit ?? new List<IngredientUnit>();
-
-                    existingUnit.ingredientUnit.Add(newIngredientUnit);
-                }
-                else
-                {
-                    _context.IngredientUnits.Remove(existingIngredient.IngredientUnit.FirstOrDefault());
-
-                    // create new relationship
-                    var newIngredientUnit = new IngredientUnit
-                    {
-                        ingredient = existingIngredient,
-                        ingredientId = existingIngredient.Id,
-                        unit = existingUnit,
-                        unitId = existingUnit.Id
-                    };
-
-                    // add new relationship to list
-                    existingIngredient.IngredientUnit.Add(newIngredientUnit);
-                }
-
-                var recipeIngredient = ExistingRecipe.RecipeIngredients.FirstOrDefault(ri => ri.IngredientId == existingIngredient.Id);
-
-                if (recipeIngredient == null)
-                {
-                    // Create a new RecipeIngredient if it doesn't exist
-                    recipeIngredient = new RecipeIngredient
-                    {
-                        Recipe = ExistingRecipe,
-                        RecipeId = ExistingRecipe.Id,
-                        Ingredient = existingIngredient,
-                        IngredientId = existingIngredient.Id
-                    };
-
-                    // Add the RecipeIngredient to the Recipe
-                    ExistingRecipe.RecipeIngredients.Add(recipeIngredient);
-                }
+                existingRecipe.RecipeIngredients.Add(recipeIngredient);
             }
 
-            // identify and create a list of ingredients that should be removed from the ExistingRecipe
+            // validate and update instructions
 
-            var ingredientsToRemove = ExistingRecipe.RecipeIngredients
-                .Where(ri => !recipeData.Ingredients.Any(ingredientDTO => ingredientDTO.Name == ri.Ingredient.Name))
-                .ToList();
+            // delete all instructions
+            _context.Instructions.RemoveRange(existingRecipe.Instructions);
 
-            foreach (var ingredientToRemove in ingredientsToRemove)
+            // add them again
+            foreach (var step in recipeData.Instructions)
             {
-                ExistingRecipe.RecipeIngredients.Remove(ingredientToRemove);
-            }
-
-            // instruction handling
-
-
-            foreach (var existingInstruction in ExistingRecipe.Instructions.ToList())
-            {
-                var updatedInstruction = recipeData.Instructions.FirstOrDefault(i => i.Text == existingInstruction.Text);
-
-                if (updatedInstruction != null)
-                {
-                    // Update the existing instruction text
-                    existingInstruction.Text = updatedInstruction.Text;
-                }
-                else
-                {
-                    // Remove the instruction if it doesn't exist in the updated data
-                    ExistingRecipe.Instructions.Remove(existingInstruction);
-                    _instructionRepository.DeleteInstruction(existingInstruction); // Delete from the database
-                }
-            }
-
-            foreach (var newInstruction in recipeData.Instructions)
-            {
-                var existingInstruction = ExistingRecipe.Instructions.FirstOrDefault(i => i.Text == newInstruction.Text);
-
-                if (existingInstruction == null)
-                {
-                    // Create and add a new instruction if it doesn't exist in the existing data
-                    var instructionMap = _mapper.Map<Instruction>(newInstruction);
-                    instructionMap.Recipe = ExistingRecipe;
-                    ExistingRecipe.Instructions.Add(instructionMap);
-                    _instructionRepository.CreateInstruction(instructionMap);
-                }
+                existingRecipe.Instructions.Add(_mapper.Map<Instruction>(step));
             }
 
 
-
-            if (!_recipeRepository.UpdateRecipe(ExistingRecipe))
+            if (!_recipeRepository.UpdateRecipe(existingRecipe))
             {
-                ModelState.AddModelError("", "Something went wrong while updating");
+                ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);
             }
 
@@ -755,6 +482,45 @@
 
 
             return Ok();
+        }
+
+        private RecipeDTO RecipeToRecipeDTO(Recipe recipe)
+        {
+            var recipeDTO = new RecipeDTO
+            {
+                Id = recipe.Id,
+                Title = recipe.Title,
+                Description = recipe.Description,
+                Category = _mapper.Map<CategoryDTO>(recipe.Category),
+                PreparationTime = _mapper.Map<PreparationTimeDTO>(recipe.PreparationTime),
+                CookingTime = _mapper.Map<CookingTimeDTO>(recipe.CookingTime),
+                Servings = _mapper.Map<ServingsDTO>(recipe.Servings),
+                Ingredients = new List<IngredientDTO>(),
+                Instructions = _mapper.Map<List<InstructionDTO>>(recipe.Instructions),
+                User = _mapper.Map<UserOnlyNameDTO>(recipe.User)
+            };
+            foreach (var recipeIngredient in recipe.RecipeIngredients)
+            {
+                IngredientDTO storedIngredient = new()
+                {
+                    Id = recipeIngredient.Ingredient.Id,
+                    Name = recipeIngredient.Ingredient.Name,
+                    Order = recipeIngredient.Ingredient.Order,
+                    Amount = new()
+                    {
+                        Id = recipeIngredient.Amount.Id,
+                        Quantity = recipeIngredient.Amount.Quantity
+                    },
+                    Unit = new()
+                    {
+                        Id = recipeIngredient.Unit.Id,
+                        Measurement = recipeIngredient.Unit.Measurement
+                    }
+                };
+                recipeDTO.Ingredients.Add(storedIngredient);
+            }
+
+            return recipeDTO;
         }
 
 

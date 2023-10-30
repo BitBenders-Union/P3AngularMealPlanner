@@ -40,7 +40,6 @@ export class CreateRecipeComponent implements OnInit {
       prepTime: null,
       cookTime: null,
       servings: null,
-      rating: null,
       ingredients: this.formBuilder.array([]),
       instructions: this.formBuilder.array([]),
     });
@@ -121,12 +120,14 @@ export class CreateRecipeComponent implements OnInit {
   // this is to create the form group for the ingredients
   // we need to create a form group for each ingredient, because each ingredient is an array
   // this is all to reflect our interface and make it easier to post to the backend
-  createIngredientFormGroup() {
+  createIngredientFormGroup(index: number) {
     return new FormGroup({
       name: new FormControl(''),
       amounts: new FormControl(''),
-      unit: new FormControl('')
+      unit: new FormControl(''),
+      order: new FormControl(index)
     });
+    
   }
 
   // this is to get the instructions from the form
@@ -168,20 +169,18 @@ export class CreateRecipeComponent implements OnInit {
         Category: {
           CategoryName: this.form.get('category')?.value
         },
-        PreparationTimes: { 
+        PreparationTime: { 
           Minutes: this.form.get('prepTime')?.value
         },
-        CookingTimes: { 
+        CookingTime: { 
           Minutes: this.form.get('cookTime')?.value
          },
         Servings: { 
           Quantity: this.form.get('servings')?.value
         },
-        Ratings: [{
-          Score: this.form.get('rating')?.value
-        }],
         Ingredients: this.ingredients.controls.map(control => ({
           Name: control.get('name')?.value,
+          Order: control.get('order')?.value,
           Amount: {
             Quantity: control.get('amounts')?.value,
           },
@@ -193,13 +192,13 @@ export class CreateRecipeComponent implements OnInit {
           Text: control.get('text')?.value
         })),
         User: {
-          Id: this.tokenService.getIdFromToken(),
-          Username: this.tokenService.getUsernameFromToken()
+          id: this.tokenService.getIdFromToken(),
+          username: this.tokenService.getUsernameFromToken()
         }
       };
 
 
-      // console.log(formattedRecipe);
+      console.log(formattedRecipe);
       this.recipeService.createRecipe(formattedRecipe).subscribe({
         next: response => {
           this.form.reset();
@@ -255,18 +254,6 @@ export class CreateRecipeComponent implements OnInit {
 
   }
 
-  // this is to restrict the rating to be between 0 and 5
-  // if you try to type a number that is less than 0, it will automatically set it to 0
-  // if you try to type a number that is greater than 5, it will automatically set it to 5
-  validateRating() {
-    const ratingControl = this.form.get('rating');
-
-    if (ratingControl!.value < 0) {
-      ratingControl!.setValue(0);
-    } else if (ratingControl!.value > 5) {
-      ratingControl!.setValue(5);
-    }
-  }
 
   // this is to restrict a given controller to be greater than 0
   aboveZero(inputElement: EventTarget, controlName: string){
@@ -294,11 +281,15 @@ export class CreateRecipeComponent implements OnInit {
   // this is to add ingredients to the form
   // it pushes the data to the last index of the array
   addIngredients(index: number) {
-    this.ingredients.controls.splice(index + 1, 0, this.createIngredientFormGroup())
+    this.ingredients.controls.splice(index, 0, this.createIngredientFormGroup(index))
   }
 
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.ingredients.controls, event.previousIndex, event.currentIndex);
+    for (let i = 0; i < this.ingredients.controls.length; i++) {
+      this.ingredients.controls[i].get('order')!.setValue(i);
+    }
+    
   }
 
 
