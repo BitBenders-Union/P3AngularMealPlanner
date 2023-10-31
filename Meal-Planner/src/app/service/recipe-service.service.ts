@@ -80,8 +80,8 @@ export class RecipeServiceService{
     
   }
 
-  GetRecipeRating(recipeId: number): Observable<any> {
-    return this.http.get(`${this.url}/Rating/recipeRating/${recipeId}`);
+  GetRecipeRating(recipeId: number): Observable<Rating> {
+    return this.http.get<Rating>(`${this.url}/Rating/recipeRating/${recipeId}`);
   }
 
 }

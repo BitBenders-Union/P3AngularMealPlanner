@@ -18,4 +18,11 @@ export class AuthGuard implements CanActivate {
       return false;
     }
   }
+
+  canEdit(): boolean {
+
+    return true
+  }
+    
+
 }

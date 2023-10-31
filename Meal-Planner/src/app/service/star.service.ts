@@ -9,7 +9,7 @@ export class StarService {
   // so we don't have to repeat ourselves
   getRatingStars(rating: number): (boolean | string)[] {
     if (rating === null || isNaN(rating)) {
-      return [];
+      return new Array(5).fill('empty');
     }
   
 
@@ -25,7 +25,6 @@ export class StarService {
     if (halfStar) {
       starsArray[fullStars] = 'half'; // Set the half star
     }
-    console.log(starsArray);
       return starsArray;
   }
 
