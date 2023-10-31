@@ -53,21 +53,24 @@ export class RecipeDetailComponent implements OnInit {
         const recipeId = Number(params.get('id'));
         if(!isNaN(recipeId)){
 
-          
-            this.recipeService.getRecipeById(recipeId!).subscribe(recipe =>{
+
+          this.recipeService.getRecipeById(recipeId).subscribe({
+            next: (recipe: Recipe) => {
               this.recipe = recipe;
-            });
+            },
+            error: (error) => {
+              console.error("Recipe get Error: ",error);
+            }
+          });
         }
 
         this.recipeService.GetRecipeRating(recipeId).subscribe({
           next: (rating: Rating) => {
             this.rating = rating.score;
+            this.stars = this.starService.getRatingStars(this.rating);
           },
           error: (error) => {
             console.error("Recipe rating Error: ",error);
-          },
-          complete: () => {
-            this.stars = this.starService.getRatingStars(this.rating);
           }
         });
         
@@ -148,29 +151,23 @@ export class RecipeDetailComponent implements OnInit {
     this.recipeService.createRating(Rating, this.user!.id, this.recipe!.id,).subscribe({
       next: (rating: Rating) => {
         this.rating = rating.score;
-        console.log(this.rating);
       },
       error: (error) => {
         console.error("Recipe rating Error: ",error);
       },
       complete: () => {
         this.stars = this.starService.getRatingStars(this.rating);
-        console.log(this.stars);
       }
     });
   }
 
   
-  validateRecipeUser(){
-    console.log("recipe id: " + this.recipe!.user.id);
-    console.log("user id: " + this.user?.id);
+  validateRecipeUser(){;
     if(this.recipe!.user.id == this.user?.id)
       {
-        console.log("true");
       return true;
     }
     else{
-      console.log("false");
       return false;
     }
 
