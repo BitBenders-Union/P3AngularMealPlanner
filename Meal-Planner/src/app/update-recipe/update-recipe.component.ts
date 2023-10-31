@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Amount, Unit, Ingredient, Recipe, Instruction, RecipeDTO } from '../Interfaces';
+import { Amount, Unit, Ingredient, Recipe, Instruction, RecipeDTO, User } from '../Interfaces';
 import { RecipeServiceService } from '../service/recipe-service.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, FormControl, AbstractControl } from '@angular/forms';
 import { LoginService } from '../service/login.service';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { UserStoreService } from '../service/user-store.service';
 
 @Component({
   selector: 'app-update-recipe',
@@ -22,6 +23,11 @@ export class UpdateRecipeComponent implements OnInit{
   categories: string[] = [];
   initialCategories: string[] = [];
   allCateogries: string[] = [];
+
+  private user: User = {
+    id: 0,
+    username: ''
+  }
 
   private searchInputSubject = new Subject<string>();
 
@@ -42,7 +48,8 @@ export class UpdateRecipeComponent implements OnInit{
     private recipeService: RecipeServiceService,
     private formBuilder: FormBuilder,
     private router: Router,
-    private tokenService: LoginService
+    private tokenService: LoginService,
+    private userStore: UserStoreService
     ) 
     { 
       this.updateForm = this.formBuilder.group({
@@ -136,6 +143,37 @@ export class UpdateRecipeComponent implements OnInit{
       }
     });
 
+
+    this.userStore.getUserFromStore().subscribe({
+      next: user => {
+        this.user.username = user;
+      },
+      error: error => console.error('There was an error!', error),
+      complete: () => {
+        if(this.user.username === ''){
+          this.user.username = this.tokenService.getUsernameFromToken();
+        }
+        else{
+        }
+      }
+    });
+
+    this.userStore.getIdFromStore().subscribe({
+      next: id => {
+        this.user.id = id;
+      },
+      error: error => console.error('There was an error!', error),
+      complete: () => {
+        if(this.user.id === 0){
+          this.user.id = this.tokenService.getIdFromToken();
+        }
+        else{
+        }
+      }
+    });
+
+
+
   }
 
   GetRandomElementsFromArray(array: string[], numberOfElements: number): string[] {
@@ -199,21 +237,21 @@ export class UpdateRecipeComponent implements OnInit{
           Text: control.get('text')?.value
         })),
         User: {
-          id: this.tokenService.getIdFromToken(),
-          username: this.tokenService.getUsernameFromToken()
+          id: this.user.id,
+          username: this.user.username
         }
       };
 
       console.log(recipeDTO);
-      this.recipeService.updateRecipe(recipeDTO, this.recipeId!).subscribe({
-        next:(data: any) => {
-          // console.log("Success", data);
-          this.router.navigate(['/recipe-detail/' + this.recipeId]);
-        },
-        error:(error) => {
-          console.error("Update recipe error: ", error);
-        }
-      })
+      // this.recipeService.updateRecipe(recipeDTO, this.recipeId!).subscribe({
+      //   next:(data: any) => {
+      //     // console.log("Success", data);
+      //     this.router.navigate(['/recipe-detail/' + this.recipeId]);
+      //   },
+      //   error:(error) => {
+      //     console.error("Update recipe error: ", error);
+      //   }
+      // });
     }
   }
   

@@ -38,8 +38,8 @@
       </div>
 
       <div class="actions">
-        <button (click)="updateRecipe()" class="btn-update">Update Recipe</button>
-        <button (click)="deleteRecipe()" class="btn-delete">Delete Recipe</button>
+        <button (click)="updateRecipe()" class="btn-update" [hidden]="!validateRecipeUser()">Update Recipe</button>
+        <button (click)="deleteRecipe()" class="btn-delete" [hidden]="!validateRecipeUser()">Delete Recipe</button>
       </div>
 
     </div>
