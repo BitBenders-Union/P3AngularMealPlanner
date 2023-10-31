@@ -60,15 +60,21 @@ export class SearchComponent implements OnInit {
       next: (recipes: Recipe[]) => {
         this.recipes = recipes;
         this.filteredRecipes = [...this.recipes];
+
+        this.recipes.forEach( (recipe) => {
+          console.log("Order of recipes:");
+          console.log(recipe.title);
+          this.getRating(recipe.id);
+        });
+
+        console.log(this.recipes);
+        console.log(this.stars);
+
       },
       error: (error) => {
         console.error(error);
       },
-      complete: () => {
-        this.recipes.forEach( (recipe) => {
-          this.getRating(recipe.id);
-        });
-      }
+
     
     });
 
@@ -99,15 +105,12 @@ export class SearchComponent implements OnInit {
     this.recipeService.GetRecipeRating(recipeId).subscribe({
       next: (rating: RatingDTO) => {
         this.rating = rating.score;
-
+        this.stars.push(this.starService.getRatingStars(this.rating));
       },
       error: (error) => {
         console.error(error);
-      },
-      complete: () => {
-        this.stars.push(this.starService.getRatingStars(this.rating));
-
-      }});    
+      }
+    });    
   }
 
 

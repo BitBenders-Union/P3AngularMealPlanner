@@ -126,6 +126,18 @@ namespace Meal_Planner_Api.Repositories
             return Save();
         }
 
+        public RecipeRating GetRecipeRating(int userId, int recipeId)
+        {
+            return _context.RecipeRatings.FirstOrDefault(x => x.RecipeID == recipeId && x.UserID == userId);
+        }
+
+        public bool UpdateRecipeRating(RecipeRating recipeRating)
+        {
+            var existingRecipeRating = _context.RecipeRatings.FirstOrDefault(x => x.RecipeID == recipeRating.RecipeID && x.UserID == recipeRating.UserID);
+            existingRecipeRating.Rating = recipeRating.Rating;
+            return Save();
+        }
+
         public bool Save()
         {
             var saved = _context.SaveChanges();

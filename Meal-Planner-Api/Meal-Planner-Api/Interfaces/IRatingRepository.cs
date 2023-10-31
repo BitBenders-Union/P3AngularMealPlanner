@@ -23,9 +23,10 @@
         bool recipeRatingsExists(int userId, int recipeId);
         bool ratingExists(float score);
         bool ratingExists(ICollection<RatingDTO> rating);
-
+        RecipeRating GetRecipeRating(int userId, int recipeId);
         bool CreateRating(Rating rating);
         bool CreateRecipeRating(RecipeRating recipeRating);
+        bool UpdateRecipeRating(RecipeRating recipeRating);
         bool DeleteRating(Rating rating);
         bool UpdateRating(Rating rating);
         bool Save();
