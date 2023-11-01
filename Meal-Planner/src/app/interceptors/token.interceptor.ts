@@ -35,15 +35,10 @@ export class TokenInterceptor implements HttpInterceptor {
         if(err instanceof HttpErrorResponse){
           //this gets error status 0 instate of 401 or other status code for some reason
           if(err.status === 401){
-            console.log("401 error");
             return this.handleUnAuthError(request, next); 
           }
-
-          if(err.status === 404){
-            console.log("404 Error");
-          }
         }
-        console.log(err)
+        console.error(err)
         return throwError(() => new Error("Something went wrong new error",));
       })
     );

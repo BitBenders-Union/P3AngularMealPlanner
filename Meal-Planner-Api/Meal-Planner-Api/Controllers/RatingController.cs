@@ -98,15 +98,17 @@ namespace Meal_Planner_Api.Controllers
         [HttpGet("recipeRating/{recipeId}")]
         public IActionResult GetRecipeRating(int recipeId)
         {
-            var rating = _mapper.Map<RatingDTO>(_ratingRepository.GetRecipeRating(recipeId));
+            var rating = _ratingRepository.GetRecipeRating(recipeId);
 
             if (rating == null)
                 return NotFound();
 
+            var ratingDTO = _mapper.Map<RatingDTO>(rating);
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(rating);
+            return Ok(ratingDTO);
         }
 
 

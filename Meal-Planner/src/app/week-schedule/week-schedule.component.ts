@@ -64,7 +64,6 @@ export class WeekScheduleComponent implements OnInit {
         if(this.user.username === ''){
           this.user.username = this.auth.getUsernameFromToken();
         }
-        console.log("user: ", this.user)
         this.RetrieveId();
       },
       error: error => console.error('There was an error!', error)
@@ -75,7 +74,6 @@ export class WeekScheduleComponent implements OnInit {
   RetrieveId(): void {
     this.userStore.getIdFromStore().subscribe({
       next: id => {
-        console.log("id from store: ", id)
         this.user.id = id;
         if(this.user.id === 0){
           this.user.id = this.auth.getIdFromToken();
@@ -116,7 +114,6 @@ export class WeekScheduleComponent implements OnInit {
           this.shoppingListUpdated.emit(newRecipe.ingredients);
           // Save the updated cellContents to db
           this.saveCellContents(rowIndex, colIndex, newRecipe.id);
-          console.log("saved to db")
         }
       });
 
@@ -133,7 +130,6 @@ export class WeekScheduleComponent implements OnInit {
   initializeCells(): void {
     // Loop through schedule
     this.schedule.forEach((entry) => {
-      console.log("entry: ", entry)
       // Check if recipeId is not null
       if (entry.recipeId !== null) {
         
@@ -144,17 +140,13 @@ export class WeekScheduleComponent implements OnInit {
             this.ratingCellContents[entry.row][entry.column] = data.score;
 
           },
-          error: (err) => console.log(err),
-          complete: () => {
-            console.log(this.ratingCellContents[entry.row][entry.column])
-          }
+          error: (err) => console.log(err)
         });
         
         this.recipeService.getRecipeById(entry.recipeId!).subscribe({
           next: (data) => {
             newRecipe = data;
             this.cellContents[entry.row][entry.column] = newRecipe;
-            console.log(this.cellContents[entry.row][entry.column])
             this.shoppingListUpdated.emit(newRecipe.ingredients);
           },
           error: (err) => console.log(err)
@@ -202,7 +194,6 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
       recipeId: myRecipeId,
       user: this.user
     };
-    console.log(updatedData)
     this.weekScheduleService.updateData(updatedData).subscribe();
   }
 
@@ -214,12 +205,10 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
         .subscribe({
             next: (data) => {
               this.schedule = data
-            },
-            error: (err) => console.log(err),
-            complete: () => {
               this.initializeCells()
-            }
-        })
+            },
+            error: (err) => console.log(err)
+        });
   }
 
 }
