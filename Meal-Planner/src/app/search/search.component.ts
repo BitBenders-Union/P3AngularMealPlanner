@@ -14,9 +14,9 @@ import { StarService } from '../service/star.service';
 export class SearchComponent implements OnInit {
   
   recipes: Recipe[] = []; // Array to hold all recipes
-  filteredRecipes: Recipe[] = []; // Array to hold filtered recipes that match the search term
+  filteredRecipes: RecipeWithScore[] = []; // Array to hold filtered recipes that match the search term
   scoreRecipe: RecipeWithScore[] = [];
-  stars: any[][] = [];
+
 
   rating: RatingWithRecipeId ={
     recipeId: 0,
@@ -65,8 +65,7 @@ export class SearchComponent implements OnInit {
     this.recipeService.getRecipes().subscribe({
       next: (recipes: Recipe[]) => {
         this.recipes = recipes;
-        this.filteredRecipes = [...this.recipes]
-
+        
         this.recipes.forEach(recipe => {
           const recipeWithScore: RecipeWithScore = {
             id: recipe.id,
@@ -75,13 +74,13 @@ export class SearchComponent implements OnInit {
           }
           this.scoreRecipe.push(recipeWithScore);
         });
+        this.filteredRecipes = [...this.scoreRecipe]
         
       },
       error: (error) => {
         console.error(error);
       },
       complete: () => {
-        console.log('complete');
           this.scoreRecipe.forEach(recipe => {
             this.getRating(recipe.id);
           });
@@ -103,7 +102,8 @@ export class SearchComponent implements OnInit {
 
   // Filter recipes based on the search term
   filterRecipes(searchTerm: string) {
-    this.filteredRecipes = this.recipes.filter(recipe =>
+    
+    this.filteredRecipes = this.scoreRecipe.filter(recipe =>
       recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
@@ -121,16 +121,16 @@ export class SearchComponent implements OnInit {
       next: (rating: RatingDTO) => {
         this.rating.score = rating.score;
         this.rating.recipeId = recipeId;
+        const recipeWithScore = this.scoreRecipe.find(recipe => recipe.id === recipeId);
+        recipeWithScore!.score = this.starService.getRatingStars(this.rating.score);
       },
       error: (error) => {
         console.error(error);
         this.rating.score = 0;
         this.rating.recipeId = recipeId;
-      },
-      complete: () => {
         const recipeWithScore = this.scoreRecipe.find(recipe => recipe.id === recipeId);
         recipeWithScore!.score = this.starService.getRatingStars(this.rating.score);
-      }
+      },
     });    
   }
 
