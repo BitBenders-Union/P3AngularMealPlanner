@@ -98,27 +98,27 @@ namespace Meal_Planner_Api.Controllers
         [HttpGet("recipeRating/{recipeId}")]
         public IActionResult GetRecipeRating(int recipeId)
         {
-            var rating = _mapper.Map<RatingDTO>(_ratingRepository.GetRecipeRating(recipeId));
+            var rating = _ratingRepository.GetRecipeRating(recipeId);
 
             if (rating == null)
                 return NotFound();
 
+            var ratingDTO = _mapper.Map<RatingDTO>(rating);
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(rating);
+            return Ok(ratingDTO);
         }
 
 
 
-        [HttpPost("create/{userId}/{recipeId}")]
+        [HttpPut("upsert/{userId}/{recipeId}")]
         public IActionResult CreateRating([FromBody] RatingDTO ratingCreate, int userId, int recipeId)
         {
             if (ratingCreate == null || userId == 0 || recipeId == 0)
                 return BadRequest();
 
-            if(_ratingRepository.recipeRatingsExists(userId, recipeId))
-                return BadRequest();
 
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -131,17 +131,31 @@ namespace Meal_Planner_Api.Controllers
                 _ratingRepository.CreateRating(_mapper.Map<Rating>(ratingCreate));
             }
 
-
-            // create RecipeRating
-
-            RecipeRating recipeRating = new()
+            
+            // if recipe rating exists, update it
+            // if it doesn't exist create a new one
+            if (_ratingRepository.recipeRatingsExists(userId, recipeId))
             {
-                Rating = _ratingRepository.GetRatingFromScore(ratingCreate.Score),
-                Recipe = _recipeRepository.GetRecipe(recipeId),
-                User = _userRepository.GetUser(userId)
-            };
 
-            _ratingRepository.CreateRecipeRating(recipeRating);
+                RecipeRating recipeRating = _ratingRepository.GetRecipeRating(userId, recipeId);
+
+                recipeRating.Rating = _ratingRepository.GetRatingFromScore(ratingCreate.Score);
+
+                _ratingRepository.UpdateRecipeRating(recipeRating);
+            }
+            else
+            {
+                RecipeRating recipeRating = new RecipeRating()
+                {
+                    Recipe = _recipeRepository.GetRecipe(recipeId),
+                    User = _userRepository.GetUser(userId),
+                    Rating = _ratingRepository.GetRatingFromScore(ratingCreate.Score)
+                };
+
+                _ratingRepository.CreateRecipeRating(recipeRating);
+
+            }
+
 
             return Ok();
         }

@@ -292,7 +292,9 @@ namespace Meal_Planner_Api.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok();
+            
+
+            return Ok(_recipeRepository.GetRecipeId(newRecipe.Title));
         }
 
         [HttpPut("update/{id}")]

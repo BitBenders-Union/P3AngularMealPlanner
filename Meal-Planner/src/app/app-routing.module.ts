@@ -16,11 +16,11 @@ import { AuthGuard } from './guards/auth.guard';
 const routes: Routes = [
   // {path: 'dashboard/:id',  component: DashboardComponent, canActivate: [AuthGuard], data: {animation: 'fader'}},
   {path: 'dashboard',  component: DashboardComponent, canActivate: [AuthGuard], data: {animation: 'fader'}},
-  {path: 'search', component: SearchComponent, data: {animation: 'fader'}},
-  {path: 'about', component: AboutComponent, data: {animation: 'fader'}},
-  {path: 'recipe-detail/:id', component: RecipeDetailComponent, data: {animation: 'fader'} },
-  {path: 'create-recipe', component: CreateRecipeComponent, data: {animation: 'fader'}},
-  {path: 'update/:id', component: UpdateRecipeComponent, data: {animation: 'fader'}},
+  {path: 'search', component: SearchComponent, canActivate: [AuthGuard], data: {animation: 'fader'}},
+  {path: 'about', component: AboutComponent, canActivate: [AuthGuard], data: {animation: 'fader'}},
+  {path: 'recipe-detail/:id', component: RecipeDetailComponent, canActivate: [AuthGuard], data: {animation: 'fader'} },
+  {path: 'create-recipe', component: CreateRecipeComponent, canActivate: [AuthGuard], data: {animation: 'fader'}},
+  {path: 'update/:id', component: UpdateRecipeComponent, canActivate: [AuthGuard], data: {animation: 'fader'}},
   {path: 'recipe', redirectTo: '/search', pathMatch: 'full', data: {animation: 'fader'}},
   // more routes goes here
   {path: '', redirectTo: '/login', pathMatch: 'full', data: {animation: 'fader'}},

@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, ReactiveFormsModule, AbstractControl  } from '@angular/forms';
-import { Recipe, RecipeDTO } from '../Interfaces';
+import { Recipe, RecipeDTO, User } from '../Interfaces';
 import { RecipeServiceService } from '../service/recipe-service.service';
 import { LoginService } from '../service/login.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { UserStoreService } from '../service/user-store.service';
 
 
 @Component({
@@ -25,13 +26,19 @@ export class CreateRecipeComponent implements OnInit {
 
   loading: boolean = false; // conrol the spinner
 
+  private user: User = {
+    id: 0,
+    username: ''
+  }
+
   // constructor initializes the form with default values, for now they are test values.
   // since ingredients and instructions are arrays, we need to initialize them as an array instead of single values
   // we also inject the createRecipeService so we can fetch from our API
   constructor(private formBuilder: FormBuilder,
     private recipeService: RecipeServiceService,
     private tokenService: LoginService,
-    private router: Router
+    private router: Router,
+    private userStore: UserStoreService,
     ) {
     this.form = this.formBuilder.group({
       title: null,
@@ -51,6 +58,7 @@ export class CreateRecipeComponent implements OnInit {
     this.addInstruction(0);
   }
   ngOnInit(): void {
+
     this.recipeService.getCategories().subscribe({
       next: categories => {
         this.allCateogries = categories.map(category => category.categoryName);
@@ -74,6 +82,30 @@ export class CreateRecipeComponent implements OnInit {
           this.filterCategories(searchTerm);
         });
 
+      }
+    });
+
+    this.userStore.getUserFromStore().subscribe({
+      next: user => {
+        this.user!.username = user;
+      },
+      error: error => console.error('There was an error!', error),
+      complete: () => {
+        if(this.user!.username === ''){
+          this.user!.username = this.tokenService.getUsernameFromToken();
+        }
+      }
+    });
+
+    this.userStore.getIdFromStore().subscribe({
+      next: id => {
+        this.user!.id = id;
+      },
+      error: error => console.error('There was an error!', error),
+      complete: () => {
+        if(this.user!.id === 0){
+          this.user!.id = this.tokenService.getIdFromToken();
+        }
       }
     });
 
@@ -192,8 +224,8 @@ export class CreateRecipeComponent implements OnInit {
           Text: control.get('text')?.value
         })),
         User: {
-          id: this.tokenService.getIdFromToken(),
-          username: this.tokenService.getUsernameFromToken()
+          id: this.user!.id,
+          username: this.user!.username
         }
       };
 
@@ -217,6 +249,8 @@ export class CreateRecipeComponent implements OnInit {
     this.markFormArrayControlsAsTouched(this.form.get('instructions') as FormArray);
 
   }
+
+
   
   markAllAsTouched(formGroup: FormGroup) {
     Object.values(formGroup.controls).forEach(control => {

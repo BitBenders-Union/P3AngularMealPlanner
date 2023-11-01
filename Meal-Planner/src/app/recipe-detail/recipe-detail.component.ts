@@ -1,10 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RecipeServiceService } from '../service/recipe-service.service';
-import { Rating, RatingDTO, Recipe, UserOnlyName } from '../Interfaces';
+import { Rating, RatingDTO, Recipe, User, UserOnlyName } from '../Interfaces';
 import { StarService } from '../service/star.service';
 import { Router } from '@angular/router';
 import { LoginService } from '../service/login.service';
+import { UserStoreService } from '../service/user-store.service';
 
 
 @Component({
@@ -17,7 +18,7 @@ export class RecipeDetailComponent implements OnInit {
   // recipe can either hold a recipe or null
   // initially it is set to null
   recipe: Recipe | undefined = undefined;
-  stars: (boolean | string)[] = new Array(5).fill('empty'); // Initialize with empty stars
+  stars: (boolean | string)[] = []; // Initialize with empty stars
   rating: number = 0;
   // Inject services and routes
   constructor(
@@ -26,9 +27,13 @@ export class RecipeDetailComponent implements OnInit {
     public starService: StarService, 
     private router: Router,
     private tokenService: LoginService,
+    private userStore: UserStoreService
     ) {}
 
-    user: UserOnlyName | undefined = undefined;
+    private user: User = {
+      id: 0,
+      username: ''
+    }
 
   ngOnInit(): void {
     
@@ -45,33 +50,52 @@ export class RecipeDetailComponent implements OnInit {
 
 
       this.route.paramMap.subscribe(params => {
-        const recipeId = Number(params.get('id'));
+        const recipeId: number = Number(params.get('id'));
         if(!isNaN(recipeId)){
 
-          
-            this.recipeService.getRecipeById(recipeId!).subscribe(recipe =>{
+          this.recipeService.getRecipeById(recipeId).subscribe({
+            next: (recipe: Recipe) => {
               this.recipe = recipe;
-            });
+            },
+            error: (error) => {
+              console.error("Recipe get Error: ",error);
+            }
+          });
         }
 
         this.recipeService.GetRecipeRating(recipeId).subscribe({
           next: (rating: Rating) => {
             this.rating = rating.score;
+            this.stars = this.starService.getRatingStars(this.rating);
           },
           error: (error) => {
             console.error("Recipe rating Error: ",error);
-          },
-          complete: () => {
+            this.rating = 0;
             this.stars = this.starService.getRatingStars(this.rating);
           }
         });
         
     });
 
-    this.user = {
-      id: this.tokenService.getIdFromToken(),
-      username: this.tokenService.getUsernameFromToken()
-    }
+    this.userStore.getUserFromStore().subscribe({
+      next: user => {
+        this.user!.username = user;
+        if(this.user!.username === ''){
+          this.user!.username = this.tokenService.getUsernameFromToken();
+        }
+      },
+      error: error => console.error('There was an error!', error),
+    });
+
+    this.userStore.getIdFromStore().subscribe({
+      next: id => {
+        this.user!.id = id;
+        if(this.user!.id === 0){
+          this.user!.id = this.tokenService.getIdFromToken();
+        }
+      },
+      error: error => console.error('There was an error!', error),
+    });
     
   }
 
@@ -111,26 +135,38 @@ export class RecipeDetailComponent implements OnInit {
   rateRecipe(rating: number) {
     // Implement your logic to save the rating, e.g., call an API
     console.log(`User rated the recipe with ${rating + 1} stars.`);
-    const Rating: Rating = {
-      id: 0,
+    const Rating: RatingDTO = {
       score: rating + 1
     }
 
+    this.recipeService.createRating(Rating, this.user!.id, this.recipe!.id).subscribe({
+      next: () => {
+        this.rating = Rating.score;
+        this.stars = this.starService.getRatingStars(this.rating);
 
-    this.recipeService.createRating(Rating, this.user!.id, this.recipe!.id,).subscribe({
-      next: (rating: Rating) => {
-        this.rating = rating.score;
-        console.log(this.rating);
+
+
+        // make it so the displayed rating can't be hovered over after making a rating
+
       },
       error: (error) => {
         console.error("Recipe rating Error: ",error);
-      },
-      complete: () => {
-        this.stars = this.starService.getRatingStars(this.rating);
-        console.log(this.stars);
       }
+
     });
+
   }
 
   
+  validateRecipeUser(){;
+    if(this.recipe!.user.id == this.user?.id)
+      {
+      return true;
+    }
+    else{
+      return false;
+    }
+
+  }
+
 }
