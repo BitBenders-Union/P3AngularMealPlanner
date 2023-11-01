@@ -75,7 +75,6 @@ export class UpdateRecipeComponent implements OnInit{
         this.recipeService.getRecipeById(this.recipeId).subscribe(recipe => {
           
           this.recipe = recipe;
-          console.log(this.recipe);
           this.updateForm.patchValue({
             title: this.recipe!.title,
             description: this.recipe!.description,
@@ -147,29 +146,22 @@ export class UpdateRecipeComponent implements OnInit{
     this.userStore.getUserFromStore().subscribe({
       next: user => {
         this.user.username = user;
-      },
-      error: error => console.error('There was an error!', error),
-      complete: () => {
         if(this.user.username === ''){
           this.user.username = this.tokenService.getUsernameFromToken();
         }
-        else{
-        }
-      }
+      },
+      error: error => console.error('There was an error!', error)
+
     });
 
     this.userStore.getIdFromStore().subscribe({
       next: id => {
         this.user.id = id;
-      },
-      error: error => console.error('There was an error!', error),
-      complete: () => {
         if(this.user.id === 0){
           this.user.id = this.tokenService.getIdFromToken();
         }
-        else{
-        }
-      }
+      },
+      error: error => console.error('There was an error!', error)
     });
 
 
@@ -242,20 +234,17 @@ export class UpdateRecipeComponent implements OnInit{
         }
       };
 
-      console.log(recipeDTO);
-      // this.recipeService.updateRecipe(recipeDTO, this.recipeId!).subscribe({
-      //   next:(data: any) => {
-      //     // console.log("Success", data);
-      //     this.router.navigate(['/recipe-detail/' + this.recipeId]);
-      //   },
-      //   error:(error) => {
-      //     console.error("Update recipe error: ", error);
-      //   }
-      // });
+      this.recipeService.updateRecipe(recipeDTO, this.recipeId!).subscribe({
+        next:() => {
+          this.router.navigate(['/recipe-detail/' + this.recipeId]);
+        },
+        error:(error) => {
+          console.error("Update recipe error: ", error);
+        }
+      });
     }
   }
   
-
 
   goBack(){
     this.router.navigate(['/recipe-detail/' + this.recipeId]);

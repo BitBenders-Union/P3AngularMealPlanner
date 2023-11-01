@@ -75,8 +75,8 @@ export class RecipeServiceService{
   }
 
 
-  createRating(rating: RatingDTO, userId: number, reicpeId: number): Observable<any> {
-    return this.http.put(`${this.url}/Rating/upsert/${userId}/${reicpeId}`, {rating});
+  createRating(rating: RatingDTO, userId: number, recipeId: number): Observable<any> {
+    return this.http.put(`${this.url}/Rating/upsert/${userId}/${recipeId}`, rating);
     
   }
 
