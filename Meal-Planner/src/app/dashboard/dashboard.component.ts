@@ -34,13 +34,9 @@ export class DashboardComponent implements OnInit{
       .subscribe(val =>{ 
         let userNameFromToken = this.auth.getUsernameFromToken();
         this.userName = val || userNameFromToken;
-        // console.log(this.userName);
+
       })
 
-      // this.auth.testApi().subscribe((data: any) =>{
-      //   this.testthing = data;
-      //   console.log(this.testthing);
-      // })
   }
 
   // This function is called when the shopping list needs to be updated with new ingredients.
