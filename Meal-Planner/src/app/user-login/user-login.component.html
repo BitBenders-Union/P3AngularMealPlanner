@@ -7,8 +7,14 @@
             Incorrect username and password
         </div>
     </div>
-    <div class="buttons-exit">
-        <button type="submit" class="confirm-button">Login</button>
-        <button class="register-button" routerLink="/register">Register</button>
+
+    <div >
+        <mat-spinner *ngIf="isLoading"></mat-spinner>
+        <div class="buttons-exit" *ngIf="!isLoading">
+            <button type="submit" class="confirm-button">Login</button>
+            <button class="register-button" routerLink="/register">Register</button>
+        </div>
+        
     </div>
+    <!-- <mat-spinner></mat-spinner> -->
 </form>
