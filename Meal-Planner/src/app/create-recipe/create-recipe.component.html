@@ -45,7 +45,7 @@
 
         <div cdkDropList class="my-list" (cdkDropListDropped)="drop($event)">
           <div *ngFor="let ingredient of ingredients.controls; let i = index;" class="ingredient-row" cdkDrag>
-            <i class="fas fa-grip-vertical grip"></i>
+            <i class="fas fa-grip-vertical grip" cdkDragHandle></i>
             <div [formGroupName]="i" class="ingredient-group">
               <input required formControlName="name" class="ingredient-input" />
               <input required formControlName="amounts" type="number" class="ingredient-input" min="0" (input)="aboveZeroIngredient()"/>
@@ -76,7 +76,7 @@
       <div cdkDropList class="my-list" (cdkDropListDropped)="dropInstruction($event)">
         <div *ngFor="let instruction of instructions.controls; let i = index" class="instruction-row" cdkDrag>
 
-          <i class="fas fa-grip-vertical grip"></i>
+          <i class="fas fa-grip-vertical grip" cdkDragHandle></i>
 
           <div [formGroupName]="i" class="instruction-group">
 
