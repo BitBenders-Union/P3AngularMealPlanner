@@ -21,8 +21,6 @@ export class WeekScheduleComponent implements OnInit {
 
   isDragging = false; // Flag to indicate dragging state
 
-  public userId: number = 0;
-
   public user: User = {
     id: 0,
     username: ''
@@ -52,42 +50,41 @@ export class WeekScheduleComponent implements OnInit {
     ) {}
 
   ngOnInit(): void {
-    this.userStore.getIdFromStore().subscribe(val =>{
-      let id = this.auth.getIdFromToken();
-      this.userId = val || id;
-      this.getScheduleData(this.userId);
-    })
 
+    this.RetrieveUser()
+
+  }
+
+  // seems like the complete object in the subscribe doesn't work
+  RetrieveUser(): void {
 
     this.userStore.getUserFromStore().subscribe({
       next: user => {
         this.user.username = user;
-      },
-      error: error => console.error('There was an error!', error),
-      complete: () => {
         if(this.user.username === ''){
           this.user.username = this.auth.getUsernameFromToken();
         }
-        else{
-        }
-      }
-    });
-
-    this.userStore.getIdFromStore().subscribe({
-      next: id => {
-        this.user.id = id;
+        this.RetrieveId();
       },
-      error: error => console.error('There was an error!', error),
-      complete: () => {
-        if(this.user.id === 0){
-          this.user.id = this.auth.getIdFromToken();
-        }
-        else{
-        }
-      }
+      error: error => console.error('There was an error!', error)
     });
 
   }
+
+  RetrieveId(): void {
+    this.userStore.getIdFromStore().subscribe({
+      next: id => {
+        this.user.id = id;
+        if(this.user.id === 0){
+          this.user.id = this.auth.getIdFromToken();
+        }
+          this.getScheduleData(this.user.id);
+      },
+      error: error => console.error('There was an error!', error)
+    });
+
+  }
+
 
     // Handles the dropping of recipes into time slots
   Drop(event: CdkDragDrop<Recipe[]>, rowIndex: number, colIndex: number): void {
@@ -117,7 +114,6 @@ export class WeekScheduleComponent implements OnInit {
           this.shoppingListUpdated.emit(newRecipe.ingredients);
           // Save the updated cellContents to db
           this.saveCellContents(rowIndex, colIndex, newRecipe.id);
-          console.log("saved to db")
         }
       });
 
@@ -144,17 +140,13 @@ export class WeekScheduleComponent implements OnInit {
             this.ratingCellContents[entry.row][entry.column] = data.score;
 
           },
-          error: (err) => console.log(err),
-          complete: () => {
-            console.log(this.ratingCellContents[entry.row][entry.column])
-          }
+          error: (err) => console.log(err)
         });
         
         this.recipeService.getRecipeById(entry.recipeId!).subscribe({
           next: (data) => {
             newRecipe = data;
             this.cellContents[entry.row][entry.column] = newRecipe;
-            console.log(this.cellContents[entry.row][entry.column])
             this.shoppingListUpdated.emit(newRecipe.ingredients);
           },
           error: (err) => console.log(err)
@@ -186,6 +178,7 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
 
     // Delete the recipe from the cellContents
     this.cellContents[colIndex][rowIndex] = null as unknown as Recipe; // wtf is this
+    this.ratingCellContents[colIndex][rowIndex] = null as unknown as number;
 
     // Save the updated cellContents to the server
     this.saveCellContents(rowIndex, colIndex, undefined);
@@ -199,10 +192,7 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
       row: colIndex,
       column: rowIndex,
       recipeId: myRecipeId,
-      user: {
-        id: this.auth.getIdFromToken(),
-        username: this.auth.getUsernameFromToken()
-      }
+      user: this.user
     };
     this.weekScheduleService.updateData(updatedData).subscribe();
   }
@@ -215,12 +205,10 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
         .subscribe({
             next: (data) => {
               this.schedule = data
-            },
-            error: (err) => console.log(err),
-            complete: () => {
               this.initializeCells()
-            }
-        })
+            },
+            error: (err) => console.log(err)
+        });
   }
 
 }

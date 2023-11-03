@@ -80,6 +80,9 @@ namespace Meal_Planner_Api.Repositories
             var ratings = _context.Ratings.Include(x => x.RecipeRating)
                 .Where(x => x.RecipeRating.Any(x => x.RecipeID == recipeId)).ToList();
 
+            if (ratings.Count <= 0)
+                return null;
+
             Rating rating = new()
             {
                 Score = ratings.Average(x => x.Score)
@@ -123,6 +126,18 @@ namespace Meal_Planner_Api.Repositories
         {
 
             _context.Add(recipeRating);
+            return Save();
+        }
+
+        public RecipeRating GetRecipeRating(int userId, int recipeId)
+        {
+            return _context.RecipeRatings.FirstOrDefault(x => x.RecipeID == recipeId && x.UserID == userId);
+        }
+
+        public bool UpdateRecipeRating(RecipeRating recipeRating)
+        {
+            var existingRecipeRating = _context.RecipeRatings.FirstOrDefault(x => x.RecipeID == recipeRating.RecipeID && x.UserID == recipeRating.UserID);
+            existingRecipeRating.Rating = recipeRating.Rating;
             return Save();
         }
 

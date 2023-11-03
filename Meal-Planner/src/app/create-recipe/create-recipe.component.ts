@@ -94,8 +94,6 @@ export class CreateRecipeComponent implements OnInit {
         if(this.user!.username === ''){
           this.user!.username = this.tokenService.getUsernameFromToken();
         }
-        else{
-        }
       }
     });
 
@@ -107,8 +105,6 @@ export class CreateRecipeComponent implements OnInit {
       complete: () => {
         if(this.user!.id === 0){
           this.user!.id = this.tokenService.getIdFromToken();
-        }
-        else{
         }
       }
     });
@@ -253,6 +249,8 @@ export class CreateRecipeComponent implements OnInit {
     this.markFormArrayControlsAsTouched(this.form.get('instructions') as FormArray);
 
   }
+
+
   
   markAllAsTouched(formGroup: FormGroup) {
     Object.values(formGroup.controls).forEach(control => {

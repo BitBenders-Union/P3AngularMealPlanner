@@ -14,8 +14,8 @@ export class RecipeServiceService{
   }
 
 
-  url: string = 'https://localhost:7268/api';
-  // url: string = 'http://192.168.21.22:5555/api';
+  // url: string = 'https://localhost:7268/api';
+  url: string = 'http://192.168.21.22:5555/api';
 
   // url: string = 'http://localhost:5000/api';
   // url = '../assets/Recipes.json';
@@ -75,8 +75,8 @@ export class RecipeServiceService{
   }
 
 
-  createRating(rating: RatingDTO, userId: number, reicpeId: number): Observable<any> {
-    return this.http.post(`${this.url}/Rating/create/${userId}/${reicpeId}`, {});
+  createRating(rating: RatingDTO, userId: number, recipeId: number): Observable<any> {
+    return this.http.put(`${this.url}/Rating/upsert/${userId}/${recipeId}`, rating);
     
   }
 

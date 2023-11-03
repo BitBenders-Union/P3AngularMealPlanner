@@ -50,23 +50,27 @@ export class RecipeDetailComponent implements OnInit {
 
 
       this.route.paramMap.subscribe(params => {
-        const recipeId = Number(params.get('id'));
+        const recipeId: number = Number(params.get('id'));
         if(!isNaN(recipeId)){
 
-          
-            this.recipeService.getRecipeById(recipeId!).subscribe(recipe =>{
+          this.recipeService.getRecipeById(recipeId).subscribe({
+            next: (recipe: Recipe) => {
               this.recipe = recipe;
-            });
+            },
+            error: (error) => {
+              console.error("Recipe get Error: ",error);
+            }
+          });
         }
 
         this.recipeService.GetRecipeRating(recipeId).subscribe({
           next: (rating: Rating) => {
             this.rating = rating.score;
+            this.stars = this.starService.getRatingStars(this.rating);
           },
           error: (error) => {
             console.error("Recipe rating Error: ",error);
-          },
-          complete: () => {
+            this.rating = 0;
             this.stars = this.starService.getRatingStars(this.rating);
           }
         });
@@ -76,29 +80,21 @@ export class RecipeDetailComponent implements OnInit {
     this.userStore.getUserFromStore().subscribe({
       next: user => {
         this.user!.username = user;
-      },
-      error: error => console.error('There was an error!', error),
-      complete: () => {
         if(this.user!.username === ''){
           this.user!.username = this.tokenService.getUsernameFromToken();
         }
-        else{
-        }
-      }
+      },
+      error: error => console.error('There was an error!', error),
     });
 
     this.userStore.getIdFromStore().subscribe({
       next: id => {
         this.user!.id = id;
-      },
-      error: error => console.error('There was an error!', error),
-      complete: () => {
         if(this.user!.id === 0){
           this.user!.id = this.tokenService.getIdFromToken();
         }
-        else{
-        }
-      }
+      },
+      error: error => console.error('There was an error!', error),
     });
     
   }
@@ -139,38 +135,35 @@ export class RecipeDetailComponent implements OnInit {
   rateRecipe(rating: number) {
     // Implement your logic to save the rating, e.g., call an API
     console.log(`User rated the recipe with ${rating + 1} stars.`);
-    const Rating: Rating = {
-      id: 0,
+    const Rating: RatingDTO = {
       score: rating + 1
     }
 
+    this.recipeService.createRating(Rating, this.user!.id, this.recipe!.id).subscribe({
+      next: () => {
+        this.rating = Rating.score;
+        this.stars = this.starService.getRatingStars(this.rating);
 
-    this.recipeService.createRating(Rating, this.user!.id, this.recipe!.id,).subscribe({
-      next: (rating: Rating) => {
-        this.rating = rating.score;
-        console.log(this.rating);
+
+
+        // make it so the displayed rating can't be hovered over after making a rating
+
       },
       error: (error) => {
         console.error("Recipe rating Error: ",error);
-      },
-      complete: () => {
-        this.stars = this.starService.getRatingStars(this.rating);
-        console.log(this.stars);
       }
+
     });
+
   }
 
   
-  validateRecipeUser(){
-    console.log("recipe id: " + this.recipe!.user.id);
-    console.log("user id: " + this.user?.id);
+  validateRecipeUser(){;
     if(this.recipe!.user.id == this.user?.id)
       {
-        console.log("true");
       return true;
     }
     else{
-      console.log("false");
       return false;
     }
 
