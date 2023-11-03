@@ -29,6 +29,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { StartpageComponent } from './startpage/startpage.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { TestComponent } from './test/test.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -53,6 +54,9 @@ import { TestComponent } from './test/test.component';
     TestComponent,
     
     
+    
+    
+    
   ],
   imports: [
     BrowserModule,
@@ -64,7 +68,9 @@ import { TestComponent } from './test/test.component';
     HttpClientModule,
     ReactiveFormsModule,
     MatSlideToggleModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatProgressSpinnerModule
+    
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
