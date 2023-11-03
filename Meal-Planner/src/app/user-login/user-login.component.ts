@@ -32,8 +32,8 @@ export class UserLoginComponent implements OnInit{
   }
 
   onSubmit(): void{
-    this.ToggleLoadingSpinner();
     if(this.loginForm.valid){
+      this.ToggleLoadingSpinner();
       const username = this.loginForm.value.username;
       const password = this.loginForm.value.password;
 
