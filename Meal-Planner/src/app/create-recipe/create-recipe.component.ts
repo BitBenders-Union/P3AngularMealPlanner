@@ -236,14 +236,18 @@ export class CreateRecipeComponent implements OnInit {
           this.form.reset();
           this.router.navigate([`/recipe-detail/${response}`])
         },
-        error: error => console.error('There was an error!', error)
+        error: error => {
+          console.error('There was an error!', error)
+          this.loading = false;
+
+        }
         });
     } 
     else {
+
       console.log('Form is invalid');
     }
 
-    this.loading = false
     this.markAllAsTouched(this.form)
     this.markFormArrayControlsAsTouched(this.form.get('ingredients') as FormArray);
     this.markFormArrayControlsAsTouched(this.form.get('instructions') as FormArray);

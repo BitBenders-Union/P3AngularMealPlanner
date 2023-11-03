@@ -24,6 +24,8 @@ export class UpdateRecipeComponent implements OnInit{
   initialCategories: string[] = [];
   allCateogries: string[] = [];
 
+  loading: boolean = false;
+
   private user: User = {
     id: 0,
     username: ''
@@ -199,6 +201,7 @@ export class UpdateRecipeComponent implements OnInit{
 
 
   updateRecipe(): void {
+    this.loading = true;
     if (this.updateForm.valid) {
       const recipeDTO: RecipeDTO = {
         Title: this.updateForm.get('title')!.value,
@@ -240,6 +243,7 @@ export class UpdateRecipeComponent implements OnInit{
         },
         error:(error) => {
           console.error("Update recipe error: ", error);
+          this.loading = false;
         }
       });
     }
