@@ -113,11 +113,17 @@
         
       </div>
   
-      <div class="buttons-exit">
-        <button type="reset" (click)="goBack()">Cancel</button>
-        <button type="submit">Update</button>
+      <div>
+
+        <mat-spinner *ngIf="loading"></mat-spinner>
+
+        <div class="buttons-exit" *ngIf="!loading">
+          <button type="reset" (click)="goBack()">Cancel</button>
+          <button type="submit">Update</button>
+        </div>
+        
       </div>
-  
+      
     </form>
   </div>
   
