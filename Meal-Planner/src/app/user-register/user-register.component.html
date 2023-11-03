@@ -12,8 +12,17 @@
         </div>
     </div>
 
-    <div class="buttons-exit">
-        <button type="submit" class="confirm-button">Register</button>
-        <button class="login-button" routerLink="/login">Login</button>
+    <div >
+
+        <mat-spinner *ngIf="isLoading"></mat-spinner>
+        
+        <div class="buttons-exit" *ngIf="!isLoading">
+            
+            <button type="submit" class="confirm-button">Register</button>
+            <button class="login-button" routerLink="/login">Login</button>
+            
+        </div>
+        
     </div>
+
 </form>

@@ -6,16 +6,18 @@ import { Route, Router } from '@angular/router';
 @Component({
   selector: 'app-user-register',
   templateUrl: './user-register.component.html',
-  styleUrls: ['./user-register.component.css']
+  styleUrls: ['./user-register.component.css'],
 })
 export class UserRegisterComponent {
   registerForm: FormGroup;
   registrationError: string | null = null;
+  isLoading: boolean = false;
 
   constructor(
     private loginService: LoginService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+
   )
   {
     this.registerForm = this.formBuilder.group({
@@ -26,6 +28,8 @@ export class UserRegisterComponent {
   }
 
   onSubmit(): void{
+    this.ToggleLoadingSpinner()
+
     if(this.registerForm.valid){
 
       const userData = {
@@ -36,20 +40,18 @@ export class UserRegisterComponent {
       this.loginService.createLogin(userData).subscribe({
         next: (data: any) => {
           console.log('Register success', data);
-
-          
-
           this.router.navigate(['/login']);
         },
 
         error: (error) =>{
           console.error('HTTP Error', error);
           console.log('Full Error Response: ');
-
+          this.ToggleLoadingSpinner();
           this.registrationError = error.error;
         }
       });
     }
+
   }
 
 
@@ -59,4 +61,12 @@ export class UserRegisterComponent {
 
     return password !== confirmPassword;
   }
+
+
+
+  ToggleLoadingSpinner(){
+    this.isLoading = !this.isLoading;
+
+  }
+
 }
