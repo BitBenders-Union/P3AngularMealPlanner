@@ -28,9 +28,9 @@ export class UserRegisterComponent {
   }
 
   onSubmit(): void{
-    this.ToggleLoadingSpinner()
-
+    
     if(this.registerForm.valid){
+      this.ToggleLoadingSpinner()
 
       const userData = {
         username: this.registerForm.value.username,
