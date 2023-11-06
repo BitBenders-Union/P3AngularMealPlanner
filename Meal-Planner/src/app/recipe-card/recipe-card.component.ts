@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CdkDrag } from '@angular/cdk/drag-drop';
-import { Rating, RatingDTO, Recipe } from '../Interfaces';
+import { Rating, RatingDTO, RatingWithRecipeId, Recipe, RecipeWithScore } from '../Interfaces';
 import { RecipeServiceService } from '../service/recipe-service.service';
 import { StarService } from '../service/star.service';
 
@@ -16,8 +16,13 @@ export class RecipeCardComponent implements OnInit{
   @Input() recipe: Recipe | null = null; // Input decorator to pass the recipe object to the component
 
   recipes: Recipe[] = []; // Initialize recipes as an empty array
+  scoreRecipe: RecipeWithScore[] = [];
   stars: any[] = [];
-  rating: number = 0;
+
+  rating: RatingWithRecipeId ={
+    recipeId: 0,
+    score: 0
+  }
   
   constructor(
     private recipeService: RecipeServiceService, 
@@ -28,12 +33,22 @@ export class RecipeCardComponent implements OnInit{
     this.recipeService.getRecipes().subscribe({
       next: (recipes: Recipe[]) => {
         this.recipes = recipes;
+
+        this.recipes.forEach(recipe => {
+          const recipeWithScore: RecipeWithScore = {
+            id: recipe.id,
+            title: recipe.title,
+            score: []
+          }
+          this.scoreRecipe.push(recipeWithScore);
+        });
+
       },
       error: (error) => {
         console.error(error);
       },
       complete: () => {
-        this.recipes.forEach( (recipe) => {
+        this.scoreRecipe.forEach((recipe) => {
           this.getRating(recipe.id);
 
         });
@@ -44,19 +59,23 @@ export class RecipeCardComponent implements OnInit{
 
 
 
+
   getRating(recipeId: number): void {
     this.recipeService.GetRecipeRating(recipeId).subscribe({
       next: (rating: RatingDTO) => {
-        this.rating = rating.score;
-
+        this.rating.score = rating.score;
+        this.rating.recipeId = recipeId;
+        const recipeWithScore = this.scoreRecipe.find(recipe => recipe.id === recipeId);
+        recipeWithScore!.score = this.starService.getRatingStars(this.rating.score);
       },
       error: (error) => {
         console.error(error);
+        this.rating.score = 0;
+        this.rating.recipeId = recipeId;
+        const recipeWithScore = this.scoreRecipe.find(recipe => recipe.id === recipeId);
+        recipeWithScore!.score = this.starService.getRatingStars(this.rating.score);
       },
-      complete: () => {
-        this.stars.push(this.starService.getRatingStars(this.rating));
-
-      }});    
+    });    
   }
 
 
