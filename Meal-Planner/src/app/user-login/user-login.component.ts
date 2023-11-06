@@ -13,6 +13,7 @@ import { UserStoreService } from '../service/user-store.service';
 })
 export class UserLoginComponent implements OnInit{
   loginForm!: FormGroup;
+  isLoading: boolean = false;
 
   constructor(
     private loginService: LoginService,
@@ -32,6 +33,7 @@ export class UserLoginComponent implements OnInit{
 
   onSubmit(): void{
     if(this.loginForm.valid){
+      this.ToggleLoadingSpinner();
       const username = this.loginForm.value.username;
       const password = this.loginForm.value.password;
 
@@ -48,10 +50,19 @@ export class UserLoginComponent implements OnInit{
           console.error("Http Error: ",error);
           this.loginForm.get('username')?.setErrors({incorrectLogin: true});
           this.loginForm.get('password')?.setErrors({incorrectLogin: true});
+          this.ToggleLoadingSpinner();
         }
       })
     }
     this.loginForm.reset();
+
+
+  }
+
+
+  ToggleLoadingSpinner(){
+    this.isLoading = !this.isLoading;
+
   }
 
 }
