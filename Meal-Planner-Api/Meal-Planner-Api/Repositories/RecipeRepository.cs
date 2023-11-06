@@ -28,12 +28,12 @@ namespace Meal_Planner_Api.Repositories
                     .Include(x => x.Instructions)
                     .Include(x => x.User)
                     .Where(x => x.Id == id)
-                    .OrderBy(r => r.RecipeIngredients.Select(ri => ri.Ingredient.Order).Min())
+                    .OrderBy(r => r.RecipeIngredients.Select(ri => ri.IngredientOrder).Min())
                     .FirstOrDefault();
 
             if (recipe != null)
             {
-                recipe.RecipeIngredients = recipe.RecipeIngredients.OrderBy(ri => ri.Ingredient.Order).ToList();
+                recipe.RecipeIngredients = recipe.RecipeIngredients.OrderBy(ri => ri.IngredientOrder).ToList();
             }
 
             return recipe;
@@ -56,12 +56,12 @@ namespace Meal_Planner_Api.Repositories
                     .Include(x => x.Instructions)
                     .Include(x => x.User)
                     .Where(x => x.Title == name)
-                    .OrderBy(r => r.RecipeIngredients.Select(ri => ri.Ingredient.Order).Min())
+                    .OrderBy(r => r.RecipeIngredients.Select(ri => ri.IngredientOrder).Min())
                     .FirstOrDefault();
 
             if (recipe != null)
             {
-                recipe.RecipeIngredients = recipe.RecipeIngredients.OrderBy(ri => ri.Ingredient.Order).ToList();
+                recipe.RecipeIngredients = recipe.RecipeIngredients.OrderBy(ri => ri.IngredientOrder).ToList();
             }
 
             return recipe;
@@ -96,7 +96,7 @@ namespace Meal_Planner_Api.Repositories
                     .Include(x => x.Instructions)
                     .Include(x => x.User)
                     .ToList();
-            recipes.ForEach(r => r.RecipeIngredients = r.RecipeIngredients.OrderBy(ri => ri.Ingredient.Order).ToList());
+            recipes.ForEach(r => r.RecipeIngredients = r.RecipeIngredients.OrderBy(ri => ri.IngredientOrder).ToList());
 
             return recipes;
         }

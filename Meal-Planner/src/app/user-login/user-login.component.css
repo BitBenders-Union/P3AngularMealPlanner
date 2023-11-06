@@ -65,3 +65,9 @@ width: 20%; /* Adjust the width as needed */
 .error-message {
   color: red;
 }
+
+.spinner{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

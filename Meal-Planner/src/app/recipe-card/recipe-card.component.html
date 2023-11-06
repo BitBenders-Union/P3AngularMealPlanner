@@ -8,12 +8,12 @@
 
 <div class="recipe-card-container" cdkDropList [cdkDropListData]="recipes" *ngIf="recipes">
   <div class="recipe-card-wrapper">
-    <div class="recipe-card" *ngFor="let recipe of recipes; let j = index" cdkDrag [cdkDragData]="recipe" >
+    <div class="recipe-card" *ngFor="let recipe of scoreRecipe; let j = index" cdkDrag [cdkDragData]="recipe" >
       <h3>{{ recipe.title }}</h3>
       <div class="rating">
 
 
-          <ng-container *ngFor="let star of stars[j]; let i = index">
+          <ng-container *ngFor="let star of scoreRecipe[j].score; let i = index">
             <i class="fas fa-star" *ngIf="star === true" ></i>
             <i class="fas fa-star-half-alt" *ngIf="star === 'half'" ></i>
             <i class="fa-regular fa-star" *ngIf="star === 'empty'"></i>

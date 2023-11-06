@@ -13,6 +13,7 @@ import { UserStoreService } from '../service/user-store.service';
 })
 export class UserLoginComponent implements OnInit{
   loginForm!: FormGroup;
+  loginError: boolean = false;
   isLoading: boolean = false;
 
   constructor(
@@ -25,6 +26,13 @@ export class UserLoginComponent implements OnInit{
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
+
+    this.loginForm.get('username')?.valueChanges.subscribe( () => {
+      if(this.loginError){
+        this.loginError = false;
+      }
+    });
+
   }
 
   ngOnInit(): void {
@@ -51,6 +59,8 @@ export class UserLoginComponent implements OnInit{
           this.loginForm.get('username')?.setErrors({incorrectLogin: true});
           this.loginForm.get('password')?.setErrors({incorrectLogin: true});
           this.ToggleLoadingSpinner();
+          this.loginForm.reset();
+          this.loginError = true;
         }
       })
     }

@@ -10,7 +10,7 @@ import { Route, Router } from '@angular/router';
 })
 export class UserRegisterComponent {
   registerForm: FormGroup;
-  registrationError: string | null = null;
+  registrationError: boolean = false;
   isLoading: boolean = false;
 
   constructor(
@@ -24,6 +24,12 @@ export class UserRegisterComponent {
       username: ['', Validators.required],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required]
+    });
+
+    this.registerForm.get('username')?.valueChanges.subscribe( () => {
+      if(this.registrationError){
+        this.registrationError = false;
+      }
     });
   }
 
@@ -47,12 +53,15 @@ export class UserRegisterComponent {
           console.error('HTTP Error', error);
           console.log('Full Error Response: ');
           this.ToggleLoadingSpinner();
-          this.registrationError = error.error;
+          this.registerForm.reset();
+          this.registrationError = true
         }
       });
     }
 
   }
+
+
 
 
   passwordsDoNotMatch():boolean {

@@ -10,11 +10,17 @@
         <div *ngIf="passwordsDoNotMatch()" class="error-message">
             Passwords do not match.
         </div>
+        <div class="error-message" *ngIf="registrationError">
+            Something went wrong connecting to the server. Please try again later.
+        </div>
     </div>
 
     <div >
 
-        <mat-spinner *ngIf="isLoading"></mat-spinner>
+        <div class="spinner">
+            <mat-spinner *ngIf="isLoading" class="spinner-element" ></mat-spinner>
+
+        </div>
         
         <div class="buttons-exit" *ngIf="!isLoading">
             

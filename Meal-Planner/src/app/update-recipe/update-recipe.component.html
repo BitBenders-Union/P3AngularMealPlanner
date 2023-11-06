@@ -115,7 +115,10 @@
   
       <div>
 
-        <mat-spinner *ngIf="loading"></mat-spinner>
+        <div class="spinner">
+
+          <mat-spinner *ngIf="loading"></mat-spinner>
+        </div>
 
         <div class="buttons-exit" *ngIf="!loading">
           <button type="reset" (click)="goBack()">Cancel</button>
