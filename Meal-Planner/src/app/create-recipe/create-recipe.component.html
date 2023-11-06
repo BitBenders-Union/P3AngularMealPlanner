@@ -98,7 +98,11 @@
 
 
 <div>
-  <mat-spinner *ngIf="loading"></mat-spinner>
+  <div class="spinner">
+
+    <mat-spinner *ngIf="loading"></mat-spinner>
+  </div>
+
   <div class="buttons-exit" *ngIf="!loading">
     <button type="reset" class="cancel-button"  (click)="onReset()">Cancel</button>
     <button type="submit" class="confirm-button" >Confirm</button>
