@@ -10,6 +10,9 @@
         <div *ngIf="passwordsDoNotMatch()" class="error-message">
             Passwords do not match.
         </div>
+        <div class="error-message" *ngIf="registrationError">
+            Something went wrong connecting to the server. Please try again later.
+        </div>
     </div>
 
     <div >
