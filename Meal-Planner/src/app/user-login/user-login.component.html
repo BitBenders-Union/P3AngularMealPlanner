@@ -9,7 +9,11 @@
     </div>
 
     <div >
-        <mat-spinner *ngIf="isLoading"></mat-spinner>
+
+        <div class="spinner">
+
+            <mat-spinner *ngIf="isLoading"></mat-spinner>
+        </div>
         <div class="buttons-exit" *ngIf="!isLoading">
             <button type="submit" class="confirm-button">Login</button>
             <button class="register-button" routerLink="/register">Register</button>

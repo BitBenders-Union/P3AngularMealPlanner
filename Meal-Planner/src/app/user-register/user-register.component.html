@@ -14,7 +14,10 @@
 
     <div >
 
-        <mat-spinner *ngIf="isLoading"></mat-spinner>
+        <div class="spinner">
+            <mat-spinner *ngIf="isLoading" class="spinner-element" ></mat-spinner>
+
+        </div>
         
         <div class="buttons-exit" *ngIf="!isLoading">
             
