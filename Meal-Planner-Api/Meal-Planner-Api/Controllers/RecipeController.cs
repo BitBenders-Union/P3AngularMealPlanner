@@ -280,6 +280,7 @@ namespace Meal_Planner_Api.Controllers
                     Ingredient = existingIngredient,
                     Amount = existingAmount,
                     Unit = existingUnit,
+                    IngredientOrder = ingredientDTO.Order
                 };
 
                 newRecipe.RecipeIngredients.Add(recipeIngredient);
@@ -398,11 +399,11 @@ namespace Meal_Planner_Api.Controllers
                     _ingredientRepository.CreateIngredient(existingIngredient);
                     existingIngredient = _ingredientRepository.GetIngredient(ingredientDTO.Name);
                 }
-                else
-                {
-                    existingIngredient.Order = ingredientDTO.Order;
+                //else
+                //{
+                //    existingIngredient.Order = ingredientDTO.Order;
 
-                }
+                //}
 
                 var existingAmount = _amountRepository.GetAmountByQuantity(ingredientDTO.Amount.Quantity);
 
@@ -428,6 +429,7 @@ namespace Meal_Planner_Api.Controllers
                     Ingredient = existingIngredient,
                     Amount = existingAmount,
                     Unit = existingUnit,
+                    IngredientOrder = ingredientDTO.Order
                 };
 
                 existingRecipe.RecipeIngredients.Add(recipeIngredient);
@@ -507,7 +509,7 @@ namespace Meal_Planner_Api.Controllers
                 {
                     Id = recipeIngredient.Ingredient.Id,
                     Name = recipeIngredient.Ingredient.Name,
-                    Order = recipeIngredient.Ingredient.Order,
+                    Order = recipeIngredient.IngredientOrder,
                     Amount = new()
                     {
                         Id = recipeIngredient.Amount.Id,
