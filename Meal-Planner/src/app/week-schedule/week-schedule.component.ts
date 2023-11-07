@@ -96,8 +96,10 @@ export class WeekScheduleComponent implements OnInit {
       );
     } else {
       const recipe = event.item.data;
+      console.log("recipe: ");
+      console.log(recipe);
       const newRecipe: Recipe = { ...recipe, ingredients: [...recipe.ingredients] };
-
+      console.log(newRecipe);
       if (!this.cellContents[colIndex]) {
         this.cellContents[colIndex] = [];
       }
