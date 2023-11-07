@@ -46,31 +46,28 @@ export class DashboardComponent implements OnInit{
 
     // Loop through the ingredients to check if they are already present in the shopping list
     ingredients.forEach(newIngredient => {
+
       
       // Find the index of the existing ingredient in the shopping list
       // If the ingredient is not in the shopping list, the index will be -1
       const existingIngredientIndex = this.shoppingListIngredients.findIndex(
-        existingIngredient => existingIngredient.name === newIngredient.name
+        existingIngredient => existingIngredient.name == newIngredient.name &&
+        existingIngredient.unit.measurement == newIngredient.unit.measurement
       );
 
       // If the ingredient already exists in the shopping list
       if (existingIngredientIndex !== -1) {
-        
+
         // Add the amount of the new ingredient to the existing ingredient's amount
         this.shoppingListIngredients[existingIngredientIndex].amount.quantity += newIngredient.amount.quantity;
+
+
       } else {
-        
-        // If the ingredient is not already in the shopping list, create a new entry
-        const shoppingListIngredient: Ingredient = {
-          id: newIngredient.id,
-          name: newIngredient.name,
-          order: newIngredient.order,
-          amount: { ...newIngredient.amount, quantity: newIngredient.amount.quantity, },
-          unit: { ...newIngredient.unit, measurement: newIngredient.unit.measurement },
-        };
-        
+
         // Add the new ingredient to the shopping list
-        this.shoppingListIngredients.push(shoppingListIngredient);
+        this.shoppingListIngredients.push(newIngredient);
+
+
       }
     });
 
@@ -78,7 +75,12 @@ export class DashboardComponent implements OnInit{
     this.shoppingListIngredients = this.shoppingListIngredients.filter(
       ingredient => ingredient.amount.quantity > 0
     );
+
+
   }
+  
+
+ 
 
   // the bookmark component emits a bool telling if the bookmark component is expanded or not
   // this function toggles the shopping list hiding it when the bookmark component is expanded

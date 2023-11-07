@@ -86,8 +86,9 @@ export class WeekScheduleComponent implements OnInit {
   }
 
 
-    // Handles the dropping of recipes into time slots
+  // Handles the dropping of recipes into time slots
   Drop(event: CdkDragDrop<Recipe[]>, rowIndex: number, colIndex: number): void {
+
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
@@ -96,33 +97,35 @@ export class WeekScheduleComponent implements OnInit {
       );
     } else {
       const recipe = event.item.data;
-      console.log("recipe: ");
-      console.log(recipe);
-      const newRecipe: Recipe = { ...recipe, ingredients: [...recipe.ingredients] };
-      console.log(newRecipe);
+      const newRecipe: Recipe = { ...recipe};
+
       if (!this.cellContents[colIndex]) {
-        this.cellContents[colIndex] = [];
+        this.cellContents[colIndex] = [];        
       }
 
       // Update the cellContents with the new recipe
       this.cellContents[colIndex][rowIndex] = newRecipe;
+
       this.recipeService.GetRecipeRating(newRecipe.id!).subscribe({
         next: (data) => {
+
           this.ratingCellContents[colIndex][rowIndex] = data.score;
-        },
-        error: (err) => console.log(err),
-        complete: () => {
+
           // Emit ingredients to update shopping list
+
           this.shoppingListUpdated.emit(newRecipe.ingredients);
+
           // Save the updated cellContents to db
           this.saveCellContents(rowIndex, colIndex, newRecipe.id);
-        }
-      });
 
-     
+        },
+        error: (err) => console.error(err),
+
+      });
     }
   }
   
+
   // get week scheduel data from user id
   // store it in schedule
   // populate cellcontents with recipes from schedule
@@ -135,23 +138,20 @@ export class WeekScheduleComponent implements OnInit {
       // Check if recipeId is not null
       if (entry.recipeId !== null) {
         
-        let newRecipe: Recipe;
-
         this.recipeService.GetRecipeRating(entry.recipeId!).subscribe({
           next: (data) => {
             this.ratingCellContents[entry.row][entry.column] = data.score;
 
           },
-          error: (err) => console.log(err)
+          error: (err) => console.error(err)
         });
         
         this.recipeService.getRecipeById(entry.recipeId!).subscribe({
           next: (data) => {
-            newRecipe = data;
-            this.cellContents[entry.row][entry.column] = newRecipe;
-            this.shoppingListUpdated.emit(newRecipe.ingredients);
+            this.cellContents[entry.row][entry.column] = data;
+            this.shoppingListUpdated.emit(data.ingredients);
           },
-          error: (err) => console.log(err)
+          error: (err) => console.error(err)
         });
 
       }
@@ -166,6 +166,7 @@ export class WeekScheduleComponent implements OnInit {
 // colIndex: The index of the column (time slot) where the recipe is located
 deleteRecipe(rowIndex: number, colIndex: number): void {
   // Get the recipe to be deleted from the cellContents
+
   const deletedRecipe = this.cellContents[colIndex][rowIndex];
 
   if (deletedRecipe) {
@@ -173,9 +174,11 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
     deletedRecipe.ingredients.forEach((ingredient) => {
       // Emit an update to the shopping list, subtracting the ingredient amounts
       // The ingredient's value is negated to indicate subtraction
+
       this.shoppingListUpdated.emit([
-        { ...ingredient, amount: { ...ingredient.amount, quantity: -ingredient.amount.quantity } },
+        { ...ingredient, amount: { ...ingredient.amount, quantity: -ingredient.amount.quantity }},
       ]);
+
     });
 
     // Delete the recipe from the cellContents
@@ -184,6 +187,7 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
 
     // Save the updated cellContents to the server
     this.saveCellContents(rowIndex, colIndex, undefined);
+
   }
 }
 
@@ -212,5 +216,5 @@ deleteRecipe(rowIndex: number, colIndex: number): void {
             error: (err) => console.log(err)
         });
   }
-
 }
+
