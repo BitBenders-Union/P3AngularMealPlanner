@@ -8,8 +8,8 @@
 
 <div class="recipe-card-container" cdkDropList [cdkDropListData]="recipes" *ngIf="recipes">
   <div class="recipe-card-wrapper">
-    <div class="recipe-card" *ngFor="let recipe of scoreRecipe; let j = index" cdkDrag [cdkDragData]="recipe" >
-      <h3>{{ recipe.title }}</h3>
+    <div class="recipe-card" *ngFor="let recipeScore of scoreRecipe; let j = index" cdkDrag [cdkDragData]="recipeScore.recipe" >
+      <h3>{{ recipeScore.title }}</h3>
       <div class="rating">
 
 
