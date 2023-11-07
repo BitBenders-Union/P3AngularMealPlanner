@@ -15,6 +15,7 @@ export interface Recipe {
     id: number
     title: string
     score: (boolean | string)[]
+    recipe: Recipe
   }
 
   
