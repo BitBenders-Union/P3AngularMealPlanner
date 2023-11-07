@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, FormControl, ReactiveFormsModule, AbstractControl  } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl, ReactiveFormsModule, AbstractControl, Validators  } from '@angular/forms';
 import { Recipe, RecipeDTO, User } from '../Interfaces';
 import { RecipeServiceService } from '../service/recipe-service.service';
 import { LoginService } from '../service/login.service';
@@ -41,14 +41,16 @@ export class CreateRecipeComponent implements OnInit {
     private userStore: UserStoreService,
     ) {
     this.form = this.formBuilder.group({
-      title: null,
-      category: null,
-      description: null,
-      prepTime: null,
-      cookTime: null,
-      servings: null,
-      ingredients: this.formBuilder.array([]),
-      instructions: this.formBuilder.array([]),
+      title: ['', Validators.required], // Use custom validator
+      category: ['', Validators.required],
+      description: ['', Validators.required],
+      prepTime: ['', Validators.required],
+      cookTime: ['', Validators.required],
+      servings: ['', Validators.required],
+      // ingredients: [this.formBuilder.array([]), Validators.required],
+      // instructions: [this.formBuilder.array([]), Validators.required],
+    ingredients: this.formBuilder.array([], Validators.required),
+    instructions: this.formBuilder.array([], Validators.required),
     });
 
     // this is to initialize the form with one ingredient and one instruction
