@@ -61,14 +61,30 @@ export class UserRegisterComponent {
 
   }
 
+  showUsernameError: boolean = false;
 
-
+checkUsernameValidity() {
+  const usernameValue = this.registerForm.get('username')?.value;
+  if (usernameValue.includes(' ')) {
+    this.showUsernameError = true;
+  } else {
+    this.showUsernameError = false;
+  }
+}
 
   passwordsDoNotMatch():boolean {
     const password = this.registerForm.get('password')?.value;
     const confirmPassword = this.registerForm.get('confirmPassword')?.value;
 
-    return password !== confirmPassword;
+    if (password !== confirmPassword){
+      return true;
+    }
+
+    if (/\s/.test(password)){
+      return true;
+    }
+
+    return false
   }
 
 
