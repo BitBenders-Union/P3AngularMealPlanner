@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../service/login.service';
 import { Route, Router } from '@angular/router';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 
 @Component({
   selector: 'app-user-register',
@@ -12,17 +13,18 @@ export class UserRegisterComponent {
   registerForm: FormGroup;
   registrationError: boolean = false;
   isLoading: boolean = false;
+  showUsernameError: boolean = false;
 
   constructor(
     private loginService: LoginService,
     private formBuilder: FormBuilder,
-    private router: Router,
+    private router: Router,    
 
   )
   {
     this.registerForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required],
+      username: ['', Validators.required, ],
+      password: ['', Validators.required, this.noWhitespaceValidator],
       confirmPassword: ['', Validators.required]
     });
 
@@ -31,6 +33,7 @@ export class UserRegisterComponent {
         this.registrationError = false;
       }
     });
+  
   }
 
   onSubmit(): void{
@@ -61,7 +64,7 @@ export class UserRegisterComponent {
 
   }
 
-  showUsernameError: boolean = false;
+  
 
 checkUsernameValidity() {
   const usernameValue = this.registerForm.get('username')?.value;
@@ -93,5 +96,14 @@ checkUsernameValidity() {
     this.isLoading = !this.isLoading;
 
   }
+
+  noWhitespaceValidator(control: AbstractControl): ValidationErrors | null {
+    const isWhitespace = (control.value || '').trim().length === 0;
+    return isWhitespace ? { whitespace: true } : null;
+  }
+
+  
+
+
 
 }
