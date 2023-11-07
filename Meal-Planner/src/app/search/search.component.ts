@@ -70,7 +70,8 @@ export class SearchComponent implements OnInit {
           const recipeWithScore: RecipeWithScore = {
             id: recipe.id,
             title: recipe.title,
-            score: []
+            score: [],
+            recipe: recipe
           }
           this.scoreRecipe.push(recipeWithScore);
         });
