@@ -47,10 +47,8 @@ export class CreateRecipeComponent implements OnInit {
       prepTime: ['', Validators.required],
       cookTime: ['', Validators.required],
       servings: ['', Validators.required],
-      // ingredients: [this.formBuilder.array([]), Validators.required],
-      // instructions: [this.formBuilder.array([]), Validators.required],
-    ingredients: this.formBuilder.array([], Validators.required),
-    instructions: this.formBuilder.array([], Validators.required),
+      ingredients: this.formBuilder.array([], Validators.required),
+      instructions: this.formBuilder.array([], Validators.required),
     });
 
     // this is to initialize the form with one ingredient and one instruction
