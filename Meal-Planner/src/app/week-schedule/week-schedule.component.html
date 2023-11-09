@@ -27,7 +27,7 @@
         >
           <h3>{{ cellContents[colIndex][rowIndex]!.title }}</h3>
           <div class="rating">
-            <ng-container *ngFor="let star of starService.getRatingStars(ratingCellContents[colIndex][rowIndex])">
+            <ng-container *ngFor="let star of starService.getRatingStars(ratingCellContents[colIndex][rowIndex]!)">
               <i class="fas fa-star" *ngIf="star === true"></i>
               <i class="fas fa-star-half-alt" *ngIf="star === 'half'"></i>
               <i class="fa-regular fa-star" *ngIf="star === 'empty'" ></i>
@@ -42,4 +42,6 @@
       </ng-template>
     </div>
   </ng-container>
+  
+
 </div>

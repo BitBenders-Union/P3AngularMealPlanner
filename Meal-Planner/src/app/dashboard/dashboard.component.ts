@@ -39,42 +39,44 @@ export class DashboardComponent implements OnInit{
 
   }
 
+
+
   // This function is called when the shopping list needs to be updated with new ingredients.
   // It takes an array of Ingredient objects as a parameter.
 
   onShoppingListUpdated(ingredients: Ingredient[]) {
 
-    // Loop through the ingredients to check if they are already present in the shopping list
-    ingredients.forEach(newIngredient => {
+    // to add each ingredient we first need to check if they already exist in the shopping list
+    // so we first need to make a foreach on the ingredients array
+    ingredients.forEach((ingredient) => {
 
-      
-      // Find the index of the existing ingredient in the shopping list
-      // If the ingredient is not in the shopping list, the index will be -1
-      const existingIngredientIndex = this.shoppingListIngredients.findIndex(
-        existingIngredient => existingIngredient.name == newIngredient.name &&
-        existingIngredient.unit.measurement == newIngredient.unit.measurement
+      // check if exist
+      const existingIngredient = this.shoppingListIngredients.findIndex(x =>
+        x.name === ingredient.name && x.unit.measurement === ingredient.unit.measurement
       );
+      
+      // if ingredient doesn't exist in the shopping list
+      if(existingIngredient == -1)
+      {
+        // add it to the shopping list
+        this.shoppingListIngredients.push(ingredient);
 
-      // If the ingredient already exists in the shopping list
-      if (existingIngredientIndex !== -1) {
+      }
+      else{
+        // if it does exist in the shopping list
+        // we need to add the quantity of the ingredient to the existing ingredient
+        this.shoppingListIngredients[existingIngredient].amount.quantity += ingredient.amount.quantity;
 
-        // Add the amount of the new ingredient to the existing ingredient's amount
-        this.shoppingListIngredients[existingIngredientIndex].amount.quantity += newIngredient.amount.quantity;
+        // after ingredient is updated, we need to check if it is 0. if it is 0, we need to remove it from the shopping list
+        if(this.shoppingListIngredients[existingIngredient].amount.quantity == 0)
+        {
+          // remove the ingredient from the shopping list
+          this.shoppingListIngredients.splice(existingIngredient, 1);
 
-
-      } else {
-
-        // Add the new ingredient to the shopping list
-        this.shoppingListIngredients.push(newIngredient);
-
+        }
 
       }
     });
-
-    // Remove ingredients with 0 amount from the shopping list
-    this.shoppingListIngredients = this.shoppingListIngredients.filter(
-      ingredient => ingredient.amount.quantity > 0
-    );
 
 
   }

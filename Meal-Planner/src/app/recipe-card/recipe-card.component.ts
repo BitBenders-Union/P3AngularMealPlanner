@@ -17,7 +17,7 @@ export class RecipeCardComponent implements OnInit{
 
   recipes: Recipe[] = []; // Initialize recipes as an empty array
   scoreRecipe: RecipeWithScore[] = [];
-  stars: any[] = [];
+
 
   rating: RatingWithRecipeId ={
     recipeId: 0,
@@ -44,16 +44,15 @@ export class RecipeCardComponent implements OnInit{
           this.scoreRecipe.push(recipeWithScore);
         });
 
-      },
-      error: (error) => {
-        console.error(error);
-      },
-      complete: () => {
         this.scoreRecipe.forEach((recipe) => {
           this.getRating(recipe.id);
 
         });
+      },
+      error: (error) => {
+        console.error(error);
       }
+
     });
     
   }
@@ -79,6 +78,8 @@ export class RecipeCardComponent implements OnInit{
     });    
   }
 
-
+  showData(data: any){
+    console.log(data)
+  }
 
 }
