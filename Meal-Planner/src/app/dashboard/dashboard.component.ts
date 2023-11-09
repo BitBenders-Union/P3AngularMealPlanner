@@ -34,7 +34,7 @@ export class DashboardComponent implements OnInit{
       .subscribe(val =>{ 
         let userNameFromToken = this.auth.getUsernameFromToken();
         this.userName = val || userNameFromToken;
-
+        console.log("dashboard user")
       })
 
   }

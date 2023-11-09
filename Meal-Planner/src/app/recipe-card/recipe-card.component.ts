@@ -78,8 +78,6 @@ export class RecipeCardComponent implements OnInit{
     });    
   }
 
-  showData(data: any){
-    console.log(data)
-  }
+
 
 }

@@ -6,6 +6,7 @@ import { StarService } from '../service/star.service';
 import { RecipeServiceService } from '../service/recipe-service.service';
 import { UserStoreService } from '../service/user-store.service';
 import { LoginService } from '../service/login.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-week-schedule',
@@ -48,13 +49,16 @@ export class WeekScheduleComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log("ngOnInit start")
+
     this.RetrieveUser();
   }
 
   // seems like the complete object in the subscribe doesn't work
   RetrieveUser(): void {
-    this.userStore.getUserFromStore().subscribe({
+    this.userStore.getUserFromStoreTest("weekschedule").subscribe({
       next: (user) => {
+        console.log("user: ",user)
         this.user.username = user;
         if (this.user.username === '') {
           this.user.username = this.auth.getUsernameFromToken();
@@ -72,6 +76,7 @@ export class WeekScheduleComponent implements OnInit {
         if (this.user.id === 0) {
           this.user.id = this.auth.getIdFromToken();
         }
+        console.log("id retrieved")
         this.getScheduleData(this.user.id);
       },
       error: (error) => console.error('There was an error!', error),
@@ -133,6 +138,7 @@ export class WeekScheduleComponent implements OnInit {
 
   initializeCells(): void {
     // Loop through schedule
+    console.log("Before: ",this.cellContents)
     this.schedule.forEach((entry) => {
       // Check if recipeId is not null
       if (entry.recipeId !== null) {
@@ -142,7 +148,14 @@ export class WeekScheduleComponent implements OnInit {
             const recipeCopy = { ...data };
             this.ratingCellContents[entry.row][entry.column] = recipeCopy.score;
           },
-          error: (err) => console.error(err),
+          error: (err: HttpErrorResponse ) =>{
+            console.error(err)
+            // if not found set ratingCellContents to null
+
+              this.ratingCellContents[entry.row][entry.column] = null;
+
+            
+          }
         });
 
         this.recipeService.getRecipeById(entry.recipeId!).subscribe({
@@ -151,11 +164,25 @@ export class WeekScheduleComponent implements OnInit {
             this.cellContents![entry.row][entry.column] = recipeCopy;
             this.shoppingListUpdated.emit(recipeCopy.ingredients);
           },
-          error: (err) => console.error(err),
+          error: (err) =>{
+            console.error(err)
+            // if not found set cellcontents to null
+            console.log(err.status)
+            if(err.status === 404){
+              this.cellContents![entry.row][entry.column] = null;
+              console.log("404 error recipe not found")
+              // this.schedule[entry.row][entry.column] = null;
+              this.saveCellContents(entry.column, entry.row, undefined);
+            }
+            
+          }
+
         });
 
       }
     });
+    console.log("after: ", this.cellContents)
+
   }
 
   // Handles the removal of a recipe from the schedule
