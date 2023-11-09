@@ -8,10 +8,10 @@
         <div *ngIf="registerForm.get('username')?.hasError('usernameTaken')" class="error-message">
             Username is already taken.
         </div>
-        <label>Password <input type="password" formControlName="password" class="input-field"></label>
-        <label>Confirm-Password <input type="password" formControlName="confirmPassword" class="input-field"></label>
-        <div *ngIf="passwordsDoNotMatch()" class="error-message">
-            <!-- Passwords do not match or contain whitespace.  -->
+        <label>Password <input type="password" formControlName="password" class="input-field" (input)="passwordsDoNotMatchMethod()"></label>
+        <label>Confirm-Password <input type="password" formControlName="confirmPassword" class="input-field" (input)="passwordsDoNotMatchMethod()"></label>
+        <div *ngIf="passwordsDoNotMatch" class="error-message">
+            
             {{passwordErrorMessages}}
         </div>
         <div class="error-message" *ngIf="registrationError">
