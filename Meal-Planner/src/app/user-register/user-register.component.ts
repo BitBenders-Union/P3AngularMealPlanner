@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../service/login.service';
 import { Route, Router } from '@angular/router';
 import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-user-register',
@@ -15,6 +16,11 @@ export class UserRegisterComponent {
   isLoading: boolean = false;
   showUsernameError: boolean = false;
 
+
+  usernameErrorMessages: string = '';
+  passwordErrorMessages: string = 'start  ';
+  
+
   constructor(
     private loginService: LoginService,
     private formBuilder: FormBuilder,
@@ -24,7 +30,7 @@ export class UserRegisterComponent {
   {
     this.registerForm = this.formBuilder.group({
       username: ['', Validators.required, ],
-      password: ['', Validators.required, this.noWhitespaceValidator],
+      password: ['', Validators.required ],
       confirmPassword: ['', Validators.required]
     });
 
@@ -38,7 +44,7 @@ export class UserRegisterComponent {
 
   onSubmit(): void{
     
-    if(this.registerForm.valid){
+    if(this.registerForm.valid && !this.passwordsDoNotMatch()){
       this.ToggleLoadingSpinner()
 
       const userData = {
@@ -64,8 +70,6 @@ export class UserRegisterComponent {
 
   }
 
-  
-
 checkUsernameValidity() {
   const usernameValue = this.registerForm.get('username')?.value;
   if (usernameValue.includes(' ')) {
@@ -79,31 +83,28 @@ checkUsernameValidity() {
     const password = this.registerForm.get('password')?.value;
     const confirmPassword = this.registerForm.get('confirmPassword')?.value;
 
-    if (password !== confirmPassword){
+    if (password !== confirmPassword && password.includes(' ')){
+      this.passwordErrorMessages = 'Passwords do not match and cannot contain spaces';
+      
       return true;
     }
+    else if (password.includes(' ')){
+      this.passwordErrorMessages = 'Password cannot contain spaces';
 
-    if (/\s/.test(password)){
+      return true;
+    }
+    else if (password !== confirmPassword){
+      this.passwordErrorMessages = 'Passwords do not match';
+
       return true;
     }
 
     return false
   }
 
-
-
   ToggleLoadingSpinner(){
     this.isLoading = !this.isLoading;
 
   }
-
-  noWhitespaceValidator(control: AbstractControl): ValidationErrors | null {
-    const isWhitespace = (control.value || '').trim().length === 0;
-    return isWhitespace ? { whitespace: true } : null;
-  }
-
-  
-
-
 
 }
