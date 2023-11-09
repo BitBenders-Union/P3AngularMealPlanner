@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Amount, Unit, Ingredient, Recipe, Instruction, RecipeDTO, User } from '../Interfaces';
 import { RecipeServiceService } from '../service/recipe-service.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, FormArray, FormControl, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, FormControl, AbstractControl, Validators } from '@angular/forms';
 import { LoginService } from '../service/login.service';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -55,15 +55,14 @@ export class UpdateRecipeComponent implements OnInit{
     ) 
     { 
       this.updateForm = this.formBuilder.group({
-      title: '',
-      category: '',
-      description: '',
-      prepTime: null,
-      cookTime: null,
-      servings: null,
-      rating: null,
-      ingredients: this.formBuilder.array([]),
-      instructions: this.formBuilder.array([]),
+        title: ['', Validators.required], // Use custom validator
+        category: ['', Validators.required],
+        description: ['', Validators.required],
+        prepTime: ['', Validators.required],
+        cookTime: ['', Validators.required],
+        servings: ['', Validators.required],
+        ingredients: this.formBuilder.array([], Validators.required),
+        instructions: this.formBuilder.array([], Validators.required),
       });
     }
 
