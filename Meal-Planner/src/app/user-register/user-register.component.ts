@@ -43,9 +43,12 @@ export class UserRegisterComponent {
   }
 
   onSubmit(): void{
-    
-    if(this.registerForm.valid && !this.passwordsDoNotMatch()){
+
+    console.log("Is Valid: ", this.registerForm.valid)
+    if(this.registerForm.valid){
+
       this.ToggleLoadingSpinner()
+      console.log("loading spinner state: ", this.isLoading)
 
       const userData = {
         username: this.registerForm.value.username,
@@ -62,6 +65,7 @@ export class UserRegisterComponent {
           console.error('HTTP Error', error);
           console.log('Full Error Response: ');
           this.ToggleLoadingSpinner();
+          console.log("loading spinner state: ", this.isLoading)
           this.registerForm.reset();
           this.registrationError = true
         }
