@@ -20,9 +20,6 @@ export class WeekScheduleService {
   // }
 
   updateData(updatedData: RecipeScheduleDTO): Observable<any> {
-    console.log("calling api")
-    console.log(updatedData)
-    console.log(`${this.dataUrl}/RecipeSchedule/update`)
     return this.http.patch(`${this.dataUrl}/RecipeSchedule/update`, updatedData).pipe(
       catchError(error => {
         console.log(error);

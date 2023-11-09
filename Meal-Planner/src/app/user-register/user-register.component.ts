@@ -15,10 +15,10 @@ export class UserRegisterComponent {
   registrationError: boolean = false;
   isLoading: boolean = false;
   showUsernameError: boolean = false;
-
+  passwordsDoNotMatch: boolean = false;
 
   usernameErrorMessages: string = '';
-  passwordErrorMessages: string = 'start  ';
+  passwordErrorMessages: string = '';
   
 
   constructor(
@@ -29,7 +29,7 @@ export class UserRegisterComponent {
   )
   {
     this.registerForm = this.formBuilder.group({
-      username: ['', Validators.required, ],
+      username: ['', Validators.required ],
       password: ['', Validators.required ],
       confirmPassword: ['', Validators.required]
     });
@@ -44,8 +44,8 @@ export class UserRegisterComponent {
 
   onSubmit(): void{
 
-    console.log("Is Valid: ", this.registerForm.valid)
-    if(this.registerForm.valid){
+
+    if(this.registerForm.valid && !this.passwordsDoNotMatch && !this.showUsernameError){
 
       this.ToggleLoadingSpinner()
       console.log("loading spinner state: ", this.isLoading)
@@ -83,27 +83,38 @@ checkUsernameValidity() {
   }
 }
 
-  passwordsDoNotMatch():boolean {
+  passwordsDoNotMatchMethod() {
+    console.log("it's running")
     const password = this.registerForm.get('password')?.value;
+    console.log("password: ", password)
     const confirmPassword = this.registerForm.get('confirmPassword')?.value;
+    console.log("confirmPassword: ", confirmPassword)
 
-    if (password !== confirmPassword && password.includes(' ')){
+    if (password !== confirmPassword && password.includes(' ') || password !== confirmPassword && confirmPassword.includes(' ') ){
       this.passwordErrorMessages = 'Passwords do not match and cannot contain spaces';
       
-      return true;
+      this.passwordsDoNotMatch = true;
     }
     else if (password.includes(' ')){
       this.passwordErrorMessages = 'Password cannot contain spaces';
 
-      return true;
+      this.passwordsDoNotMatch = true;
+
     }
     else if (password !== confirmPassword){
       this.passwordErrorMessages = 'Passwords do not match';
 
-      return true;
+      this.passwordsDoNotMatch = true;
+
+    }
+    else{
+
+      this.passwordsDoNotMatch = false;
     }
 
-    return false
+    console.log("passwordsDoNotMatch: ", this.passwordsDoNotMatch)
+
+
   }
 
   ToggleLoadingSpinner(){
