@@ -15,9 +15,7 @@ export class WeekScheduleService {
 
   constructor(private http: HttpClient) { }
 
-  // getData(): Observable<any> {
-  //   return this.http.get(`${this.dataUrl}/RecipeSchedule`);
-  // }
+
 
   updateData(updatedData: RecipeScheduleDTO): Observable<any> {
     return this.http.patch(`${this.dataUrl}/RecipeSchedule/update`, updatedData).pipe(
@@ -51,14 +49,6 @@ export class WeekScheduleService {
     })
   }
 
-  // post
-  // createScheduleEntry(weekData: WeekData): Observable<any>{
-  //   return this.http.post(this.dataUrl + '/endpoint', weekData).pipe(error=>{
-  //     console.log(error);
-  //     return error;
-  //   })   
-  // }
-
   // patch
   updateScheduleEntry(weekData: RecipeScheduleDTO): Observable<any>{
     return this.http.put(`${this.dataUrl}/RecipeSchedule/update`, weekData).pipe(error=>{
@@ -67,25 +57,5 @@ export class WeekScheduleService {
     })
   }
 
-
-  // delete
-
-  // deleteScheduleEntry(weekDataId: number): Observable<any>{
-  //   return this.http.delete(`${this.dataUrl}/endpoint/${weekDataId}`).pipe(error=>{
-  //     console.log(error);
-  //     return error;
-  //   })
-  // }
-
-
 }
 
-/* 
-Idea
-
-Create a table with mon-sun as columns and the recipeID as rows.
-
-then fetch the data from the database and fill the table with the recipeID's
-
-
-*/
