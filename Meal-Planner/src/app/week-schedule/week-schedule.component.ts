@@ -56,14 +56,9 @@ export class WeekScheduleComponent implements OnInit {
     ]).subscribe({
       next: ([username, userId]) => {
         
-        this.user.username = username;
-        this.user.id = userId;
-        if (this.user.username === '') {
-          this.user.username = this.auth.getUsernameFromToken();
-        }
-        if (this.user.id === 0) {
-          this.user.id = this.auth.getIdFromToken();
-        }
+        this.user.username = username || this.auth.getUsernameFromToken();
+        this.user.id = userId || this.auth.getIdFromToken();
+        console.log(this.user);
         this.getScheduleData(this.user.id);
       },
       error: (err) => {
@@ -132,7 +127,7 @@ export class WeekScheduleComponent implements OnInit {
     this.schedule.forEach((entry) => {
       // Check if recipeId is not null
 
-
+      if(entry.recipeId != null){
         this.recipeService.GetRecipeRating(entry.recipeId!).subscribe({
           next: (data) => {
             const recipeCopy = { ...data };
@@ -154,9 +149,10 @@ export class WeekScheduleComponent implements OnInit {
             console.error(err)
             }
           });
+      }
 
-      });
-    }
+    });
+  }
 
   
 

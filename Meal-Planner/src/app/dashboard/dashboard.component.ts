@@ -34,12 +34,9 @@ export class DashboardComponent implements OnInit{
       .subscribe(val =>{ 
         let userNameFromToken = this.auth.getUsernameFromToken();
         this.userName = val || userNameFromToken;
-        console.log("dashboard user")
       })
 
   }
-
-
 
   // This function is called when the shopping list needs to be updated with new ingredients.
   // It takes an array of Ingredient objects as a parameter.
@@ -81,9 +78,6 @@ export class DashboardComponent implements OnInit{
 
   }
   
-
- 
-
   // the bookmark component emits a bool telling if the bookmark component is expanded or not
   // this function toggles the shopping list hiding it when the bookmark component is expanded
   toggleShoppingList() {

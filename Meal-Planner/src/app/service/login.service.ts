@@ -10,8 +10,8 @@ import { TokenModel } from '../models/token.model';
 })
 export class LoginService {
 
-  private apiUrl = 'https://localhost:7268/';
-  // private apiUrl = 'http://192.168.21.22:5555/';
+  // private apiUrl = 'https://localhost:7268/';
+  private apiUrl = 'http://192.168.21.22:5555/';
   
   // private apiUrl = 'http://localhost:5000/';
   private userPayload: any;
@@ -68,7 +68,7 @@ export class LoginService {
   decodeToken(){
     const jwtHelper = new JwtHelperService();
     const token = this.getToken()!;
-    // console.log(jwtHelper.decodeToken(token))
+
     return jwtHelper.decodeToken(token);
   }
 

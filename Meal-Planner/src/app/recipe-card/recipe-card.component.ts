@@ -13,8 +13,6 @@ import { StarService } from '../service/star.service';
 })
 export class RecipeCardComponent implements OnInit{
 
-  // @Input() recipe: Recipe | null = null; // Input decorator to pass the recipe object to the component
-
   recipes: Recipe[] = []; // Initialize recipes as an empty array
   scoreRecipe: RecipeWithScore[] = [];
 
@@ -57,9 +55,6 @@ export class RecipeCardComponent implements OnInit{
     
   }
 
-
-
-
   getRating(recipeId: number): void {
     this.recipeService.GetRecipeRating(recipeId).subscribe({
       next: (rating: RatingDTO) => {
@@ -77,7 +72,5 @@ export class RecipeCardComponent implements OnInit{
       },
     });    
   }
-
-
 
 }
