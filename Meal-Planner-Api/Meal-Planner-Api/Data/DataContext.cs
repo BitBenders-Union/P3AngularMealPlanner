@@ -34,6 +34,12 @@ namespace Meal_Planner_Api.Data
             // then tell that first key is many to many & what fk they have
             // the tell second key is many to many & what fk they have
 
+            modelBuilder.Entity<RecipeSchedule>()
+            .HasOne(rs => rs.Recipe)
+            .WithMany()
+            .HasForeignKey(rs => rs.RecipeId)
+            .OnDelete(DeleteBehavior.SetNull);
+
 
 
             modelBuilder.Entity<RecipeIngredient>()

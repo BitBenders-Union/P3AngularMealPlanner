@@ -8,11 +8,13 @@ export class UserStoreService {
   private user$ = new BehaviorSubject<string>("");
   private id$ = new BehaviorSubject<number>(0);
 
+
   constructor() { }
 
   public getUserFromStore(){
     return this.user$.asObservable();
   }
+
 
   public setUserInStore(user: string){
     this.user$.next(user);

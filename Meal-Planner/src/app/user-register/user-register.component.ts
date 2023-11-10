@@ -48,7 +48,6 @@ export class UserRegisterComponent {
     if(this.registerForm.valid && !this.passwordsDoNotMatch && !this.showUsernameError){
 
       this.ToggleLoadingSpinner()
-      console.log("loading spinner state: ", this.isLoading)
 
       const userData = {
         username: this.registerForm.value.username,
@@ -56,8 +55,7 @@ export class UserRegisterComponent {
       };
 
       this.loginService.createLogin(userData).subscribe({
-        next: (data: any) => {
-          console.log('Register success', data);
+        next: () => {
           this.router.navigate(['/login']);
         },
 
@@ -65,7 +63,6 @@ export class UserRegisterComponent {
           console.error('HTTP Error', error);
           console.log('Full Error Response: ');
           this.ToggleLoadingSpinner();
-          console.log("loading spinner state: ", this.isLoading)
           this.registerForm.reset();
           this.registrationError = true
         }
@@ -84,11 +81,8 @@ checkUsernameValidity() {
 }
 
   passwordsDoNotMatchMethod() {
-    console.log("it's running")
     const password = this.registerForm.get('password')?.value;
-    console.log("password: ", password)
     const confirmPassword = this.registerForm.get('confirmPassword')?.value;
-    console.log("confirmPassword: ", confirmPassword)
 
     if (password !== confirmPassword && password.includes(' ') || password !== confirmPassword && confirmPassword.includes(' ') ){
       this.passwordErrorMessages = 'Passwords do not match and cannot contain spaces';
@@ -112,7 +106,6 @@ checkUsernameValidity() {
       this.passwordsDoNotMatch = false;
     }
 
-    console.log("passwordsDoNotMatch: ", this.passwordsDoNotMatch)
 
 
   }

@@ -44,8 +44,6 @@ export class SearchComponent implements OnInit {
   // AsyncSubject: Emits only the last value when the observable completes.
   
 
-
-
   // Inject the Router and RecipeServiceService
   constructor(private router: Router,
               private recipeService: RecipeServiceService,
@@ -134,12 +132,5 @@ export class SearchComponent implements OnInit {
       },
     });    
   }
-
-
-
-
-
-
-
 
 }

@@ -6,6 +6,8 @@ import { StarService } from '../service/star.service';
 import { RecipeServiceService } from '../service/recipe-service.service';
 import { UserStoreService } from '../service/user-store.service';
 import { LoginService } from '../service/login.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { combineLatest, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-week-schedule',
@@ -48,35 +50,23 @@ export class WeekScheduleComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.RetrieveUser();
-  }
-
-  // seems like the complete object in the subscribe doesn't work
-  RetrieveUser(): void {
-    this.userStore.getUserFromStore().subscribe({
-      next: (user) => {
-        this.user.username = user;
-        if (this.user.username === '') {
-          this.user.username = this.auth.getUsernameFromToken();
-        }
-        this.RetrieveId();
-      },
-      error: (error) => console.error('There was an error!', error),
-    });
-  }
-
-  RetrieveId(): void {
-    this.userStore.getIdFromStore().subscribe({
-      next: (id) => {
-        this.user.id = id;
-        if (this.user.id === 0) {
-          this.user.id = this.auth.getIdFromToken();
-        }
+    combineLatest([
+      this.userStore.getUserFromStore(),
+      this.userStore.getIdFromStore(),
+    ]).subscribe({
+      next: ([username, userId]) => {
+        
+        this.user.username = username || this.auth.getUsernameFromToken();
+        this.user.id = userId || this.auth.getIdFromToken();
+        console.log(this.user);
         this.getScheduleData(this.user.id);
       },
-      error: (error) => console.error('There was an error!', error),
+      error: (err) => {
+        console.error(err);
+      }
     });
   }
+ 
 
   // Handles the dropping of recipes into time slots
   Drop(event: CdkDragDrop<Recipe[]>, rowIndex: number, colIndex: number): void {
@@ -133,16 +123,20 @@ export class WeekScheduleComponent implements OnInit {
 
   initializeCells(): void {
     // Loop through schedule
+
     this.schedule.forEach((entry) => {
       // Check if recipeId is not null
-      if (entry.recipeId !== null) {
 
+      if(entry.recipeId != null){
         this.recipeService.GetRecipeRating(entry.recipeId!).subscribe({
           next: (data) => {
             const recipeCopy = { ...data };
             this.ratingCellContents[entry.row][entry.column] = recipeCopy.score;
           },
-          error: (err) => console.error(err),
+          error: (err: HttpErrorResponse) =>{
+            console.error(err)
+            
+          }
         });
 
         this.recipeService.getRecipeById(entry.recipeId!).subscribe({
@@ -151,12 +145,16 @@ export class WeekScheduleComponent implements OnInit {
             this.cellContents![entry.row][entry.column] = recipeCopy;
             this.shoppingListUpdated.emit(recipeCopy.ingredients);
           },
-          error: (err) => console.error(err),
-        });
-
+          error: (err) =>{
+            console.error(err)
+            }
+          });
       }
+
     });
   }
+
+  
 
   // Handles the removal of a recipe from the schedule
   // rowIndex: The index of the row (weekday) where the recipe is located
@@ -215,10 +213,5 @@ export class WeekScheduleComponent implements OnInit {
       error: (err) => console.log(err),
     });
   }
-
-
-
-
-
 
 }
