@@ -68,7 +68,7 @@ export class LoginService {
   decodeToken(){
     const jwtHelper = new JwtHelperService();
     const token = this.getToken()!;
-    // console.log(jwtHelper.decodeToken(token))
+
     return jwtHelper.decodeToken(token);
   }
 
