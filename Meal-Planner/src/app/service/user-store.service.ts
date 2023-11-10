@@ -7,20 +7,14 @@ import {BehaviorSubject} from 'rxjs';
 export class UserStoreService {
   private user$ = new BehaviorSubject<string>("");
   private id$ = new BehaviorSubject<number>(0);
-  private counter: number = 0;
+
 
   constructor() { }
 
   public getUserFromStore(){
-
     return this.user$.asObservable();
   }
 
-  public getUserFromStoreTest(sender: string){
-    this.counter++;
-    console.log(`From ${sender}, counter: `, this.counter)
-    return this.user$.asObservable();
-  }
 
   public setUserInStore(user: string){
     this.user$.next(user);

@@ -7,6 +7,7 @@ import { RecipeServiceService } from '../service/recipe-service.service';
 import { UserStoreService } from '../service/user-store.service';
 import { LoginService } from '../service/login.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { combineLatest, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-week-schedule',
@@ -49,39 +50,28 @@ export class WeekScheduleComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log("ngOnInit start")
-
-    this.RetrieveUser();
-  }
-
-  // seems like the complete object in the subscribe doesn't work
-  RetrieveUser(): void {
-    this.userStore.getUserFromStoreTest("weekschedule").subscribe({
-      next: (user) => {
-        console.log("user: ",user)
-        this.user.username = user;
+    combineLatest([
+      this.userStore.getUserFromStore(),
+      this.userStore.getIdFromStore(),
+    ]).subscribe({
+      next: ([username, userId]) => {
+        
+        this.user.username = username;
+        this.user.id = userId;
         if (this.user.username === '') {
           this.user.username = this.auth.getUsernameFromToken();
         }
-        this.RetrieveId();
-      },
-      error: (error) => console.error('There was an error!', error),
-    });
-  }
-
-  RetrieveId(): void {
-    this.userStore.getIdFromStore().subscribe({
-      next: (id) => {
-        this.user.id = id;
         if (this.user.id === 0) {
           this.user.id = this.auth.getIdFromToken();
         }
-        console.log("id retrieved")
         this.getScheduleData(this.user.id);
       },
-      error: (error) => console.error('There was an error!', error),
+      error: (err) => {
+        console.error(err);
+      }
     });
   }
+ 
 
   // Handles the dropping of recipes into time slots
   Drop(event: CdkDragDrop<Recipe[]>, rowIndex: number, colIndex: number): void {
@@ -138,22 +128,18 @@ export class WeekScheduleComponent implements OnInit {
 
   initializeCells(): void {
     // Loop through schedule
-    console.log("Before: ",this.cellContents)
+
     this.schedule.forEach((entry) => {
       // Check if recipeId is not null
-      if (entry.recipeId !== null) {
+
 
         this.recipeService.GetRecipeRating(entry.recipeId!).subscribe({
           next: (data) => {
             const recipeCopy = { ...data };
             this.ratingCellContents[entry.row][entry.column] = recipeCopy.score;
           },
-          error: (err: HttpErrorResponse ) =>{
+          error: (err: HttpErrorResponse) =>{
             console.error(err)
-            // if not found set ratingCellContents to null
-
-              this.ratingCellContents[entry.row][entry.column] = null;
-
             
           }
         });
@@ -166,24 +152,13 @@ export class WeekScheduleComponent implements OnInit {
           },
           error: (err) =>{
             console.error(err)
-            // if not found set cellcontents to null
-            console.log(err.status)
-            if(err.status === 404){
-              this.cellContents![entry.row][entry.column] = null;
-              console.log("404 error recipe not found")
-              // this.schedule[entry.row][entry.column] = null;
-              this.saveCellContents(entry.column, entry.row, undefined);
             }
-            
-          }
+          });
 
-        });
+      });
+    }
 
-      }
-    });
-    console.log("after: ", this.cellContents)
-
-  }
+  
 
   // Handles the removal of a recipe from the schedule
   // rowIndex: The index of the row (weekday) where the recipe is located
@@ -242,10 +217,5 @@ export class WeekScheduleComponent implements OnInit {
       error: (err) => console.log(err),
     });
   }
-
-
-
-
-
 
 }
