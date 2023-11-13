@@ -13,11 +13,9 @@ import { StarService } from '../service/star.service';
 })
 export class RecipeCardComponent implements OnInit{
 
-  // @Input() recipe: Recipe | null = null; // Input decorator to pass the recipe object to the component
-
   recipes: Recipe[] = []; // Initialize recipes as an empty array
   scoreRecipe: RecipeWithScore[] = [];
-  stars: any[] = [];
+
 
   rating: RatingWithRecipeId ={
     recipeId: 0,
@@ -44,22 +42,18 @@ export class RecipeCardComponent implements OnInit{
           this.scoreRecipe.push(recipeWithScore);
         });
 
-      },
-      error: (error) => {
-        console.error(error);
-      },
-      complete: () => {
         this.scoreRecipe.forEach((recipe) => {
           this.getRating(recipe.id);
 
         });
+      },
+      error: (error) => {
+        console.error(error);
       }
+
     });
     
   }
-
-
-
 
   getRating(recipeId: number): void {
     this.recipeService.GetRecipeRating(recipeId).subscribe({
@@ -78,7 +72,5 @@ export class RecipeCardComponent implements OnInit{
       },
     });    
   }
-
-
 
 }

@@ -87,26 +87,18 @@ export class CreateRecipeComponent implements OnInit {
 
     this.userStore.getUserFromStore().subscribe({
       next: user => {
-        this.user!.username = user;
+        this.user!.username = user || this.tokenService.getUsernameFromToken();
       },
       error: error => console.error('There was an error!', error),
-      complete: () => {
-        if(this.user!.username === ''){
-          this.user!.username = this.tokenService.getUsernameFromToken();
-        }
-      }
+
     });
 
     this.userStore.getIdFromStore().subscribe({
       next: id => {
-        this.user!.id = id;
+        this.user!.id = id || this.tokenService.getIdFromToken();
       },
       error: error => console.error('There was an error!', error),
-      complete: () => {
-        if(this.user!.id === 0){
-          this.user!.id = this.tokenService.getIdFromToken();
-        }
-      }
+
     });
 
   }

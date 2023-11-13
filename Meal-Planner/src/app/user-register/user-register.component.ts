@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../service/login.service';
 import { Route, Router } from '@angular/router';
 import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-user-register',
@@ -14,6 +15,11 @@ export class UserRegisterComponent {
   registrationError: boolean = false;
   isLoading: boolean = false;
   showUsernameError: boolean = false;
+  passwordsDoNotMatch: boolean = false;
+
+  usernameErrorMessages: string = '';
+  passwordErrorMessages: string = '';
+  
 
   constructor(
     private loginService: LoginService,
@@ -23,8 +29,8 @@ export class UserRegisterComponent {
   )
   {
     this.registerForm = this.formBuilder.group({
-      username: ['', Validators.required, ],
-      password: ['', Validators.required, this.noWhitespaceValidator],
+      username: ['', Validators.required ],
+      password: ['', Validators.required ],
       confirmPassword: ['', Validators.required]
     });
 
@@ -37,8 +43,10 @@ export class UserRegisterComponent {
   }
 
   onSubmit(): void{
-    
-    if(this.registerForm.valid){
+
+
+    if(this.registerForm.valid && !this.passwordsDoNotMatch && !this.showUsernameError){
+
       this.ToggleLoadingSpinner()
 
       const userData = {
@@ -47,8 +55,7 @@ export class UserRegisterComponent {
       };
 
       this.loginService.createLogin(userData).subscribe({
-        next: (data: any) => {
-          console.log('Register success', data);
+        next: () => {
           this.router.navigate(['/login']);
         },
 
@@ -64,8 +71,6 @@ export class UserRegisterComponent {
 
   }
 
-  
-
 checkUsernameValidity() {
   const usernameValue = this.registerForm.get('username')?.value;
   if (usernameValue.includes(' ')) {
@@ -75,35 +80,39 @@ checkUsernameValidity() {
   }
 }
 
-  passwordsDoNotMatch():boolean {
+  passwordsDoNotMatchMethod() {
     const password = this.registerForm.get('password')?.value;
     const confirmPassword = this.registerForm.get('confirmPassword')?.value;
 
-    if (password !== confirmPassword){
-      return true;
+    if (password !== confirmPassword && password.includes(' ') || password !== confirmPassword && confirmPassword.includes(' ') ){
+      this.passwordErrorMessages = 'Passwords do not match and cannot contain spaces';
+      
+      this.passwordsDoNotMatch = true;
+    }
+    else if (password.includes(' ')){
+      this.passwordErrorMessages = 'Password cannot contain spaces';
+
+      this.passwordsDoNotMatch = true;
+
+    }
+    else if (password !== confirmPassword){
+      this.passwordErrorMessages = 'Passwords do not match';
+
+      this.passwordsDoNotMatch = true;
+
+    }
+    else{
+
+      this.passwordsDoNotMatch = false;
     }
 
-    if (/\s/.test(password)){
-      return true;
-    }
 
-    return false
+
   }
-
-
 
   ToggleLoadingSpinner(){
     this.isLoading = !this.isLoading;
 
   }
-
-  noWhitespaceValidator(control: AbstractControl): ValidationErrors | null {
-    const isWhitespace = (control.value || '').trim().length === 0;
-    return isWhitespace ? { whitespace: true } : null;
-  }
-
-  
-
-
 
 }
