@@ -25,7 +25,11 @@
         (cdkDragStarted)="isDragging = true"
         (cdkDragEnded)="isDragging = false"
         >
-          <h3>{{ cellContents[colIndex][rowIndex]!.title }}</h3>
+          <div (click)="goToRecipeDetail(cellContents[colIndex][rowIndex].id)" class="recipe-card-title">
+
+            <h3>{{ cellContents[colIndex][rowIndex]!.title }}</h3>
+          </div>
+
           <div class="rating">
             <ng-container *ngFor="let star of starService.getRatingStars(ratingCellContents[colIndex][rowIndex]!)">
               <i class="fas fa-star" *ngIf="star === true"></i>

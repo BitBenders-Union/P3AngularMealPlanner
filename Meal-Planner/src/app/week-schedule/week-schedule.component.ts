@@ -8,6 +8,7 @@ import { UserStoreService } from '../service/user-store.service';
 import { LoginService } from '../service/login.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { combineLatest, forkJoin } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-week-schedule',
@@ -46,10 +47,12 @@ export class WeekScheduleComponent implements OnInit {
     public recipeService: RecipeServiceService,
     public starService: StarService,
     private userStore: UserStoreService,
-    private auth: LoginService
+    private auth: LoginService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
+
     combineLatest([
       this.userStore.getUserFromStore(),
       this.userStore.getIdFromStore(),
@@ -65,6 +68,7 @@ export class WeekScheduleComponent implements OnInit {
         console.error(err);
       }
     });
+    
   }
  
 
@@ -212,6 +216,12 @@ export class WeekScheduleComponent implements OnInit {
       },
       error: (err) => console.log(err),
     });
+  }
+
+
+  goToRecipeDetail(id: any) {
+    // Navigate to RecipeDetailComponent with the recipe's ID as parameter
+    this.router.navigate(['/recipe-detail', id]);
   }
 
 }

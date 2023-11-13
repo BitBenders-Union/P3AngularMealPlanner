@@ -94,3 +94,8 @@
   color: var(--color-button-hover);
 
 }
+
+.recipe-card-title{
+  /* change cursor to finger */
+  cursor: pointer;
+}
