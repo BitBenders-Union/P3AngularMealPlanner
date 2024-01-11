@@ -3,14 +3,22 @@ export interface Recipe {
     title: string
     description: string
     category: Category
-    preparationTimes: PreparationTime
-    cookingTimes: CookingTime
+    preparationTime: PreparationTime
+    cookingTime: CookingTime
     servings: Servings
-    ratings: Rating[]
     ingredients: Ingredient[]
     instructions: Instruction[]
     user: User
   }
+
+  export interface RecipeWithScore {
+    id: number
+    title: string
+    score: (boolean | string)[]
+    recipe: Recipe
+  }
+
+  
 
 export interface Category {
     id: number,
@@ -40,6 +48,7 @@ export interface Category {
   export interface Ingredient {
     id: number,
     name: string,
+    order: number,
     amount: Amount,
     unit: Unit
   }
@@ -60,8 +69,8 @@ export interface Category {
   }
 
   export interface User {
-    Id: number,
-    Username: string
+    id: number,
+    username: string
   }
 
 
@@ -69,10 +78,9 @@ export interface Category {
     Title: string
     Description: string
     Category: CategoryDTO
-    PreparationTimes: PreparationTimeDTO
-    CookingTimes: CookingTimeDTO
+    PreparationTime: PreparationTimeDTO
+    CookingTime: CookingTimeDTO
     Servings: ServingsDTO
-    Ratings: RatingDTO[]
     Ingredients: IngredientDTO[]
     Instructions: InstructionDTO[]
     User: User
@@ -95,11 +103,12 @@ export interface CategoryDTO {
   }
 
   export interface RatingDTO {
-    Score: number
+    score: number
   }
 
   export interface IngredientDTO {
     Name: string,
+    Order: number,
     Amount: AmountDTO,
     Unit: UnitDTO
   }
@@ -119,10 +128,24 @@ export interface CategoryDTO {
 
 
 
-  export interface WeekData{
-    WeekDataId: number;
-    userId: number;
+  export interface RecipeScheduleDTO{
     row: number;
     column: number;
+    recipeId?: number;
+    user: UserOnlyName;
+  }
+
+  export interface UserOnlyName{
+    id: number; 
+    username: string;
+  }
+
+  export interface RatingWithRecipeId{
     recipeId: number;
+    score: number;
+  }
+
+  export interface RecipeIdAndStarsArray{
+    recipeId: number;
+    starsArray: (boolean | string)[];
   }

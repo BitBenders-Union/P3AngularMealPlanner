@@ -9,6 +9,7 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+
 //fixed
 builder.Services.AddCors(options =>
 {
@@ -18,9 +19,8 @@ builder.Services.AddCors(options =>
         {
 
             policy.WithOrigins(allowedOrigins)
-                  .AllowAnyHeader()
                   .WithHeaders("Content-Type", "Authorization", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin")
-                  .WithMethods("GET", "POST", "PUT", "DELETE");
+                  .WithMethods("GET", "POST", "PUT", "DELETE", "PATCH");
         });
 });
 
@@ -80,6 +80,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+if(app.Environment.IsProduction())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 //app.UseCors(MyAllowSpecificOrigins);
 app.UseCors();
 

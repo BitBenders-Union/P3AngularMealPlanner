@@ -5,22 +5,10 @@
 namespace Meal_Planner_Api.Migrations
 {
     /// <inheritdoc />
-    public partial class recipeScheduleCreation : Migration
+    public partial class recipeDeleteBehavior : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropForeignKey(
-                name: "FK_RecipeSchedules_Recipes_RecipeId",
-                table: "RecipeSchedules");
-
-            migrationBuilder.DropIndex(
-                name: "IX_RecipeSchedules_RecipeId",
-                table: "RecipeSchedules");
-        }
-
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateIndex(
                 name: "IX_RecipeSchedules_RecipeId",
@@ -32,7 +20,20 @@ namespace Meal_Planner_Api.Migrations
                 table: "RecipeSchedules",
                 column: "RecipeId",
                 principalTable: "Recipes",
-                principalColumn: "Id");
+                principalColumn: "Id",
+                onDelete: ReferentialAction.SetNull);
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropForeignKey(
+                name: "FK_RecipeSchedules_Recipes_RecipeId",
+                table: "RecipeSchedules");
+
+            migrationBuilder.DropIndex(
+                name: "IX_RecipeSchedules_RecipeId",
+                table: "RecipeSchedules");
         }
     }
 }

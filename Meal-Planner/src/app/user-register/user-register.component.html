@@ -1,18 +1,38 @@
 <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="login-form">
     <h2>Register</h2>
     <div class="form-section">
-        <label>Username <input type="text" formControlName="username" class="input-field"></label>
+        <label>Username <input type="text" formControlName="username" class="input-field" (input)="checkUsernameValidity()"></label>
+        <div *ngIf="showUsernameError">
+            Username cannot contain whitespace.
+        </div>
         <div *ngIf="registerForm.get('username')?.hasError('usernameTaken')" class="error-message">
             Username is already taken.
         </div>
-        <label>Password <input type="password" formControlName="password" class="input-field"></label>
-        <label>Confirm-Password <input type="password" formControlName="confirmPassword" class="input-field"></label>
-        <div *ngIf="passwordsDoNotMatch()" class="error-message">
-            Passwords do not match.
+        <label>Password <input type="password" formControlName="password" class="input-field" (input)="passwordsDoNotMatchMethod()"></label>
+        <label>Confirm-Password <input type="password" formControlName="confirmPassword" class="input-field" (input)="passwordsDoNotMatchMethod()"></label>
+        <div *ngIf="passwordsDoNotMatch" class="error-message">
+            
+            {{passwordErrorMessages}}
+        </div>
+        <div class="error-message" *ngIf="registrationError">
+            Something went wrong connecting to the server. Please try again later.
         </div>
     </div>
 
-    <div class="buttons-exit">
-        <button type="submit" class="confirm-button">Rregister</button>
+    <div >
+
+        <div class="spinner">
+            <mat-spinner *ngIf="isLoading" class="spinner-element" ></mat-spinner>
+
+        </div>
+        
+        <div class="buttons-exit" *ngIf="!isLoading">
+            
+            <button type="submit" class="confirm-button">Register</button>
+            <button class="login-button" routerLink="/login">Login</button>
+            
+        </div>
+        
     </div>
+
 </form>

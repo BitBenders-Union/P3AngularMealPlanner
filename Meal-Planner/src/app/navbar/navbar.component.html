@@ -1,15 +1,29 @@
-<nav class="navbar">
-    <ul>
-      <li><a routerLink="/dashboard">Dashboard</a></li>
-      <li><a routerLink="/search">Search</a></li>
-      <li><a routerLink="/create-recipe">Create Recipe</a></li>
-      <!-- <li><a routerLink="/forms-test">Forms Test</a></li> -->
-      <li><a routerLink="/about">About</a></li>
-      <li><a routerLink=""(click)="logout()">Logout</a></li>
 
-    </ul>
-  </nav>
   
+
+  <div class="grid-container">
+    <div class="column-1">
+
+      <p>Welcome {{userName}}</p>
+      
+    </div>
+    <div class="column-2">
+      <nav class="navbar">
+  
+        <ul>
+          <li><a routerLink="/dashboard">Dashboard</a></li>
+          <li><a routerLink="/search">Search</a></li>
+          <li><a routerLink="/create-recipe">CreateRecipe</a></li>
+          <li><a routerLink="/about">About</a></li>
+          <li><a routerLink=""(click)="logout()">Logout</a></li>
+    
+        </ul>
+      </nav>
+    </div>
+    <div class="column-3">
+      <!-- The third column content goes here (if needed) -->
+    </div>
+  </div>
 
 
     

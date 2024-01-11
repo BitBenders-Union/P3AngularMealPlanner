@@ -3,7 +3,9 @@ namespace Meal_Planner_Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AmountController : ControllerBase 
+
+    public class AmountController : ControllerBase // Delete this comment
+
     {
         private readonly IMapper _mapper;
         private readonly IAmountRepository _amountRepository;
@@ -23,7 +25,7 @@ namespace Meal_Planner_Api.Controllers
 
             // check if any amounts was found
             if (amounts == null || amounts.Count() == 0)
-                return NotFound("Not Found");
+                return NotFound();
 
             // check if the model is as it should be
             if (!ModelState.IsValid)
@@ -39,7 +41,7 @@ namespace Meal_Planner_Api.Controllers
         {
             // check if amount exists from id
             if (!_amountRepository.AmountExists(id))
-                return NotFound("Not Found");
+                return NotFound();
 
             // get the amount from id
             var amount = _mapper.Map<AmountDTO>(_amountRepository.GetAmount(id));
@@ -58,7 +60,7 @@ namespace Meal_Planner_Api.Controllers
             var amount = _mapper.Map<List<AmountDTO>>(_amountRepository.GetAmountsFromRecipe(recipeId));
 
             if (amount == null)
-                return NotFound("Not Found");
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -73,7 +75,7 @@ namespace Meal_Planner_Api.Controllers
             var amount = _mapper.Map<AmountDTO>(_amountRepository.GetAmountForIngredient(ingredientId));
 
             if (amount == null)
-                return NotFound("Not Found");
+                return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -114,7 +116,7 @@ namespace Meal_Planner_Api.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok("Success");
+            return Ok();
         }
 
 

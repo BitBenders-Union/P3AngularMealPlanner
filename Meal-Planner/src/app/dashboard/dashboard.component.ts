@@ -31,16 +31,11 @@ export class DashboardComponent implements OnInit{
   ngOnInit(){
     
       this.userStore.getUserFromStore()
-      .subscribe(val =>{
+      .subscribe(val =>{ 
         let userNameFromToken = this.auth.getUsernameFromToken();
         this.userName = val || userNameFromToken;
-        // console.log(this.userName);
-      })      
+      })
 
-      // this.auth.testApi().subscribe((data: any) =>{
-      //   this.testthing = data;
-      //   console.log(this.testthing);
-      // })
   }
 
   // This function is called when the shopping list needs to be updated with new ingredients.
@@ -48,41 +43,41 @@ export class DashboardComponent implements OnInit{
 
   onShoppingListUpdated(ingredients: Ingredient[]) {
 
-    // Loop through the ingredients to check if they are already present in the shopping list
-    ingredients.forEach(newIngredient => {
-      
-      // Find the index of the existing ingredient in the shopping list
-      // If the ingredient is not in the shopping list, the index will be -1
-      const existingIngredientIndex = this.shoppingListIngredients.findIndex(
-        existingIngredient => existingIngredient.name === newIngredient.name
-      );
+    // to add each ingredient we first need to check if they already exist in the shopping list
+    // so we first need to make a foreach on the ingredients array
+    ingredients.forEach((ingredient) => {
 
-      // If the ingredient already exists in the shopping list
-      if (existingIngredientIndex !== -1) {
-        
-        // Add the amount of the new ingredient to the existing ingredient's amount
-        this.shoppingListIngredients[existingIngredientIndex].amount.quantity += newIngredient.amount.quantity;
-      } else {
-        
-        // If the ingredient is not already in the shopping list, create a new entry
-        const shoppingListIngredient: Ingredient = {
-          id: newIngredient.id,
-          name: newIngredient.name,
-          amount: { ...newIngredient.amount, quantity: newIngredient.amount.quantity, },
-          unit: { ...newIngredient.unit, measurement: newIngredient.unit.measurement },
-        };
-        
-        // Add the new ingredient to the shopping list
-        this.shoppingListIngredients.push(shoppingListIngredient);
+      // check if exist
+      const existingIngredient = this.shoppingListIngredients.findIndex(x =>
+        x.name === ingredient.name && x.unit.measurement === ingredient.unit.measurement
+      );
+      
+      // if ingredient doesn't exist in the shopping list
+      if(existingIngredient == -1)
+      {
+        // add it to the shopping list
+        this.shoppingListIngredients.push(ingredient);
+
+      }
+      else{
+        // if it does exist in the shopping list
+        // we need to add the quantity of the ingredient to the existing ingredient
+        this.shoppingListIngredients[existingIngredient].amount.quantity += ingredient.amount.quantity;
+
+        // after ingredient is updated, we need to check if it is 0. if it is 0, we need to remove it from the shopping list
+        if(this.shoppingListIngredients[existingIngredient].amount.quantity == 0)
+        {
+          // remove the ingredient from the shopping list
+          this.shoppingListIngredients.splice(existingIngredient, 1);
+
+        }
+
       }
     });
 
-    // Remove ingredients with 0 amount from the shopping list
-    this.shoppingListIngredients = this.shoppingListIngredients.filter(
-      ingredient => ingredient.amount.quantity > 0
-    );
-  }
 
+  }
+  
   // the bookmark component emits a bool telling if the bookmark component is expanded or not
   // this function toggles the shopping list hiding it when the bookmark component is expanded
   toggleShoppingList() {

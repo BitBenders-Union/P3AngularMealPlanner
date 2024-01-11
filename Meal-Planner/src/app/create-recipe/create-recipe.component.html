@@ -1,22 +1,11 @@
-<!-- 
-  Form for creating a recipe.
-  see interfaces for required data
-  includes validation on numbers
-
-  TODO:
-  - re-route from here to recipe page on submission
-
- -->
 <app-navbar></app-navbar>
 
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="recipe-form">
 
-  <!-- using formGroup to bind the data to form variable -->
-
     <h2>Create Recipe</h2>
     <div class="form-section">
-      <label>Title: <input required formControlName="title" class="input-field" /></label>
+      <label>Title: <input required formControlName="title" class="input-field" ></label>
       <label>Category:
 
         <mat-autocomplete #auto="matAutocomplete">
@@ -32,20 +21,21 @@
         class="input-field"
         formControlName="category"
         [matAutocomplete]="auto"
+        (keyup)="onSearchInputChanged($event)"
+        (keyup.enter)="filterCategories(form.get('category')?.value)"
         required>
-
-
       </label>
+      
       <label>Description: <input required formControlName="description" class="input-field" /></label>
       <label>Preparation Time: <input required formControlName="prepTime" type="number" class="input-field" min="0" (input)="aboveZero($event.target!, 'prepTime')"/></label>
       <label>Cooking Time: <input required formControlName="cookTime" type="number" class="input-field" min="0" (input)="aboveZero($event.target!, 'cookTime')"/></label>
       <label>Servings: <input required formControlName="servings" type="number" class="input-field" min="0" (input)="aboveZero($event.target!, 'servings')"/></label>
-      <label>Rating: <input required formControlName="rating" type="number" class="input-field" min="0" max="5" (input)="validateRating()"/></label>
+
     </div>
     
-    <div formArrayName="ingredients" class="form-array-container">
+    <div formArrayName="ingredients" class="form-section form-array-container ingredient-container">
 
-      <h4>Ingredients</h4>
+      <label class="ingredient-label-header">Ingredients</label>
 
         <div class="ingredient-labels">
           <label class="ingredient-label">Name:</label>
@@ -53,20 +43,26 @@
           <label class="ingredient-label">Unit:</label>
         </div>
 
-        <div *ngFor="let ingredient of ingredients.controls; let i = index" class="ingredient-row">
-          
-          <div [formGroupName]="i" class="ingredient-group">
-            <input required formControlName="name" class="ingredient-input" />
-            <input required formControlName="amounts" type="number" class="ingredient-input" min="0" (input)="aboveZeroIngredient()"/>
-            <input required formControlName="unit" class="ingredient-input" />
-          
+        <div cdkDropList class="my-list" (cdkDropListDropped)="drop($event)">
+          <div *ngFor="let ingredient of ingredients.controls; let i = index;" class="ingredient-row" cdkDrag>
+            <i class="fas fa-grip-vertical grip" cdkDragHandle></i>
+            <div [formGroupName]="i" class="ingredient-group">
+              <input required formControlName="name" class="ingredient-input" />
+              <input required formControlName="amounts" type="number" class="ingredient-input" min="0" (input)="aboveZeroIngredient()"/>
+              <input required formControlName="unit" class="ingredient-input" />
+
+
+
+                  <div class="buttons">
+                    <button type="button" (click)="addIngredients(i+1)" class="fas fa-plus"></button>
+                    <button type="button" (click)="removeIngredient(i)" class="fas fa-minus"></button>
+                  </div>
+
+            </div>
           </div>
         </div>
 
-        <div class="buttons">
-          <button type="button" (click)="addIngredients()" class="fas fa-plus"></button>
-          <button type="button" (click)="removeIngredients()" class="fas fa-minus"></button>
-        </div>
+
         
       </div>
       
@@ -74,37 +70,45 @@
     <div formArrayName="instructions" class="form-array-container">
 
       <div class="instruction-labels">
-        <label class="instruction-label">Instructions:</label>
+        <label class="instruction-label">Instructions</label>
       </div>
 
-        <div *ngFor="let instruction of instructions.controls; let i = index" class="instruction-row">
+      <div cdkDropList class="my-list" (cdkDropListDropped)="dropInstruction($event)">
+        <div *ngFor="let instruction of instructions.controls; let i = index" class="instruction-row" cdkDrag>
+
+          <i class="fas fa-grip-vertical grip" cdkDragHandle></i>
+
           <div [formGroupName]="i" class="instruction-group">
+
             <input required formControlName="text" class="instruction-input"/>
+
           </div>
+
+          <div class="buttons">
+            <button type="button" (click)="addInstruction(i)" class="fas fa-plus"></button>
+            <button type="button" (click)="removeInstruction(i)" class="fas fa-minus"></button>
+          </div>
+
         </div>
 
-      <div class="buttons">
-        <button type="button" (click)="addInstruction()" class="fas fa-plus"></button>
-        <button type="button" (click)="removeLastInstruction()" class="fas fa-minus"></button>
       </div>
 
     </div>
 
-<!-- Display loading spinner while loading -->
-<!-- 
-     This is very fast and we should maybe add a delay or find another solution.
-     We could also make a modal that says "Recipe created" or something like that.
--->
-<div *ngIf="loading" class="loading-spinner">
-  <app-loading-spinner></app-loading-spinner>
+
+
+<div>
+  <div class="spinner">
+
+    <mat-spinner *ngIf="loading"></mat-spinner>
+  </div>
+
+  <div class="buttons-exit" *ngIf="!loading">
+    <button type="reset" class="cancel-button"  (click)="onReset()">Cancel</button>
+    <button type="submit" class="confirm-button" >Confirm</button>
+  </div>
+  
 </div>
-
-
-    <div class="buttons-exit">
-        <button type="reset" class="cancel-button" [disabled]="loading" (click)="onReset()">Cancel</button>
-        <button type="submit" class="confirm-button" [disabled]="loading">Confirm</button>
-      </div>
-
 
 
   </form>

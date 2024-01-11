@@ -21,13 +21,14 @@ import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { CustomFilterPipe } from './custom-filter-pipe.pipe';
 import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 import { CreateRecipeComponent } from './create-recipe/create-recipe.component';
-import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 import { UpdateRecipeComponent } from './update-recipe/update-recipe.component';
 import { UserLoginComponent } from './user-login/user-login.component';
 import { UserRegisterComponent } from './user-register/user-register.component';
 import { AuthGuard } from './guards/auth.guard';
 import { StartpageComponent } from './startpage/startpage.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
+import { TestComponent } from './test/test.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -44,11 +45,14 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
     CustomFilterPipe,
     RecipeDetailComponent,
     CreateRecipeComponent,
-    LoadingSpinnerComponent,
     UpdateRecipeComponent,
     UserLoginComponent,
     UserRegisterComponent,
     StartpageComponent,
+    TestComponent,
+    
+    
+    
     
     
   ],
@@ -62,7 +66,9 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
     HttpClientModule,
     ReactiveFormsModule,
     MatSlideToggleModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatProgressSpinnerModule
+    
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

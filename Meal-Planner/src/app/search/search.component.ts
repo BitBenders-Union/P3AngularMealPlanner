@@ -3,7 +3,8 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { RecipeServiceService } from '../service/recipe-service.service'; // Import the service for fetching recipes
-import { Recipe } from '../Interfaces'; // Import the Recipe interface
+import { RatingDTO, RatingWithRecipeId, Recipe, RecipeIdAndStarsArray, RecipeWithScore } from '../Interfaces'; // Import the Recipe interface
+import { StarService } from '../service/star.service';
 
 @Component({
   selector: 'app-search',
@@ -11,8 +12,17 @@ import { Recipe } from '../Interfaces'; // Import the Recipe interface
   styleUrls: ['./search.component.css'],
 })
 export class SearchComponent implements OnInit {
+  
   recipes: Recipe[] = []; // Array to hold all recipes
-  filteredRecipes: Recipe[] = []; // Array to hold filtered recipes that match the search term
+  filteredRecipes: RecipeWithScore[] = []; // Array to hold filtered recipes that match the search term
+  scoreRecipe: RecipeWithScore[] = [];
+
+
+  rating: RatingWithRecipeId ={
+    recipeId: 0,
+    score: 0
+  }
+
 
   searchTerm: string = ''; // The search term entered by the user
 
@@ -34,31 +44,51 @@ export class SearchComponent implements OnInit {
   // AsyncSubject: Emits only the last value when the observable completes.
   
 
-
-
   // Inject the Router and RecipeServiceService
-  constructor(private router: Router, private recipeService: RecipeServiceService) {
+  constructor(private router: Router,
+              private recipeService: RecipeServiceService,
+              public starService: StarService
+              ){
     
-  }
-
-  // Fetch recipes from the service
-  getRecipes(): void {
-    this.recipeService.getRecipes().subscribe(recipes => {
-      // Initialize both recipes and filteredRecipes with fetched recipes
-      this.recipes = recipes;
-      this.filteredRecipes = [...this.recipes];
-    });
-  }
+    }
   
   // Navigate to the recipe detail page
-  goToRecipeDetail(recipe: Recipe) {
+  goToRecipeDetail(recipe: any) {
     // Navigate to RecipeDetailComponent with the recipe's ID as parameter
     this.router.navigate(['/recipe-detail', recipe.id]);
   }
 
   ngOnInit() {
     // Initialize recipes and filteredRecipes when the component loads
-    this.getRecipes();
+    this.recipeService.getRecipes().subscribe({
+      next: (recipes: Recipe[]) => {
+        this.recipes = recipes;
+        
+        this.recipes.forEach(recipe => {
+          const recipeWithScore: RecipeWithScore = {
+            id: recipe.id,
+            title: recipe.title,
+            score: [],
+            recipe: recipe
+          }
+          this.scoreRecipe.push(recipeWithScore);
+        });
+        this.filteredRecipes = [...this.scoreRecipe]
+        
+      },
+      error: (error) => {
+        console.error(error);
+      },
+      complete: () => {
+          this.scoreRecipe.forEach(recipe => {
+            this.getRating(recipe.id);
+          });
+
+
+      }
+
+    
+    })
 
     // Subscribe to changes in the search term input
     this.searchInputSubject
@@ -71,7 +101,8 @@ export class SearchComponent implements OnInit {
 
   // Filter recipes based on the search term
   filterRecipes(searchTerm: string) {
-    this.filteredRecipes = this.recipes.filter(recipe =>
+    
+    this.filteredRecipes = this.scoreRecipe.filter(recipe =>
       recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
@@ -81,4 +112,27 @@ export class SearchComponent implements OnInit {
     // Push the updated search term to the subject
     this.searchInputSubject.next(this.searchTerm);
   }
+  
+
+
+  getRating(recipeId: number): void {
+    this.recipeService.GetRecipeRating(recipeId).subscribe({
+      next: (rating: RatingDTO) => {
+        this.rating.score = rating.score;
+        this.rating.recipeId = recipeId;
+        const recipeWithScore = this.scoreRecipe.find(recipe => recipe.id === recipeId);
+        recipeWithScore!.score = this.starService.getRatingStars(this.rating.score);
+      },
+      error: (error) => {
+        console.error(error);
+        this.rating.score = 0;
+        this.rating.recipeId = recipeId;
+        const recipeWithScore = this.scoreRecipe.find(recipe => recipe.id === recipeId);
+        recipeWithScore!.score = this.starService.getRatingStars(this.rating.score);
+      },
+    });    
+  }
+
+  
+
 }

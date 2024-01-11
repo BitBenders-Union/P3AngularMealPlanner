@@ -23,10 +23,12 @@
 
 .rating {
   margin-bottom: 12px;
+  color: var(--color-button-hover);
 }
 
 .rating i {
-  color: gold;
+
+  font-size: larger;
 }
 
 .list {
@@ -91,3 +93,27 @@
 }
 
 /* ... Other existing CSS ... */
+
+/* CSS classes for stars */
+.fas {
+  font-size: 24px;
+  transition: color 0.2s;
+}
+
+.fas.fa-star-half-alt {
+  position: relative;
+}
+
+/* Change star color on hover */
+
+.icon-star-empty{
+  position: relative;
+  font-size: 24px;
+  transition: color 0.2s;
+  width: 20px;
+  height: 20px;
+  z-index: 1;
+  color: var(--color-button-hover);
+}
+
+

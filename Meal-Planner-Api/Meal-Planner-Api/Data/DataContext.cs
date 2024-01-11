@@ -23,8 +23,6 @@ namespace Meal_Planner_Api.Data
         public DbSet<Servings> Servings { get; set; }
 
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
-        public DbSet<IngredientAmount> IngredientAmounts { get; set; }
-        public DbSet<IngredientUnit> IngredientUnits { get; set; }
         public DbSet<RecipeRating> RecipeRatings { get; set; }
 
 
@@ -35,6 +33,12 @@ namespace Meal_Planner_Api.Data
             // tell what keys to bind on
             // then tell that first key is many to many & what fk they have
             // the tell second key is many to many & what fk they have
+
+            modelBuilder.Entity<RecipeSchedule>()
+            .HasOne(rs => rs.Recipe)
+            .WithMany()
+            .HasForeignKey(rs => rs.RecipeId)
+            .OnDelete(DeleteBehavior.SetNull);
 
 
 
@@ -53,43 +57,34 @@ namespace Meal_Planner_Api.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
 
+            modelBuilder.Entity<RecipeIngredient>()
+                .HasOne(ri => ri.Amount)
+                .WithMany(a => a.RecipeIngredients)
+                .HasForeignKey(ri => ri.AmountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<RecipeIngredient>()
+                .HasOne(ri => ri.Unit)
+                .WithMany(u => u.RecipeIngredients)
+                .HasForeignKey(ri => ri.UnitId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+
             modelBuilder.Entity<RecipeRating>()
-                .HasKey(rr => new { rr.RecipeID, rr.RatingID });
+                .HasOne(rr => rr.Recipe)
+                .WithMany()
+                .HasForeignKey(rr => rr.RecipeID);
+
             modelBuilder.Entity<RecipeRating>()
-                .HasOne(r => r.Recipe)
-                .WithMany(rr => rr.RecipeRating)
-                .HasForeignKey(r => r.RecipeID);
+                .HasOne(rr => rr.Rating)
+                .WithMany(r => r.RecipeRating)
+                .HasForeignKey(rr => rr.RatingID);
+
             modelBuilder.Entity<RecipeRating>()
-                .HasOne(r => r.Rating)
-                .WithMany(rr => rr.RecipeRating)
-                .HasForeignKey(r => r.RatingID);
-
-
-            modelBuilder.Entity<UserRating>()
-                .HasKey(ur => new { ur.UserId, ur.RatingId });
-            modelBuilder.Entity<UserRating>()
-                .HasOne(u => u.User)
-                .WithMany(ur => ur.UserRating)
-                .HasForeignKey(u => u.UserId);
-            modelBuilder.Entity<UserRating>()
-                .HasOne(r => r.Rating)
-                .WithMany(ur => ur.UserRating)
-                .HasForeignKey(r => r.RatingId);
-
-
-            modelBuilder.Entity<IngredientAmount>()
-                .HasKey(ia => new { ia.ingredientId, ia.amountId });
-
-            modelBuilder.Entity<IngredientUnit>()
-                .HasKey(iu => new { iu.ingredientId, iu.unitId });
-
-
-            //modelBuilder.Entity<User>()
-            //    .HasMany(u => u.Recipes)
-            //    .WithOne(r => r.User)
-            //    .HasForeignKey(r => r.User.Id)
-            //    .OnDelete(DeleteBehavior.Restrict);
-
+                .HasOne(rr => rr.User)
+                .WithMany(u => u.RecipeRatings)
+                .HasForeignKey(rr => rr.UserID);
 
 
             base.OnModelCreating(modelBuilder);

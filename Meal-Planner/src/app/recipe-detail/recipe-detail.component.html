@@ -4,19 +4,20 @@
 
       <h2>{{ recipe.title }}</h2>
 
-      <!-- <div class="rating">
-        <ng-container *ngFor="let star of starService.getRatingStars(recipe.rating)">
-          <i class="fas fa-star" *ngIf="star === true"></i>
-          <i class="fas fa-star-half-alt" *ngIf="star === 'half'"></i>
+      <div class="rating">
+        <ng-container *ngFor="let star of stars; let i = index">
+          <i class="fas fa-star" *ngIf="star === true" (mouseover)="hoverStar(i)" (click)="rateRecipe(i)" ></i>
+          <i class="fas fa-star-half-alt" *ngIf="star === 'half'" (mouseover)="hoverStar(i)" (click)="rateRecipe(i)" ></i>
+          <i class="fa-regular fa-star" *ngIf="star === 'empty'" (mouseover)="hoverStar(i)"(click)="rateRecipe(i)" ></i>
         </ng-container>
-      </div> -->
-      
+      </div>
+
       <div class="description">
         <p><i>{{ recipe.description }}</i></p>
       </div>
 
       <div class="list">
-        <h2 class="time">Cooking Time: {{recipe.cookingTimes.minutes}} - Preparation time: {{recipe.preparationTimes.minutes}}</h2>
+        <h2 class="time">Cooking Time: {{recipe.cookingTime.minutes}} - Preparation time: {{recipe.preparationTime.minutes}}</h2>
         <h2 class="servings">Servings: {{recipe.servings.quantity}}</h2>
       </div>
 
@@ -37,8 +38,8 @@
       </div>
 
       <div class="actions">
-        <button (click)="updateRecipe()" class="btn-update">Update Recipe</button>
-        <button (click)="deleteRecipe()" class="btn-delete">Delete Recipe</button>
+        <button (click)="updateRecipe()" class="btn-update" [hidden]="!validateRecipeUser()">Update Recipe</button>
+        <button (click)="deleteRecipe()" class="btn-delete" [hidden]="!validateRecipeUser()">Delete Recipe</button>
       </div>
 
     </div>

@@ -10,7 +10,10 @@ import { TokenModel } from '../models/token.model';
 })
 export class LoginService {
 
-  private apiUrl = 'https://localhost:7268/';
+  // private apiUrl = 'https://localhost:7268/';
+  private apiUrl = 'http://192.168.21.22:5555/';
+  
+  // private apiUrl = 'http://localhost:5000/';
   private userPayload: any;
   constructor(private http:HttpClient, private router: Router) { 
     this.userPayload = this.decodeToken();
@@ -22,12 +25,13 @@ export class LoginService {
       username: username,
       password: password
     };
-    return this.http.post(`${this.apiUrl}validate`, body,{responseType: 'json'});
+    
+    return this.http.post(`${this.apiUrl}validate`, body, {responseType: 'json'});
   }
 
   createLogin(data: any): Observable<any>{
 
-    return this.http.post(`${this.apiUrl}api/User`, data,{responseType: 'text'});
+    return this.http.post(`${this.apiUrl}api/User`, data, {responseType: 'json'});
   }
 
   //set usertoken to storage
@@ -53,15 +57,18 @@ export class LoginService {
     return !! localStorage.getItem('accessToken');
   }
 
+  
+
   signOut(){
     localStorage.removeItem('accessToken');
-    this.router.navigate(['login']);
+    localStorage.removeItem('refreshToken');
+    this.router.navigate(['/login']);
   }
 
   decodeToken(){
     const jwtHelper = new JwtHelperService();
     const token = this.getToken()!;
-    // console.log(jwtHelper.decodeToken(token))
+
     return jwtHelper.decodeToken(token);
   }
 
@@ -80,9 +87,6 @@ export class LoginService {
   renewToken(token: TokenModel): Observable<any>{
     return this.http.post<any>(`${this.apiUrl}api/User/refresh`, token, {responseType: 'json'});
   }
-
-
-
 
   //just to test if the api is working with the token
   testApi(): Observable<any>{

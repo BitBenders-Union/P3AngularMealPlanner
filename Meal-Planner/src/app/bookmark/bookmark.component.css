@@ -5,12 +5,11 @@
 }
 
 .arrow {
-  width: 40px;
+  width: 120px;
   height: 40px;
   background-color: var(--color-secondary);
-  color: white;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   cursor: pointer;
   position: fixed;
@@ -23,7 +22,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 30vh;
+  height: 25vh;
   background-color: var(--color-secondary);
   color: white;
   display: flex;
@@ -37,7 +36,7 @@
   display: none; /* Initially hidden */
   width: 100%;
   height: 90%;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
   /* Add any desired styles for the expanded content */
 }
 

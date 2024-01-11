@@ -1,4 +1,6 @@
-﻿namespace Meal_Planner_Api.Repositories
+﻿using Meal_Planner_Api.Models;
+
+namespace Meal_Planner_Api.Repositories
 {
     public class RatingRepository : IRatingRepository
     {
@@ -14,6 +16,8 @@
             _context.Add(rating);
             return Save();
         }
+
+
 
         public bool DeleteRating(Rating rating)
         {
@@ -43,11 +47,10 @@
 
         public ICollection<Rating> GetRatingsForRecipe(int recipeId)
         {
-            var recipe = _context.Recipes.Include(x => x.RecipeRating)
-                .ThenInclude(x => x.Rating)
-                .FirstOrDefault(x => x.Id == recipeId);
 
-            var rating = recipe.RecipeRating.Select(x => x.Rating).Where(x => x != null).ToList();
+            var rating = _context.Ratings.Include(x => x.RecipeRating)
+                .Where(x => x.RecipeRating.Any(x => x.RecipeID == recipeId)).ToList();
+                
 
             return rating;
 
@@ -58,15 +61,32 @@
         {
             // returns all the ratings the user have given
 
-            var user = _context.Users.Include(x => x.UserRating)
+            var user = _context.Users.Include(x => x.RecipeRatings)
                 .ThenInclude(x => x.Rating)
                 .FirstOrDefault(x => x.Id == userId);
 
             if (user == null)
                 return null;
 
-            var rating = user.UserRating.Select(x => x.Rating)
+            var rating = user.RecipeRatings.Select(x => x.Rating)
                 .Where(x => x != null).ToList();
+
+            return rating;
+        }
+
+        public Rating GetRecipeRating(int recipeId)
+        {
+            // find all ratings for the recipe
+            var ratings = _context.Ratings.Include(x => x.RecipeRating)
+                .Where(x => x.RecipeRating.Any(x => x.RecipeID == recipeId)).ToList();
+
+            if (ratings.Count <= 0)
+                return null;
+
+            Rating rating = new()
+            {
+                Score = ratings.Average(x => x.Score)
+            };
 
             return rating;
         }
@@ -75,7 +95,7 @@
         {
             // get the rating a user made on a recipe
 
-            var userRatings = GetRatingsForUser(userID);
+            //var userRatings = GetRatingsForUser(userID);
 
             // find the recipe inside the userRatings
 
@@ -86,9 +106,9 @@
 
         }
 
-        public bool ratingExists(int id)
+        public bool ratingExists(float score)
         {
-            return _context.Ratings.Any(x => x.Id == id);
+            return _context.Ratings.Any(x => x.Score == score);
         }
 
         public bool ratingExists(ICollection<RatingDTO> rating)
@@ -97,19 +117,34 @@
             return _context.Ratings.Any(x => x.Score == rating.First().Score);
         }
 
-        public bool recipeRatingsExists(int recipeId)
+        public bool recipeRatingsExists(int userId, int recipeId)
         {
-            var recipe = _context.Recipes.Include(x => x.RecipeRating)
-                .ThenInclude(x => x.Rating)
-                .FirstOrDefault(x => x.Id == recipeId);
+            return _context.RecipeRatings.Any(x => x.RecipeID == recipeId && x.UserID == userId);
+        }
 
-            return recipe.RecipeRating.Any();
+        public bool CreateRecipeRating(RecipeRating recipeRating)
+        {
+
+            _context.Add(recipeRating);
+            return Save();
+        }
+
+        public RecipeRating GetRecipeRating(int userId, int recipeId)
+        {
+            return _context.RecipeRatings.FirstOrDefault(x => x.RecipeID == recipeId && x.UserID == userId);
+        }
+
+        public bool UpdateRecipeRating(RecipeRating recipeRating)
+        {
+            var existingRecipeRating = _context.RecipeRatings.FirstOrDefault(x => x.RecipeID == recipeRating.RecipeID && x.UserID == recipeRating.UserID);
+            existingRecipeRating.Rating = recipeRating.Rating;
+            return Save();
         }
 
         public bool Save()
         {
             var saved = _context.SaveChanges();
-            return saved > 0 ? true : false;
+            return saved > 0;
         }
 
         public bool UpdateRating(Rating rating)

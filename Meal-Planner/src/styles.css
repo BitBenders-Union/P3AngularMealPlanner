@@ -64,7 +64,7 @@ body{
   }
 
 
-Apply custom scrollbar styling
+/* Apply custom scrollbar styling */
 .scrollable-content {
   overflow: scroll; /* Always show scrollbar, even when content fits */
   max-height: 100vh; /* Set a maximum height for the scrollable element */

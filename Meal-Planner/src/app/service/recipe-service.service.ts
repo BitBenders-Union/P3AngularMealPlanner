@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpHeaderResponse } from '@angular/common/http';
 import { Observable, catchError } from 'rxjs';
-import { Category, Recipe, RecipeDTO } from '../Interfaces';
+import { Category, Rating, RatingDTO, Recipe, RecipeDTO, User, UserOnlyName } from '../Interfaces';
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -14,8 +14,11 @@ export class RecipeServiceService{
   }
 
 
-  url: string = 'https://localhost:7268/api';
-  // url = '../assets/Recipes.json';
+  // url: string = 'https://localhost:7268/api';
+  url: string = 'http://192.168.21.22:5555/api';
+
+  // url: string = 'http://localhost:5000/api';
+
 
 
 
@@ -32,6 +35,8 @@ export class RecipeServiceService{
         throw error;
       }));
   }
+
+
 
   getRecipeById(id: number): Observable<Recipe> {
 
@@ -52,38 +57,31 @@ export class RecipeServiceService{
       }));
   }
 
-  // // temporary method that gets data from json file instead of api
-  // getRecipeFromJson(id: number): Observable<Recipe | undefined> {
-  //   return this.http.get<Recipe[]>(this.url).pipe(
-  //     map((data) => {
-  //       const recipe = data.find((x) => x.id === id);
-  //       return recipe;
-  //     })
-  //   );
-  // }
-
 
   createRecipe(recipeData: RecipeDTO): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
 
     // Send a POST request to the API
-    return this.http.post(`${this.url}/Recipe/create`, recipeData, {headers}).pipe(
-      catchError(error => {
-        console.error('Error creating recipe:', error);
-        throw error;
-      })
-    );
+    return this.http.post(`${this.url}/Recipe/create`, recipeData);
   }
 
   deleteRecipe(recipeId: number): Observable<any> {
     return this.http.delete(`${this.url}/Recipe/delete/${recipeId}`);
   }
 
-  //------------------- changing -------------------------------
+
   updateRecipe( recipeData: RecipeDTO, recipeId: number): Observable<any> {
     // Send a PUT request to the API
     return this.http.put(`${this.url}/Recipe/update/${recipeId}`, recipeData);
   }
+
+
+  createRating(rating: RatingDTO, userId: number, recipeId: number): Observable<any> {
+    return this.http.put(`${this.url}/Rating/upsert/${userId}/${recipeId}`, rating);
+    
+  }
+
+  GetRecipeRating(recipeId: number): Observable<Rating> {
+    return this.http.get<Rating>(`${this.url}/Rating/recipeRating/${recipeId}`);
+  }
+
 }

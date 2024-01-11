@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CdkDrag } from '@angular/cdk/drag-drop';
-import { Recipe } from '../Interfaces';
+import { Rating, RatingDTO, RatingWithRecipeId, Recipe, RecipeWithScore } from '../Interfaces';
 import { RecipeServiceService } from '../service/recipe-service.service';
 import { StarService } from '../service/star.service';
 
@@ -13,23 +13,64 @@ import { StarService } from '../service/star.service';
 })
 export class RecipeCardComponent implements OnInit{
 
-  @Input() recipe: Recipe | null = null; // Input decorator to pass the recipe object to the component
-
   recipes: Recipe[] = []; // Initialize recipes as an empty array
+  scoreRecipe: RecipeWithScore[] = [];
 
+
+  rating: RatingWithRecipeId ={
+    recipeId: 0,
+    score: 0
+  }
   
-  constructor(private recipeService: RecipeServiceService, public starService: StarService) { } // Inject the services
+  constructor(
+    private recipeService: RecipeServiceService, 
+    public starService: StarService) { } // Inject the services
 
   ngOnInit(): void {
-    this.getRecipes(); // method that fetches recipes from API
+
+    this.recipeService.getRecipes().subscribe({
+      next: (recipes: Recipe[]) => {
+        this.recipes = recipes;
+
+        this.recipes.forEach(recipe => {
+          const recipeWithScore: RecipeWithScore = {
+            id: recipe.id,
+            title: recipe.title,
+            score: [],
+            recipe: recipe
+          }
+          this.scoreRecipe.push(recipeWithScore);
+        });
+
+        this.scoreRecipe.forEach((recipe) => {
+          this.getRating(recipe.id);
+
+        });
+      },
+      error: (error) => {
+        console.error(error);
+      }
+
+    });
+    
   }
 
-  getRecipes(): void {
-    // fetch recipes from API using a subscription, should add error handling
-    this.recipeService.getRecipes()
-      .subscribe(recipes => this.recipes = recipes);
-      
-    
+  getRating(recipeId: number): void {
+    this.recipeService.GetRecipeRating(recipeId).subscribe({
+      next: (rating: RatingDTO) => {
+        this.rating.score = rating.score;
+        this.rating.recipeId = recipeId;
+        const recipeWithScore = this.scoreRecipe.find(recipe => recipe.id === recipeId);
+        recipeWithScore!.score = this.starService.getRatingStars(this.rating.score);
+      },
+      error: (error) => {
+        console.error(error);
+        this.rating.score = 0;
+        this.rating.recipeId = recipeId;
+        const recipeWithScore = this.scoreRecipe.find(recipe => recipe.id === recipeId);
+        recipeWithScore!.score = this.starService.getRatingStars(this.rating.score);
+      },
+    });    
   }
 
 }

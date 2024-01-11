@@ -46,11 +46,16 @@
 width: 20%; /* Adjust the width as needed */
 }
 
+.login-button{
+    width: 20%; /* Adjust the width as needed */
+    margin-left: 20%;
+}
+
 .confirm-button {
     margin-left: 10px;
 }
 
-.buttons,
+
 .buttons-exit {
   display: flex;
   align-items: center;
@@ -61,3 +66,8 @@ width: 20%; /* Adjust the width as needed */
   color: red;
 }
   
+.spinner{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

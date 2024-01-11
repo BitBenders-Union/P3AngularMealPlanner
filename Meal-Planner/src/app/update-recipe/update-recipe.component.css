@@ -22,11 +22,14 @@
   border-radius: 5px;
 }
 
+
+
 /* Container for dynamically added rows */
 .form-array-container {
   margin-top: 20px;
   border-top: 1px solid var(--color-text);
   padding-top: 20px;
+  width: 100%;
 }
 
 /* Ingredient and Instruction Rows */
@@ -45,10 +48,23 @@
   width: 100%; /* Use 100% width to fill the available space */
 }
 
+.test{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.ingredient-label-header{
+  font-weight: bold;
+  height: 4vh;
+}
+
+
 /* Ingredient and Instruction Labels */
 .ingredient-label,
 .instruction-label {
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   font-weight: bold;
 }
 
@@ -63,17 +79,21 @@
 }
 
 .ingredient-labels {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
+  width: 100%;
 }
 
-/* Align labels with inputs */
 .ingredient-label {
-  flex: 1;
   text-align: center;
   font-weight: bold;
+  margin-left: 1vw;
+  padding-right: 10.2vw;
 }
+.ingredient-label:nth-child(2){
+  padding-right: 9.2vw;
+}
+
+
+
 
 .instruction-labels {
   display: flex;
@@ -83,7 +103,6 @@
 
 /* Align instruction label */
 .instruction-label {
-  flex: 1;
   text-align: center;
   font-weight: bold;
 }
@@ -96,7 +115,8 @@
 .buttons-exit {
   display: flex;
   align-items: center;
-  margin-top: 10px;
+  padding-left: 2.5%;
+
 }
 
 .buttons-exit {
@@ -147,7 +167,33 @@ margin-left: 10px;
   /* Add other styling properties for your loading spinner */
 }
 
+.instruction-input {
+  padding: 8px;
+  border: 1px solid var(--color-text);
+  border-radius: 5px;
+  margin-right: 5px;
+}
 
-.input-field.ng-invalid {
+.instruction-input {
+  width: 100%;
+}
+
+.ingredient-input.ng-invalid.ng-touched,
+.instruction-input.ng-invalid.ng-touched,
+.input-field.ng-invalid.ng-touched {
   border: 1px solid red;
+}
+
+
+.grip{
+  font-size: 1.5em;
+  margin-right: 5px;
+  color: var(--color-button-hover);
+
+}
+
+.spinner{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
